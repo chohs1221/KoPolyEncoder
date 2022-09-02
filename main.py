@@ -36,7 +36,7 @@ def main(args):
     tokenizer = KoBERTTokenizer.from_pretrained('skt/kobert-base-v1')
     # model = BiEncoder.from_pretrained('./checkpoint/firstmodel_ep5')
     model = BiEncoder.from_pretrained('skt/kobert-base-v1')
-    model.to('cuda');
+    model.to('cuda')
 
 
     train_loader = DataLoader(train_context, train_candidate, tokenizer)
@@ -52,7 +52,7 @@ def main(args):
         learning_rate = LR,
 
         weight_decay  = 0.01,
-        warmup_steps = 100
+        warmup_steps = 100,
 
         save_strategy="epoch",
         save_total_limit=10,
@@ -79,7 +79,7 @@ def main(args):
 
     empty_cuda_cache()
     trainer.train()
-    model.save_pretrained(f"checkpoints/firstmodel_ep5")
+    model.save_pretrained(f"checkpoints/firstmodel_ep10")
 
 
     print(f"\n{time.strftime('%c', time.localtime(time.time()))}")
