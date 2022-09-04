@@ -63,7 +63,7 @@ def main(args):
 
         per_device_train_batch_size=BATCH_SIZE,
         per_device_eval_batch_size=BATCH_SIZE,
-        gradient_accumulation_steps=1,
+        gradient_accumulation_steps=2,
         dataloader_num_workers=0,
         fp16=True,
 
@@ -79,7 +79,7 @@ def main(args):
 
     empty_cuda_cache()
     trainer.train()
-    model.save_pretrained(f"checkpoints/firstmodel_ep10")
+    model.save_pretrained(f"checkpoints/firstmodel_ep{EPOCH}")
 
 
     print(f"\n{time.strftime('%c', time.localtime(time.time()))}")
@@ -88,7 +88,7 @@ def main(args):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
 
-    parser.add_argument('--epoch', default=10)
+    parser.add_argument('--epoch', default=1)
     parser.add_argument('--lr', default=5e-5)
     parser.add_argument('--batch', default=256)
     parser.add_argument('--seed', default=42)
