@@ -29,9 +29,15 @@ def parse_data(dir):
             for line in lines:
                 dataset.append(line["norm_text"])
 
-            if dataset:            
-                context += dataset[:-1]
-                candidate += dataset[1:]
+            if len(dataset) > 1:
+                if len(dataset) % 2 == 0:
+                    context += dataset[0::2]
+                    candidate += dataset[1::2]
+                elif len(dataset) % 2 == 1:
+                    context += dataset[0:len(dataset)-1:2]
+                    candidate += dataset[1::2]
+            
+            assert len(context) == len(candidate)
     
     print(f'{len(context)} datasets found')
 
@@ -42,5 +48,5 @@ if __name__ == "__main__":
     train_context, train_candidate = parse_data("./data/train/")
     valid_context, valid_candidate = parse_data("./data/valid/")
 
-    pickling('./data/pickles/train.pickle', act = 'save', data = (train_context, train_candidate))
-    pickling('./data/pickles/valid.pickle', act = 'save', data = (valid_context, valid_candidate))
+    pickling('./data/pickles/train2.pickle', act = 'save', data = (train_context, train_candidate))
+    pickling('./data/pickles/valid2.pickle', act = 'save', data = (valid_context, valid_candidate))

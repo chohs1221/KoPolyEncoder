@@ -1,83 +1,79 @@
-from kobert_tokenizer import KoBERTTokenizer
+from tqdm import tqdm
+
 import torch
 
-from tqdm import tqdm
+from kobert_tokenizer import KoBERTTokenizer
 
 from modeling import BiEncoder
 from parsing import pickling
-from utils import empty_cuda_cache
 
-valid_context, valid_candidate = pickling('./data/pickle/valid.pickle', 'load')
-valid_context += valid_candidate
 
-tokenizer = KoBERTTokenizer.from_pretrained('skt/kobert-base-v1')
-model = BiEncoder.from_pretrained('./checkpoints/firstmodel_ep1')
-model.to('cuda');
-model.eval()
+def load_tokenizer_model(model_path, device):
+    tokenizer = KoBERTTokenizer.from_pretrained(model_path)
+    model = BiEncoder.from_pretrained(model_path).to(device)
+    
+    return tokenizer, model
 
-# 메모리 해결
 
-candidate_text = ['내 이름은 달이라고 해',
-                            '나는 145센치야',
-                            "나는 그런거 몰라",
-                            "나는 두살이야",
-                            "나도 반가워 궁금한거 있으면 물어봐",
-                            "잘가 내일도 올거지?",
-                            "무슨 말 하는지 모르겠어요",
-                            "더울 땐 물을 많이 드세요",]
-candidate_input = tokenizer(candidate_text, padding='max_length', max_length=50, truncation=True, return_tensors = 'pt')
-candidate_input = {'input_ids': candidate_input['input_ids'].to('cuda'),
-                'attention_mask': candidate_input['attention_mask'].to('cuda'),
-                'token_type_ids': candidate_input['token_type_ids'].to('cuda'),
-                }
-candidate_embeddings = model(**candidate_input, training = False)
+def candidates_designated(file_dir, model_path, device= 'cuda'):
+    with open(file_dir, 'r', encoding= 'utf-8') as f:
+        candidate_text = []
+        for line in f.readlines():
+            candidate_text.append(line.strip())
 
-# print(len(valid_context))
-# try:
-#     candidate_embeddings = pickling('./data/pickle/candidates512.pickle', act='load')
-# except:
-#     candidate_inputs = []
-#     batch_size = 512
-#     for i in tqdm(range(0, len(valid_context)-batch_size, batch_size)):
-#         candidate_input = tokenizer(valid_context[i: i+256], padding='max_length', max_length=50, truncation=True, return_tensors = 'pt')
+    tokenizer, model = load_tokenizer_model(model_path, device)
+    model.eval()
 
-#         candidate_input = {'input_ids': candidate_input['input_ids'].to('cuda'),
-#                         'attention_mask': candidate_input['attention_mask'].to('cuda'),
-#                         'token_type_ids': candidate_input['token_type_ids'].to('cuda'),
-#                         }
-#         candidate_inputs.append(candidate_input)
+    candidate_input = tokenizer(candidate_text, padding='max_length', max_length=50, truncation=True, return_tensors = 'pt').to(device)
+    candidate_embeddings = model(**candidate_input, training = False)
+
+    return tokenizer, model, candidate_text, candidate_embeddings
+
+
+def candidates_incorpus(file_dir, model_path, batch_size = 256, device = 'cuda'):
+    _, candidate_text = pickling(file_dir, act= 'load')
+    print(f'{len(candidate_text)} candidates found')
+
+    tokenizer, model = load_tokenizer_model(model_path, device)
+    model.eval()
+
+    try:
+        candidate_embeddings = pickling(f'./data/pickles/corpus_embeddings.pickle', act= 'load')
+    except:
+        print('No pickle file exists')
+        candidate_inputs = []
+        for i in tqdm(range(0, len(candidate_text)-batch_size, batch_size)):
+            candidate_inputs.append(tokenizer(candidate_text[i: i+256], padding='max_length', max_length=50, truncation=True, return_tensors = 'pt').to(device))
+
+        candidate_embeddings = []
+        for candidate_input in tqdm(candidate_inputs):
+            with torch.no_grad():
+                candidate_embedding = model(**candidate_input, training = False)
+                candidate_embeddings.append(candidate_embedding)
+        candidate_embeddings = torch.cat(candidate_embeddings, dim=0)
+        pickling('./data/pickles/corpus_embeddings.pickle', act='save', data=candidate_embeddings)
+
+        return tokenizer, model, candidate_text, candidate_embeddings
+
+
+if __name__ == '__main__':
+    device = 'cuda'
+    model_path = 'skt/kobert-base-v1'
+    # model_path = './checkpoints/firstmodel_ep1'
+
+    # tokenizer, model, candidate_text, candidate_embeddings = candidates_incorpus('./data/pickles/valid.pickle', model_path, batch_size = 256, device=device)
+    tokenizer, model, candidate_text, candidate_embeddings = candidates_designated('./data/responses.txt', model_path, device=device)
+
+    while True:
+        prompt = input()
+        if prompt == 'bye':
+            break
         
-#     print(len(candidate_inputs))
-#     candidate_embeddings = torch.Tensor().to('cuda')
-#     for candidate_input in tqdm(candidate_inputs):
-#         empty_cuda_cache()
-#         with torch.no_grad():
-#             candidate_embedding = model(**candidate_input, training = False)
-#             candidate_embeddings = torch.cat([candidate_embeddings, candidate_embedding], dim=0)
-#             # print(candidate_embeddings.shape)
+        context_input = tokenizer(prompt, padding='max_length', max_length=50, truncation=True, return_tensors = 'pt').to(device)
+        context_embedding = model(**context_input, training = False)
 
-#     pickling('./data/pickle/candidates512.pickle', act='save', data=candidate_embeddings)
+        dot_product = torch.matmul(context_embedding, candidate_embeddings.t())
+        
+        best_idx = torch.argmax(dot_product).item()
 
-print(candidate_embeddings.shape)
-
-while True:
-    prompt = input()
-    if prompt == 'okay':
-        break
-    
-    context_input = tokenizer(prompt, padding='max_length', max_length=50, truncation=True, return_tensors = 'pt')
-    context_input = {'input_ids': context_input['input_ids'].to('cuda'),
-                    'attention_mask': context_input['attention_mask'].to('cuda'),
-                    'token_type_ids': context_input['token_type_ids'].to('cuda'),
-                    }
-
-    model.to('cuda')
-    context_output = model(**context_input, training = False)
-
-    dot_product = torch.matmul(context_output, candidate_embeddings.to('cuda').t())
-    
-    best = torch.argmax(dot_product).item()
-
-    print(candidate_text[best])
-    # break
-
+        print(candidate_text[best_idx])

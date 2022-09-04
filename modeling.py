@@ -28,28 +28,32 @@ class BiEncoder(BertPreTrainedModel):
         training = True
         ):
         
+        # (batch size, sequence length, hidden state size)
         context_output = self.bert(
-                                input_ids = input_ids,
-                                attention_mask= attention_mask,
-                                token_type_ids= token_type_ids,
-                                position_ids = position_ids,
-                                head_mask = head_mask,
-                                inputs_embeds = inputs_embeds,
-                                output_attentions = output_attentions,
-                                output_hidden_states = output_hidden_states,
-                                )
+            input_ids = input_ids,
+            attention_mask= attention_mask,
+            token_type_ids= token_type_ids,
+            position_ids = position_ids,
+            head_mask = head_mask,
+            inputs_embeds = inputs_embeds,
+            output_attentions = output_attentions,
+            output_hidden_states = output_hidden_states,
+            )
 
         if training:
-            candidate_output = self.bert(input_ids = candidate_input_ids,
-                                    attention_mask = candidate_attention_mask, 
-                                    token_type_ids = candidate_token_type_ids,
-                                    position_ids = position_ids,
-                                    head_mask = head_mask,
-                                    inputs_embeds = inputs_embeds,
-                                    output_attentions = output_attentions,
-                                    output_hidden_states = output_hidden_states,
-                                    )
+            # (batch size, sequence length, hidden state size)
+            candidate_output = self.bert(
+                input_ids = candidate_input_ids,
+                attention_mask = candidate_attention_mask, 
+                token_type_ids = candidate_token_type_ids,
+                position_ids = position_ids,
+                head_mask = head_mask,
+                inputs_embeds = inputs_embeds,
+                output_attentions = output_attentions,
+                output_hidden_states = output_hidden_states,
+                )
 
+            # (batch size, hidden state size) -> (batch size, batch size)
             dot_product = torch.matmul(context_output[0][:, 0, :], candidate_output[0][:, 0, :].t())
 
             loss_fnt = nn.CrossEntropyLoss()
