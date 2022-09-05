@@ -47,8 +47,8 @@ def main(args):
     model.to('cuda')
 
 
-    train_loader = DataLoader(train_context[:10], train_candidate, tokenizer)
-    valid_loader = DataLoader(valid_context[:10], valid_candidate, tokenizer)
+    train_loader = DataLoader(train_context, train_candidate, tokenizer)
+    valid_loader = DataLoader(valid_context, valid_candidate, tokenizer)
 
     # C:\Users\HSC\Documents\VS_workspace\pytorch17_cuda11\lib\site-packages\transformers\trainer.py", line 1810
     # optimizer = Adam(model.parameters(), lr=5e-5)
