@@ -21,6 +21,7 @@ def candidates_designated(file_dir, model_path, device= 'cuda'):
         candidate_text = []
         for line in f.readlines():
             candidate_text.append(line.strip())
+    print(f'{len(candidate_text)} candidates found')
 
     tokenizer, model = load_tokenizer_model(model_path, device)
     model.eval()
@@ -64,9 +65,8 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     device = 'cuda'
-    # model_path = 'skt/kobert-base-v1'
-    model_path = './checkpoints/2022_09_05_00_03_ep5_bs256_ep5'
-
+    model_path = './checkpoints/2022_09_05_06_05_bs512_ep5'
+    print(args)
     if args.incorpus:
         tokenizer, model, candidate_text, candidate_embeddings = candidates_incorpus('./data/pickles/valid.pickle', model_path, batch_size = 256, device=device)
     else:
