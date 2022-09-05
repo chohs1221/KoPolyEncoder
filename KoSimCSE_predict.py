@@ -1,17 +1,17 @@
-import argparse
 from tqdm import tqdm
 
 import torch
 
-from kobert_tokenizer import KoBERTTokenizer
+from transformers import AutoTokenizer, AutoModel
+# from kobert_tokenizer import KoBERTTokenizer
 
 from modeling import BiEncoder
 from parsing import pickling
 
 
 def load_tokenizer_model(model_path, device):
-    tokenizer = KoBERTTokenizer.from_pretrained('skt/kobert-base-v1')
-    model = BiEncoder.from_pretrained(model_path).to(device)
+    tokenizer = AutoTokenizer.from_pretrained('BM-K/KoSimCSE-roberta-multitask')
+    model = AutoModel.from_pretrained(model_path).to(device)
     
     return tokenizer, model
 
@@ -26,7 +26,7 @@ def candidates_designated(file_dir, model_path, device= 'cuda'):
     model.eval()
 
     candidate_input = tokenizer(candidate_text, padding='max_length', max_length=50, truncation=True, return_tensors = 'pt').to(device)
-    candidate_embeddings = model(**candidate_input, training = False)[:, 0, :]
+    candidate_embeddings = model(**candidate_input)[0][:, 0, :]
 
     return tokenizer, model, candidate_text, candidate_embeddings
 
@@ -50,7 +50,7 @@ def candidates_incorpus(file_dir, model_path, batch_size = 256, device = 'cuda')
         candidate_embeddings = []
         for candidate_input in tqdm(candidate_inputs):
             with torch.no_grad():
-                candidate_embedding = model(**candidate_input, training = False)[:, 0, :]
+                candidate_embedding = model(**candidate_input)[0][:, 0, :]
                 candidate_embeddings.append(candidate_embedding)
         candidate_embeddings = torch.cat(candidate_embeddings, dim=0)
         pickling('./data/pickles/corpus_embeddings.pickle', act='save', data=candidate_embeddings)
@@ -59,18 +59,12 @@ def candidates_incorpus(file_dir, model_path, batch_size = 256, device = 'cuda')
 
 
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser()
-    parser.add_argument('--incorpus', type=bool, default=False)
-    args = parser.parse_args()
-
     device = 'cuda'
     # model_path = 'skt/kobert-base-v1'
-    model_path = './checkpoints/2022_09_05_00_03_ep5_bs256_ep5'
+    model_path = 'BM-K/KoSimCSE-roberta-multitask'
 
-    if args.incorpus:
-        tokenizer, model, candidate_text, candidate_embeddings = candidates_incorpus('./data/pickles/valid.pickle', model_path, batch_size = 256, device=device)
-    else:
-        tokenizer, model, candidate_text, candidate_embeddings = candidates_designated('./data/responses.txt', model_path, device=device)
+    tokenizer, model, candidate_text, candidate_embeddings = candidates_incorpus('./data/pickles/valid.pickle', model_path, batch_size = 256, device=device)
+    # tokenizer, model, candidate_text, candidate_embeddings = candidates_designated('./data/responses.txt', model_path, device=device)
 
     while True:
         prompt = input("user >> ")
@@ -78,7 +72,7 @@ if __name__ == '__main__':
             break
         
         context_input = tokenizer(prompt, padding='max_length', max_length=50, truncation=True, return_tensors = 'pt').to(device)
-        context_embedding = model(**context_input, training = False)[:, 0, :]
+        context_embedding = model(**context_input)[0][:, 0, :]
 
         dot_product = torch.matmul(context_embedding, candidate_embeddings.t())
         

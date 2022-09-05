@@ -61,4 +61,4 @@ class BiEncoder(BertPreTrainedModel):
 
             return loss, dot_product
 
-        return context_output[1]
+        return context_output[0]

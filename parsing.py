@@ -29,9 +29,17 @@ def parse_data(dir):
             for line in lines:
                 dataset.append(line["norm_text"])
 
-            if dataset:            
-                context += dataset[:-1]
-                candidate += dataset[1:]
+            # if dataset:            
+            #     context += dataset[:-1]
+            #     candidate += dataset[1:]
+            
+            if len(dataset) > 1:
+                if len(dataset) % 2 == 0:
+                    context += dataset[0::2]
+                    candidate += dataset[1::2]
+                elif len(dataset) % 2 == 1:
+                    context += dataset[0:len(dataset)-1:2]
+                    candidate += dataset[1::2]
     
     print(f'{len(context)} datasets found')
 

@@ -32,8 +32,6 @@ def main(args):
 
     train_context, train_candidate = pickling('./data/pickles/train.pickle', 'load')
     valid_context, valid_candidate = pickling('./data/pickles/valid.pickle', 'load')
-    # train_context, train_candidate = pickling('./data/pickles/train2.pickle', 'load')
-    # valid_context, valid_candidate = pickling('./data/pickles/valid2.pickle', 'load')
     print(train_context[100:105])
     print(train_candidate[100:105])
     print()
@@ -86,7 +84,7 @@ def main(args):
 
     empty_cuda_cache()
     trainer.train(resume_from_checkpoint = None)
-    model.save_pretrained(f"checkpoints/{start_time.strftime('%Y_%m_%d_%H_%M')}_ep{args.epoch}_bs{args.batch}_ep{args.epoch}")
+    model.save_pretrained(f"checkpoints/{start_time.strftime('%Y_%m_%d_%H_%M')}_bs{args.batch * args.accumulation}_ep{args.epoch}")
 
     end_time = datetime.now()
     running_time = end_time - start_time
