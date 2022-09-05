@@ -74,8 +74,10 @@ if __name__ == '__main__':
 
     while True:
         prompt = input("user >> ")
-        if prompt == 'bye':
+        if prompt == 'bye' or prompt == 'ㅂㅂ':
+            print("{0:>50}\n".format("잘가! << bot"))
             break
+        print()
         
         context_input = tokenizer(prompt, padding='max_length', max_length=50, truncation=True, return_tensors = 'pt').to(device)
         context_embedding = model(**context_input, training = False)[:, 0, :]
@@ -84,4 +86,4 @@ if __name__ == '__main__':
         
         best_idx = torch.argmax(dot_product).item()
 
-        print(f"bot >>  {candidate_text[best_idx]}")
+        print("{0:>50}\n".format(candidate_text[best_idx] + " << bot"))
