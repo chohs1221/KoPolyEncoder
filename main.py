@@ -7,7 +7,7 @@ from torch.optim import Adam, lr_scheduler
 from kobert_tokenizer import KoBERTTokenizer
 from transformers import TrainingArguments, Trainer
 
-from modeling import BiEncoder
+from modeling import BiEncoder, PolyEncoder
 from parsing import pickling
 from data_loader import DataLoader
 from utils import seed_everything, empty_cuda_cache
@@ -19,6 +19,8 @@ def main(args):
     print(f'============================================================')
     start_time = datetime.now()
     print(f"START!! {start_time.strftime('%Y_%m_%d / %H_%M')}")
+    print(f'model: {args.model}')
+    print(f'model: {args.m}')
     print(f'seed: {args.seed}')
     print(f'epoch: {args.epoch}')
     print(f'learning rate: {args.lr}')
@@ -37,14 +39,16 @@ def main(args):
     print()
 
 
-    # model = BiEncoder.from_pretrained('./checkpoint/firstmodel_ep5')
     tokenizer = KoBERTTokenizer.from_pretrained('skt/kobert-base-v1')
-    model = BiEncoder.from_pretrained('skt/kobert-base-v1')
+    if args.model == 'bi':
+        model = BiEncoder.from_pretrained('skt/kobert-base-v1')
+    elif args.model == 'poly':
+        model = PolyEncoder.from_pretrained('skt/kobert-base-v1', m=args.m)
     model.to('cuda')
 
 
-    train_loader = DataLoader(train_context, train_candidate, tokenizer)
-    valid_loader = DataLoader(valid_context, valid_candidate, tokenizer)
+    train_loader = DataLoader(train_context[:10], train_candidate, tokenizer)
+    valid_loader = DataLoader(valid_context[:10], valid_candidate, tokenizer)
 
     # C:\Users\HSC\Documents\VS_workspace\pytorch17_cuda11\lib\site-packages\transformers\trainer.py", line 1810
     # optimizer = Adam(model.parameters(), lr=5e-5)
@@ -95,12 +99,14 @@ def main(args):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
 
+    parser.add_argument('--model', type=str, default='bi')
+    parser.add_argument('--m', type=int, default=360)
     parser.add_argument('--seed', type=int, default=42)
     parser.add_argument('--epoch', type=int, default=1)
     parser.add_argument('--lr', type=float, default=5e-5)
     parser.add_argument('--batch', type=int, default=256)
     parser.add_argument('--accumulation', type=int, default=1)
-    parser.add_argument('--best', type=bool, default=False)
+    parser.add_argument('--best', type=int, default=0)
 
     args = parser.parse_args()
     main(args)
