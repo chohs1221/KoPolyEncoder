@@ -18,15 +18,18 @@ from utils import seed_everything, empty_cuda_cache
 def main(args):
     print(f'============================================================')
     start_time = datetime.now()
+    file_name = f"{args.model}{start_time.strftime('%Y%m%d_%H%M'[2:])}_bs{args.batch * args.accumulation}_ep{args.epoch}_best{args.best}"
+    print(f'File Name: {file_name}')
     print(f"START!! {start_time.strftime('%Y_%m_%d / %H_%M')}")
     print(f'model: {args.model}')
-    print(f'model: {args.m}')
+    print(f'm: {args.m}')
     print(f'seed: {args.seed}')
     print(f'epoch: {args.epoch}')
     print(f'learning rate: {args.lr}')
     print(f'batch size: {args.batch}')
-    print(f'accumulate: {args.accumulation}')
-    print(f'BEST: {args.best}\n')
+    print(f'accumulation: {args.accumulation}')
+    print(f'best: {args.best}')
+    print(f'description: {args.description}\n')
 
 
     seed_everything(args.seed)
@@ -60,20 +63,24 @@ def main(args):
 
         num_train_epochs = args.epoch,
         learning_rate = args.lr,
-
-        warmup_steps = 100,
-
-        save_strategy = "epoch",
-        save_total_limit = 10,
-        evaluation_strategy = "epoch",
-        load_best_model_at_end=args.best,
-        
-        report_to = 'none',
-
         per_device_train_batch_size = args.batch,
         per_device_eval_batch_size = args.batch,
         gradient_accumulation_steps = args.accumulation,
         dataloader_num_workers=0,
+
+        warmup_steps = 100,
+
+        save_strategy = "steps",
+        save_steps = 500,
+        save_total_limit = 30,
+
+        evaluation_strategy = "steps",
+        eval_steps = 500,
+
+        load_best_model_at_end=args.best,
+        
+        report_to = 'none',
+
         fp16=True,
         )
 
@@ -85,10 +92,9 @@ def main(args):
         eval_dataset=valid_loader
         )
 
-
     empty_cuda_cache()
     trainer.train(resume_from_checkpoint = None)
-    model.save_pretrained(f"checkpoints/{start_time.strftime('%Y_%m_%d_%H_%M')}_bs{args.batch * args.accumulation}_ep{args.epoch}")
+    model.save_pretrained(f"checkpoints/{file_name}")
 
     end_time = datetime.now()
     running_time = end_time - start_time
@@ -107,6 +113,7 @@ if __name__ == '__main__':
     parser.add_argument('--batch', type=int, default=256)
     parser.add_argument('--accumulation', type=int, default=1)
     parser.add_argument('--best', type=int, default=0)
+    parser.add_argument('--description', type=str, default='')
 
     args = parser.parse_args()
     main(args)

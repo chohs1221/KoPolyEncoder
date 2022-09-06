@@ -28,10 +28,6 @@ def parse_data(dir):
             lines = data["info"][0]["annotations"]["lines"]
             for line in lines:
                 dataset.append(line["norm_text"])
-
-            # if dataset:            
-            #     context += dataset[:-1]
-            #     candidate += dataset[1:]
             
             if len(dataset) > 1:
                 if len(dataset) % 2 == 0:

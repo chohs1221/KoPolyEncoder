@@ -32,7 +32,6 @@ class BiEncoder(BertPreTrainedModel):
         training = True
         ):
         
-        # (batch size, sequence length, hidden state size)
         context_output = self.bert(
             input_ids = input_ids,
             attention_mask= attention_mask,
@@ -42,10 +41,9 @@ class BiEncoder(BertPreTrainedModel):
             inputs_embeds = inputs_embeds,
             output_attentions = output_attentions,
             output_hidden_states = output_hidden_states,
-            )
+            )          # (batch size, sequence length, hidden state size) 
 
         if training:
-            # (batch size, sequence length, hidden state size)
             candidate_output = self.bert(
                 input_ids = candidate_input_ids,
                 attention_mask = candidate_attention_mask, 
@@ -55,17 +53,16 @@ class BiEncoder(BertPreTrainedModel):
                 inputs_embeds = inputs_embeds,
                 output_attentions = output_attentions,
                 output_hidden_states = output_hidden_states,
-                )
+                )      # (batch size, sequence length, hidden state size)
 
-            # (batch size, hidden state size) -> (batch size, batch size)
-            dot_product = torch.matmul(context_output[0][:, 0, :], candidate_output[0][:, 0, :].t())
+            dot_product = torch.matmul(context_output[0][:, 0, :], candidate_output[0][:, 0, :].t())    # (batch size, hidden state) @ (batch size, hidden state).t() = (batch size, batch size)
 
             loss_fnt = nn.CrossEntropyLoss()
             loss = loss_fnt(dot_product, torch.arange(dot_product.shape[0]).to(dot_product.device))
 
             return loss, dot_product
 
-        return context_output[0]
+        return context_output[0]    # (batch size, 1, hidden state)
 
 
 class PolyEncoder(BertPreTrainedModel):
@@ -83,7 +80,6 @@ class PolyEncoder(BertPreTrainedModel):
     def dot_attention(self, q, k, v):
         # q:   [bs, poly_m, hidden state] or [bs, 1, hidden state]
         # k=v: [bs, length, hidden state] or [bs, poly_m, hidden state]
-        # attention_weights: [bs, poly_m, lenght]
         attention_weights = torch.matmul(q, k.permute(0, 2, 1))
         attention_weights = F.softmax(attention_weights, -1)
 
@@ -109,7 +105,6 @@ class PolyEncoder(BertPreTrainedModel):
         candidate_output = None,
         ):
         
-        # (batch size, sequence length, hidden state)
         context_output = self.bert(
             input_ids = input_ids,
             attention_mask= attention_mask,
@@ -119,18 +114,16 @@ class PolyEncoder(BertPreTrainedModel):
             inputs_embeds = inputs_embeds,
             output_attentions = output_attentions,
             output_hidden_states = output_hidden_states,
-            )[0]
+            )[0]                        # (batch size, sequence length, hidden state)
 
         code_embedding_ids = torch.arange(self.m, dtype = torch.long).to(context_output.device)
         code_embedding_ids = code_embedding_ids.unsqueeze(0).expand(context_output.shape[0], self.m)
 
-        codes = self.code_embedding(code_embedding_ids)
+        codes = self.code_embedding(code_embedding_ids)                             # (m, hidden state)
 
-        # (batch size, m, hidden state)
-        code_output = self.dot_attention(codes, context_output, context_output)
+        code_output = self.dot_attention(codes, context_output, context_output)     # (batch size, m, hidden state)
 
         if training:
-            # (batch size, sequence length, hidden state)
             candidate_output = self.bert(
                 input_ids = candidate_input_ids,
                 attention_mask = candidate_attention_mask, 
@@ -140,13 +133,11 @@ class PolyEncoder(BertPreTrainedModel):
                 inputs_embeds = inputs_embeds,
                 output_attentions = output_attentions,
                 output_hidden_states = output_hidden_states,
-                )[0][:, 0, :]
+                )[0][:, 0, :]           # (batch size, hidden state)
 
-            # (batch size, 1, hidden state)
-            cross_output = self.dot_attention(candidate_output.unsqueeze(1), code_output, code_output)
+            cross_output = self.dot_attention(candidate_output.unsqueeze(1), code_output, code_output)  # (batch size, 1, hidden state)
             
-            # (batch size, hidden state) -> (batch size, batch size)
-            dot_product = torch.matmul(cross_output.squeeze(1), candidate_output.t())
+            dot_product = torch.matmul(cross_output.squeeze(1), candidate_output.t())                   # (batch size, hidden state) @ (batch size, hidden state).t() = (batch size, batch size)
 
             loss_fnt = nn.CrossEntropyLoss()
             loss = loss_fnt(dot_product, torch.arange(dot_product.shape[0]).to(dot_product.device))
@@ -155,10 +146,9 @@ class PolyEncoder(BertPreTrainedModel):
         
         # get candidate output embedding for making candidate pickles
         elif not training and candidate_output is None:
-            return context_output
+            return context_output                   # (batch size, sequence length, hidden state)
 
-        # get embedding for inference
+        # get context embedding for inference
         elif not training and candidate_output is not None:
-            # (batch size, 1, hidden state size)
             cross_output = self.dot_attention(candidate_output.unsqueeze(1), code_output, code_output)
-            return cross_output
+            return cross_output                     # (candidate size, 1, hidden state)
