@@ -1,6 +1,7 @@
 import os
 import argparse
 from datetime import datetime
+from random import shuffle
 
 from torch.optim import Adam, lr_scheduler
 
@@ -36,8 +37,10 @@ def main(args):
     seed_everything(args.seed)
 
 
-    train_context, train_candidate = pickling('./data/pickles/train.pickle', 'load')
-    valid_context, valid_candidate = pickling('./data/pickles/valid.pickle', 'load')
+    train_context, train_candidate = pickling('./data/pickles/train_648542.pickle', 'load')
+    valid_context, valid_candidate = pickling('./data/pickles/valid_81068.pickle', 'load')
+    print(f"train: {len(train_context)}")
+    print(f"valid: {len(valid_context)}")
     print(train_context[100:105])
     print(train_candidate[100:105])
     print()
@@ -51,8 +54,8 @@ def main(args):
     model.to('cuda')
 
 
-    train_loader = DataLoader(train_context, train_candidate, tokenizer)
-    valid_loader = DataLoader(valid_context, valid_candidate, tokenizer)
+    train_loader = DataLoader(train_context, train_candidate, tokenizer, shuffle = True, seed = args.seed)
+    valid_loader = DataLoader(valid_context, valid_candidate, tokenizer, shuffle = True, seed = args.seed)
 
     # C:\Users\HSC\Documents\VS_workspace\pytorch17_cuda11\lib\site-packages\transformers\trainer.py", line 1810
     # optimizer = Adam(model.parameters(), lr=5e-5)
@@ -107,7 +110,7 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
 
     parser.add_argument('--model', type=str, default='bi')
-    parser.add_argument('--m', type=int, default=360)
+    parser.add_argument('--m', type=int, default=0)
     parser.add_argument('--seed', type=int, default=42)
     parser.add_argument('--epoch', type=int, default=1)
     parser.add_argument('--lr', type=float, default=5e-5)

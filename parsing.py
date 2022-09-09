@@ -44,7 +44,16 @@ def parse_data(dir):
 
 if __name__ == "__main__":
     train_context, train_candidate = parse_data("./data/train/")
-    valid_context, valid_candidate = parse_data("./data/valid/")
 
-    pickling('./data/pickles/train.pickle', act = 'save', data = (train_context, train_candidate))
-    pickling('./data/pickles/valid.pickle', act = 'save', data = (valid_context, valid_candidate))
+    split_index = int(len(train_context)*0.8), int(len(train_context)*0.9)
+
+    train_context, valid_context, test_context = train_context[:split_index[0]], train_context[split_index[0]: split_index[1]], train_context[split_index[1]:]
+    train_candidate, valid_candidate, test_candidate = train_candidate[:split_index[0]], train_candidate[split_index[0]: split_index[1]], train_candidate[split_index[1]:]
+
+    print(f"train: {len(train_context)}")
+    print(f"valid: {len(valid_context)}")
+    print(f"test: {len(test_context)}")
+    pickling(f'./data/pickles/train_{len(train_context)}.pickle', act = 'save', data = (train_context, train_candidate))
+    pickling(f'./data/pickles/valid_{len(valid_context)}.pickle', act = 'save', data = (valid_context, valid_candidate))
+    pickling(f'./data/pickles/test_{len(test_context)}.pickle', act = 'save', data = (test_context, test_candidate))
+    

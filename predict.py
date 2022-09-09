@@ -10,11 +10,13 @@ from modeling import BiEncoder, PolyEncoder
 from parsing import pickling
 
 
-def load_tokenizer_model(model_path, m = 360, device = 'cuda'):
+def load_tokenizer_model(model_path, m = 0, device = 'cuda'):
     tokenizer = KoBERTTokenizer.from_pretrained('skt/kobert-base-v1')
-    if args.model == 'bi':
+    if m == 0:
+        print('Load BiEncoder')
         model = BiEncoder.from_pretrained(model_path).to(device)
-    elif args.model == 'poly':
+    else:
+        print('Load PolyEncoder')
         model = PolyEncoder.from_pretrained(model_path, m).to(device)
     
     return tokenizer, model
@@ -29,16 +31,22 @@ def candidates_designated(file_dir, model_path, args, device= 'cuda'):
     tokenizer, model = load_tokenizer_model(model_path, args.m, device)
     model.eval()
 
-    candidate_input = tokenizer(candidate_text, padding='max_length', max_length=50, truncation=True, return_tensors = 'pt').to(device)
-    with torch.no_grad():
-        candidate_embeddings = model(**candidate_input, training = False)[:, 0, :]
+    try:
+        candidate_embeddings = pickling(f'./data/pickles/{args.path}_designated{len(candidate_text)}.pickle', act= 'load')
+    except:
+        candidate_input = tokenizer(candidate_text, padding='max_length', max_length=50, truncation=True, return_tensors = 'pt').to(device)
+        with torch.no_grad():
+            candidate_embeddings = model(**candidate_input, training = False)[:, 0, :]
+        
+        pickling(f'./data/pickles/{args.path}_designated{len(candidate_text)}.pickle', act='save', data=candidate_embeddings)
 
     return tokenizer, model, candidate_text, candidate_embeddings
 
 
 def candidates_incorpus(file_dir, model_path, args, batch_size = 256, device = 'cuda'):
     candidate_text0, candidate_text1 = pickling(file_dir, act= 'load')
-    candidate_text = candidate_text1
+    candidate_text = candidate_text0 + candidate_text1
+    candidate_text = candidate_text[-100000:]
     print(f'{len(candidate_text)} candidates found!!')
 
     tokenizer, model = load_tokenizer_model(model_path, args.m, device)
@@ -49,12 +57,12 @@ def candidates_incorpus(file_dir, model_path, args, batch_size = 256, device = '
 
     except:
         print('No pickle file exists!!')
-        candidate_inputs = []
+        batch = []
         for i in tqdm(range(0, len(candidate_text)-batch_size, batch_size)):
-            candidate_inputs.append(tokenizer(candidate_text[i: i+batch_size], padding='max_length', max_length=50, truncation=True, return_tensors = 'pt').to(device))
+            batch.append(tokenizer(candidate_text[i: i+batch_size], padding='max_length', max_length=50, truncation=True, return_tensors = 'pt').to(device))
 
         candidate_embeddings = []
-        for candidate_input in tqdm(candidate_inputs):
+        for candidate_input in tqdm(batch):
             with torch.no_grad():
                 candidate_embedding = model(**candidate_input, training = False)[:, 0, :]
                 candidate_embeddings.append(candidate_embedding)
@@ -69,7 +77,7 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--model', type=str, default='bi')
     parser.add_argument('--path', type=str, default='2022_09_06_01_19_bs2_ep10')
-    parser.add_argument('--m', type=int, default=360)
+    parser.add_argument('--m', type=int, default=0)
     parser.add_argument('--incorpus', type=int, default=0)
     args = parser.parse_args()
     print(args)
@@ -78,7 +86,7 @@ if __name__ == '__main__':
     device = 'cuda'
     model_path =  './checkpoints/' + args.path
     if args.incorpus:
-        tokenizer, model, candidate_text, candidate_embeddings = candidates_incorpus('./data/pickles/valid.pickle', model_path, args, batch_size = 256, device=device)
+        tokenizer, model, candidate_text, candidate_embeddings = candidates_incorpus('./data/pickles/test_81068.pickle', model_path, args, batch_size = 256, device=device)
     else:
         tokenizer, model, candidate_text, candidate_embeddings = candidates_designated('./data/responses.txt', model_path, args, device=device)
 
