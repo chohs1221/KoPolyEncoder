@@ -2,6 +2,7 @@ import argparse
 from tqdm import tqdm
 
 import torch
+import torch.nn.functional as F
 
 from kobert_tokenizer import KoBERTTokenizer
 
@@ -57,7 +58,6 @@ def candidates_incorpus(file_dir, model_path, args, batch_size = 256, device = '
             with torch.no_grad():
                 candidate_embedding = model(**candidate_input, training = False)[:, 0, :]
                 candidate_embeddings.append(candidate_embedding)
-                candidate_embedding.to('cpu')
         candidate_embeddings = torch.cat(candidate_embeddings, dim=0)
 
         pickling(f'./data/pickles/{args.path}.pickle', act='save', data=candidate_embeddings)
@@ -84,11 +84,14 @@ if __name__ == '__main__':
 
 
     while True:
-        prompt = input("user >> ")
-        if prompt == 'bye' or prompt == 'ㅂㅂ':
-            print("{0:>50}\n".format("잘가! << bot"))
-            break
-        print()
+        try:
+            prompt = input("user >> ")
+            if prompt == 'bye' or prompt == 'ㅂㅂ':
+                print("{0:>50}\n".format("안녕히 가세요! << bot"))
+                break
+            print()
+        except:
+            continue
         
         context_input = tokenizer(prompt, padding='max_length', max_length=50, truncation=True, return_tensors = 'pt').to(device)
         
@@ -97,13 +100,17 @@ if __name__ == '__main__':
                 context_embedding = model(**context_input, training = False)[:, 0, :]       # (1, hidden state)
 
                 dot_product = torch.matmul(context_embedding, candidate_embeddings.t())     # (1, hidden state) @ (candidate size, hidden state).t() = (1, candidate size)
+                dot_product = dot_product[0, :]
 
             elif args.model == 'poly':
                 context_embedding = model(**context_input, training = False, candidate_output = candidate_embeddings)[:, 0, :]  # (candidate size, hidden state)
 
                 dot_product = torch.sum(context_embedding * candidate_embeddings, dim = 1)  # (candidate size)
 
-        best_idx = torch.argmax(dot_product).item()
+        sorted_dot_product, indices = torch.sort(F.softmax(dot_product, -1), dim = -1, descending = True)
 
-        print("{0:>50}\n".format(candidate_text[best_idx] + " << bot"))
+        best_idx = indices[0]
+
+        print("{0:>50}".format(candidate_text[best_idx] + f" << bot ({sorted_dot_product[0] * 100:.2f}%)"))
+        print(list(map(lambda x: round(x*100, 2), sorted_dot_product[:10].tolist())), end='\n\n')
 

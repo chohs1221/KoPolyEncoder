@@ -18,7 +18,8 @@ from utils import seed_everything, empty_cuda_cache
 def main(args):
     print(f'============================================================')
     start_time = datetime.now()
-    file_name = f"{args.model}{start_time.strftime('%Y%m%d_%H%M'[2:])}_bs{args.batch * args.accumulation}_ep{args.epoch}_best{args.best}"
+    file_name = f"{args.model}{start_time.strftime('%Y%m%d_%H%M')[2:]}_bs{args.batch * args.accumulation}_ep{args.epoch}_best{args.best}"
+    os.rename('./output.txt', f'./outputs/{file_name}.txt')
     print(f'File Name: {file_name}')
     print(f"START!! {start_time.strftime('%Y_%m_%d / %H_%M')}")
     print(f'model: {args.model}')
