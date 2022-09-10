@@ -6,12 +6,8 @@ from tqdm import tqdm
 from utils import pickling
 
 
-def get_filename(dir):
-    filenames = os.listdir(dir)
-    return [dir + f for f in filenames if f.endswith(".json")]
-
 def parse_data(dir):
-    filenames = os.listdir(dir)
+    filenames = os.listdir(f"{dir}/opendomain")
     filenames = [dir + f for f in filenames if f.endswith(".json")]
     print(f'{len(filenames)} json files found')
 
@@ -37,13 +33,37 @@ def parse_data(dir):
                     context += dataset[0:len(dataset)-1:2]
                     candidate += dataset[1::2]
     
-    print(f'{len(context)} datasets found')
+    print(f'current {len(context)} datasets found')
+
+    #########################################################################################################
+
+    folders = os.listdir(f"{dir}/closedomain")
+    for folder in folders:
+        os.chdir(f"./{folder}")
+        filenames = [dir + f for f in filenames if f.endswith(".txt")]
+        print(f'{len(filenames)} txt files found')
+
+        for filename in tqdm(filenames):
+            with open(filename, 'r', encoding= 'utf-8') as f:
+                dataset = [line.strip() for line in f.readlines() if len(line) > 1]
+            
+            if len(dataset) > 1:
+                if len(dataset) % 2 == 0:
+                    context += dataset[0::2]
+                    candidate += dataset[1::2]
+                elif len(dataset) % 2 == 1:
+                    context += dataset[0:len(dataset)-1:2]
+                    candidate += dataset[1::2]
+
+        os.chdir(f"..")
+        
+    print(f'total {len(context)} datasets found')
 
     return context, candidate
 
 
 if __name__ == "__main__":
-    train_context, train_candidate = parse_data("./data/train/")
+    train_context, train_candidate = parse_data("./data/train")
 
     split_index = int(len(train_context)*0.8), int(len(train_context)*0.9)
 
