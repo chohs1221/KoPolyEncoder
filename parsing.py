@@ -22,17 +22,17 @@ def parse_data(dir):
                 print(filename)
                 exit(0)
             
-            lines = data["info"][0]["annotations"]["lines"]
-            for line in lines:
-                dataset.append(line["norm_text"])
-            
-            if len(dataset) > 1:
-                if len(dataset) % 2 == 0:
-                    context += dataset[0::2]
-                    candidate += dataset[1::2]
-                elif len(dataset) % 2 == 1:
-                    context += dataset[0:len(dataset)-1:2]
-                    candidate += dataset[1::2]
+        lines = data["info"][0]["annotations"]["lines"]
+        for line in lines:
+            dataset.append(line["norm_text"])
+        
+        if len(dataset) > 1:
+            if len(dataset) % 2 == 0:
+                context += dataset[0::2]
+                candidate += dataset[1::2]
+            elif len(dataset) % 2 == 1:
+                context += dataset[0:len(dataset)-1:2]
+                candidate += dataset[1::2]
     
     print(f'current {len(context)} datasets found')
 
@@ -75,30 +75,57 @@ def parse_data(dir):
                 print(filename)
                 continue
             
-            for i in range(len(data)):
-                del data[i]['도메인']
-                del data[i]['카테고리']
-                del data[i]['대화셋일련번호']
-                del data[i]['화자']
-                del data[i]['문장번호']
-                del data[i]['고객의도']
-                del data[i]['상담사의도']
-                del data[i]['QA']
-                del data[i]['개체명 ']
-                del data[i]['용어사전']
-                del data[i]['지식베이스']
+        for i in range(len(data)):
+            del data[i]['도메인']
+            del data[i]['카테고리']
+            del data[i]['대화셋일련번호']
+            del data[i]['화자']
+            del data[i]['문장번호']
+            del data[i]['고객의도']
+            del data[i]['상담사의도']
+            del data[i]['QA']
+            del data[i]['개체명 ']
+            del data[i]['용어사전']
+            del data[i]['지식베이스']
 
-                dataset.append(sorted(list(data[i].values())).pop())
+            dataset.append(sorted(list(data[i].values())).pop())
+        
+        if len(dataset) > 1:
+            if len(dataset) % 2 == 0:
+                context += dataset[0::2]
+                candidate += dataset[1::2]
+            elif len(dataset) % 2 == 1:
+                context += dataset[0:len(dataset)-1:2]
+                candidate += dataset[1::2]
+    
+    print(f'current {len(context)} datasets found')
+
+    #########################################################################################################
+
+    # KLUE DST https://klue-benchmark.com/tasks/73/data/description
+    filenames = os.listdir(f"{dir}/klue_dst")
+    filenames = [f"{dir}/klue_dst/{f}" for f in filenames if f.endswith(".json")]
+    print(f'{len(filenames)} json files found')
+
+    for filename in tqdm(filenames):
+        with open(filename, 'r', encoding= 'utf-8') as f:
+            data = json.load(f)
             
-            if len(dataset) > 1:
-                if len(dataset) % 2 == 0:
-                    context += dataset[0::2]
-                    candidate += dataset[1::2]
-                elif len(dataset) % 2 == 1:
-                    context += dataset[0:len(dataset)-1:2]
-                    candidate += dataset[1::2]
+        dataset = []
+        for annotation in data:
+            for dialogue in annotation['dialogue']:
+                dataset.append(dialogue['text'])
+                
+        if len(dataset) > 1:
+            if len(dataset) % 2 == 0:
+                context += dataset[0::2]
+                candidate += dataset[1::2]
+            elif len(dataset) % 2 == 1:
+                context += dataset[0:len(dataset)-1:2]
+                candidate += dataset[1::2]
     
     print(f'total {len(context)} datasets found')
+
 
     return context, candidate
 
