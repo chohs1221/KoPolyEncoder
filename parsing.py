@@ -6,10 +6,10 @@ from tqdm import tqdm
 from utils import pickling
 
 
-# 주제별 텍스트 일상 대화 https://www.aihub.or.kr/aihubdata/data/view.do?currMenu=115&topMenu=100&aihubDataSe=realm&dataSetSn=543
 def parse_data(dir):
-    filenames = os.listdir(f"{dir}/opendomain")
-    filenames = [f"{dir}/opendomain/{f}" for f in filenames if f.endswith(".json")]
+    # 주제별 텍스트 일상 대화 https://www.aihub.or.kr/aihubdata/data/view.do?currMenu=115&topMenu=100&aihubDataSe=realm&dataSetSn=543
+    filenames = os.listdir(f"{dir}/aihub_543")
+    filenames = [f"{dir}/aihub_543/{f}" for f in filenames if f.endswith(".json")]
     print(f'{len(filenames)} json files found')
 
     context, candidate = [], []
@@ -39,10 +39,10 @@ def parse_data(dir):
     #########################################################################################################
 
     # 용도별 목적대화 https://www.aihub.or.kr/aihubdata/data/view.do?currMenu=115&topMenu=100&aihubDataSe=realm&dataSetSn=544
-    folders = os.listdir(f"{dir}/closedomain")
+    folders = os.listdir(f"{dir}/aihub_544")
     for folder in folders:
-        filenames = os.listdir(f"{dir}/closedomain/{folder}")
-        filenames = [f"{dir}/closedomain/{folder}/{f}" for f in filenames if f.endswith(".txt")]
+        filenames = os.listdir(f"{dir}/aihub_544/{folder}")
+        filenames = [f"{dir}/aihub_544/{folder}/{f}" for f in filenames if f.endswith(".txt")]
         print(f'{len(filenames)} txt files found')
 
         for filename in tqdm(filenames):
@@ -57,6 +57,47 @@ def parse_data(dir):
                     context += dataset[0:len(dataset)-1:2]
                     candidate += dataset[1::2]
         
+    print(f'current {len(context)} datasets found')
+
+    #########################################################################################################
+
+    # 민원(콜센터) 질의-응답 https://www.aihub.or.kr/aihubdata/data/view.do?currMenu=115&topMenu=100&aihubDataSe=realm&dataSetSn=98
+    filenames = os.listdir(f"{dir}/aihub_98")
+    filenames = [f"{dir}/aihub_98/{f}" for f in filenames if f.endswith(".json")]
+    print(f'{len(filenames)} json files found')
+
+    for filename in tqdm(filenames):
+        dataset = []
+        with open(filename, 'r', encoding= 'cp949') as f:
+            try:
+                data = json.load(f)
+            except:
+                print(filename)
+                continue
+            
+            for i in range(len(data)):
+                del data[i]['도메인']
+                del data[i]['카테고리']
+                del data[i]['대화셋일련번호']
+                del data[i]['화자']
+                del data[i]['문장번호']
+                del data[i]['고객의도']
+                del data[i]['상담사의도']
+                del data[i]['QA']
+                del data[i]['개체명 ']
+                del data[i]['용어사전']
+                del data[i]['지식베이스']
+
+                dataset.append(sorted(list(data[i].values())).pop())
+            
+            if len(dataset) > 1:
+                if len(dataset) % 2 == 0:
+                    context += dataset[0::2]
+                    candidate += dataset[1::2]
+                elif len(dataset) % 2 == 1:
+                    context += dataset[0:len(dataset)-1:2]
+                    candidate += dataset[1::2]
+    
     print(f'total {len(context)} datasets found')
 
     return context, candidate
