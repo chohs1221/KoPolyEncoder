@@ -6,9 +6,10 @@ from tqdm import tqdm
 from utils import pickling
 
 
+# 주제별 텍스트 일상 대화 https://www.aihub.or.kr/aihubdata/data/view.do?currMenu=115&topMenu=100&aihubDataSe=realm&dataSetSn=543
 def parse_data(dir):
     filenames = os.listdir(f"{dir}/opendomain")
-    filenames = [dir + f for f in filenames if f.endswith(".json")]
+    filenames = [f"{dir}/opendomain/{f}" for f in filenames if f.endswith(".json")]
     print(f'{len(filenames)} json files found')
 
     context, candidate = [], []
@@ -37,10 +38,11 @@ def parse_data(dir):
 
     #########################################################################################################
 
+    # 용도별 목적대화 https://www.aihub.or.kr/aihubdata/data/view.do?currMenu=115&topMenu=100&aihubDataSe=realm&dataSetSn=544
     folders = os.listdir(f"{dir}/closedomain")
     for folder in folders:
-        os.chdir(f"./{folder}")
-        filenames = [dir + f for f in filenames if f.endswith(".txt")]
+        filenames = os.listdir(f"{dir}/closedomain/{folder}")
+        filenames = [f"{dir}/closedomain/{folder}/{f}" for f in filenames if f.endswith(".txt")]
         print(f'{len(filenames)} txt files found')
 
         for filename in tqdm(filenames):
@@ -54,8 +56,6 @@ def parse_data(dir):
                 elif len(dataset) % 2 == 1:
                     context += dataset[0:len(dataset)-1:2]
                     candidate += dataset[1::2]
-
-        os.chdir(f"..")
         
     print(f'total {len(context)} datasets found')
 

@@ -1,0 +1,75 @@
+============================================================
+File Name: bi220910_1006_bs512_ep5_best1
+START!! 2022_09_10 / 10_06
+model: bi
+m: 0
+seed: 42
+epoch: 5
+learning rate: 5e-05
+batch size: 256
+accumulation: 2
+best: 1
+description: 
+
+train: 853474
+valid: 106684
+['영어 언제까지 했어?', '영어 할 때 제일 어려운 게 뭐야?', '단어 외울 때 본인만의 팁 있어?', '단어 외우기 싫으면 어떻게 외워?', '애들은 다 집에있나?']
+['취업 준비할 때 까진 했던 거 같아', '모르는 단어 나오면 엄청 짜증 났어', '난 성격상 그냥 주야장천 외우는 편이었어', '그래도 무조건 쓰면서 외웠어', '**이는 점심먹고 딱지치기하러 나갔고신랑은 스타크래프트 한판하고 키키 지금 **이랑 보드게임한다카드라 키키']
+
+{'loss': 4.4963, 'learning_rate': 4.761991499696418e-05, 'epoch': 0.3}
+{'eval_loss': 4.070739269256592, 'eval_runtime': 85.4092, 'eval_samples_per_second': 1249.093, 'eval_steps_per_second': 4.882, 'epoch': 0.3}
+{'loss': 3.2147, 'learning_rate': 4.458409228901033e-05, 'epoch': 0.6}
+{'eval_loss': 3.93159556388855, 'eval_runtime': 85.1456, 'eval_samples_per_second': 1252.96, 'eval_steps_per_second': 4.897, 'epoch': 0.6}
+{'loss': 3.0831, 'learning_rate': 4.154826958105647e-05, 'epoch': 0.9}
+{'eval_loss': 3.828883409500122, 'eval_runtime': 85.1917, 'eval_samples_per_second': 1252.282, 'eval_steps_per_second': 4.895, 'epoch': 0.9}
+{'loss': 2.925, 'learning_rate': 3.8512446873102616e-05, 'epoch': 1.2}
+{'eval_loss': 3.8164379596710205, 'eval_runtime': 85.0936, 'eval_samples_per_second': 1253.726, 'eval_steps_per_second': 4.9, 'epoch': 1.2}
+{'loss': 2.827, 'learning_rate': 3.5476624165148756e-05, 'epoch': 1.5}
+{'eval_loss': 3.7437496185302734, 'eval_runtime': 85.359, 'eval_samples_per_second': 1249.827, 'eval_steps_per_second': 4.885, 'epoch': 1.5}
+{'loss': 2.8003, 'learning_rate': 3.24408014571949e-05, 'epoch': 1.8}
+{'eval_loss': 3.7229089736938477, 'eval_runtime': 85.1416, 'eval_samples_per_second': 1253.019, 'eval_steps_per_second': 4.898, 'epoch': 1.8}
+{'loss': 2.7206, 'learning_rate': 2.9404978749241046e-05, 'epoch': 2.1}
+{'eval_loss': 3.7452385425567627, 'eval_runtime': 85.1231, 'eval_samples_per_second': 1253.291, 'eval_steps_per_second': 4.899, 'epoch': 2.1}
+{'loss': 2.6143, 'learning_rate': 2.6369156041287192e-05, 'epoch': 2.4}
+{'eval_loss': 3.770026922225952, 'eval_runtime': 85.0544, 'eval_samples_per_second': 1254.303, 'eval_steps_per_second': 4.903, 'epoch': 2.4}
+{'loss': 2.6026, 'learning_rate': 2.3333333333333336e-05, 'epoch': 2.7}
+{'eval_loss': 3.7235817909240723, 'eval_runtime': 85.6176, 'eval_samples_per_second': 1246.052, 'eval_steps_per_second': 4.87, 'epoch': 2.7}
+{'loss': 2.5993, 'learning_rate': 2.029751062537948e-05, 'epoch': 3.0}
+{'eval_loss': 3.7357048988342285, 'eval_runtime': 85.604, 'eval_samples_per_second': 1246.249, 'eval_steps_per_second': 4.871, 'epoch': 3.0}
+{'loss': 2.4569, 'learning_rate': 1.7261687917425623e-05, 'epoch': 3.3}
+{'eval_loss': 3.7315778732299805, 'eval_runtime': 85.6892, 'eval_samples_per_second': 1245.011, 'eval_steps_per_second': 4.866, 'epoch': 3.3}
+{'loss': 2.4604, 'learning_rate': 1.4225865209471768e-05, 'epoch': 3.6}
+{'eval_loss': 3.720541477203369, 'eval_runtime': 85.6761, 'eval_samples_per_second': 1245.202, 'eval_steps_per_second': 4.867, 'epoch': 3.6}
+{'loss': 2.457, 'learning_rate': 1.1190042501517913e-05, 'epoch': 3.9}
+{'eval_loss': 3.7021405696868896, 'eval_runtime': 85.5127, 'eval_samples_per_second': 1247.581, 'eval_steps_per_second': 4.876, 'epoch': 3.9}
+{'loss': 2.3897, 'learning_rate': 8.154219793564056e-06, 'epoch': 4.2}
+{'eval_loss': 3.7194559574127197, 'eval_runtime': 85.7962, 'eval_samples_per_second': 1243.459, 'eval_steps_per_second': 4.86, 'epoch': 4.2}
+{'loss': 2.3672, 'learning_rate': 5.1183970856102e-06, 'epoch': 4.5}
+{'eval_loss': 3.6980574131011963, 'eval_runtime': 85.7284, 'eval_samples_per_second': 1244.441, 'eval_steps_per_second': 4.864, 'epoch': 4.5}
+{'loss': 2.3474, 'learning_rate': 2.082574377656345e-06, 'epoch': 4.8}
+{'eval_loss': 3.7303428649902344, 'eval_runtime': 85.5889, 'eval_samples_per_second': 1246.469, 'eval_steps_per_second': 4.872, 'epoch': 4.8}
+{'train_runtime': 9379.9679, 'train_samples_per_second': 454.945, 'train_steps_per_second': 0.889, 'train_loss': 2.7558360080913507, 'epoch': 5.0}
+END!! 2022_09_10 / 12_43
+RUNNING TIME: 2:36:30
+============================================================
+
+
+
+SCORE!!
+Namespace(c=100, dataset='test_81068.pickle', device='cuda', m=0, model='bi', path='bi220910_1006_bs512_ep5_best1')
+Load BiEncoder
+R@1/100: 59.66007416563659
+============================================================
+
+SCORE!!
+Namespace(c=20, dataset='test_81068.pickle', device='cuda', m=0, model='bi', path='bi220910_1006_bs512_ep5_best1')
+Load BiEncoder
+R@1/20: 76.28208292201381
+============================================================
+
+SCORE!!
+Namespace(c=10, dataset='test_81068.pickle', device='cuda', m=0, model='bi', path='bi220910_1006_bs512_ep5_best1')
+Load BiEncoder
+R@1/10: 83.15731030228254
+============================================================
+

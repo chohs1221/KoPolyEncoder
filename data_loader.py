@@ -2,7 +2,7 @@ import random
 from utils import seed_everything
 
 class DataLoader:
-    def __init__(self, context, candidate, tokenizer, shuffle = False, seed = 42, device = 'cuda'):
+    def __init__(self, context, candidate, tokenizer, shuffle = False, seed = 42, return_tensors = None, device = None):
         if shuffle:
             seed_everything(seed)
             temp = list(zip(context, candidate))
@@ -14,11 +14,16 @@ class DataLoader:
 
         self.tokenizer = tokenizer
 
+        self.return_tensors = return_tensors
         self.device = device
 
     def __getitem__(self, i):
-        context_input = self.tokenizer(self.context[i], padding='max_length', max_length=50, truncation=True, return_tensors= 'pt').to(self.device)
-        candidate_input = self.tokenizer(self.candidate[i], padding='max_length', max_length=50, truncation=True, return_tensors= 'pt').to(self.device)
+        if self.device is not None:
+            context_input = self.tokenizer(self.context[i], padding='max_length', max_length=50, truncation=True, return_tensors=self.return_tensors).to(self.device)
+            candidate_input = self.tokenizer(self.candidate[i], padding='max_length', max_length=50, truncation=True, return_tensors=self.return_tensors).to(self.device)
+        elif self.device is None:
+            context_input = self.tokenizer(self.context[i], padding='max_length', max_length=50, truncation=True, return_tensors=self.return_tensors)
+            candidate_input = self.tokenizer(self.candidate[i], padding='max_length', max_length=50, truncation=True, return_tensors=self.return_tensors)
 
         return {
             'input_ids': context_input['input_ids'],

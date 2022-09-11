@@ -131,3 +131,21 @@ RUNNING TIME: 8:46:33
 
 
 
+SCORE!!
+Namespace(c=100, dataset='test_81068.pickle', device='cuda', m=360, model='poly', path='poly220907_2133_bs512_ep20_best1')
+Load PolyEncoder
+R@1/100: 44.30655129789864
+============================================================
+
+SCORE!!
+Namespace(c=20, dataset='test_81068.pickle', device='cuda', m=360, model='poly', path='poly220907_2133_bs512_ep20_best1')
+Load PolyEncoder
+R@1/20: 62.967670286278384
+============================================================
+
+SCORE!!
+Namespace(c=10, dataset='test_81068.pickle', device='cuda', m=360, model='poly', path='poly220907_2133_bs512_ep20_best1')
+Load PolyEncoder
+R@1/10: 71.71252313386799
+============================================================
+

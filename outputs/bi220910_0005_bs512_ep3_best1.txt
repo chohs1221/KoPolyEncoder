@@ -1,0 +1,57 @@
+============================================================
+File Name: bi220910_0005_bs512_ep3_best1
+START!! 2022_09_10 / 00_05
+model: bi
+m: 0
+seed: 42
+epoch: 3
+learning rate: 5e-05
+batch size: 256
+accumulation: 2
+best: 1
+description: 
+
+train: 648542
+valid: 81068
+['영어 언제까지 했어?', '영어 할 때 제일 어려운 게 뭐야?', '단어 외울 때 본인만의 팁 있어?', '단어 외우기 싫으면 어떻게 외워?', '애들은 다 집에있나?']
+['취업 준비할 때 까진 했던 거 같아', '모르는 단어 나오면 엄청 짜증 났어', '난 성격상 그냥 주야장천 외우는 편이었어', '그래도 무조건 쓰면서 외웠어', '**이는 점심먹고 딱지치기하러 나갔고신랑은 스타크래프트 한판하고 키키 지금 **이랑 보드게임한다카드라 키키']
+
+{'loss': 4.569, 'learning_rate': 4.470413401783302e-05, 'epoch': 0.39}
+{'eval_loss': 3.297983169555664, 'eval_runtime': 64.3687, 'eval_samples_per_second': 1259.431, 'eval_steps_per_second': 4.925, 'epoch': 0.39}
+{'loss': 3.3511, 'learning_rate': 3.794920291813024e-05, 'epoch': 0.79}
+{'eval_loss': 3.1437032222747803, 'eval_runtime': 64.1068, 'eval_samples_per_second': 1264.576, 'eval_steps_per_second': 4.945, 'epoch': 0.79}
+{'loss': 3.154, 'learning_rate': 3.119427181842745e-05, 'epoch': 1.18}
+{'eval_loss': 3.0640580654144287, 'eval_runtime': 64.0467, 'eval_samples_per_second': 1265.764, 'eval_steps_per_second': 4.95, 'epoch': 1.18}
+{'loss': 3.0197, 'learning_rate': 2.4439340718724672e-05, 'epoch': 1.58}
+{'eval_loss': 3.0118839740753174, 'eval_runtime': 64.0802, 'eval_samples_per_second': 1265.102, 'eval_steps_per_second': 4.947, 'epoch': 1.58}
+{'loss': 2.9844, 'learning_rate': 1.7697919481221292e-05, 'epoch': 1.97}
+{'eval_loss': 2.966378927230835, 'eval_runtime': 64.067, 'eval_samples_per_second': 1265.362, 'eval_steps_per_second': 4.948, 'epoch': 1.97}
+{'loss': 2.8404, 'learning_rate': 1.0942988381518509e-05, 'epoch': 2.37}
+{'eval_loss': 2.949580192565918, 'eval_runtime': 64.1125, 'eval_samples_per_second': 1264.466, 'eval_steps_per_second': 4.944, 'epoch': 2.37}
+{'loss': 2.8082, 'learning_rate': 4.188057281815726e-06, 'epoch': 2.76}
+{'eval_loss': 2.951693296432495, 'eval_runtime': 64.1916, 'eval_samples_per_second': 1262.906, 'eval_steps_per_second': 4.938, 'epoch': 2.76}
+{'train_runtime': 4109.9502, 'train_samples_per_second': 473.394, 'train_steps_per_second': 0.925, 'train_loss': 3.2115968274179494, 'epoch': 3.0}
+END!! 2022_09_10 / 01_14
+RUNNING TIME: 1:08:40
+============================================================
+
+
+
+SCORE!!
+Namespace(c=100, dataset='test_81068.pickle', device='cuda', m=0, model='bi', path='bi220910_0005_bs512_ep3_best1')
+Load BiEncoder
+R@1/100: 47.43386897404203
+============================================================
+
+SCORE!!
+Namespace(c=20, dataset='test_81068.pickle', device='cuda', m=0, model='bi', path='bi220910_0005_bs512_ep3_best1')
+Load BiEncoder
+R@1/20: 65.43311944718657
+============================================================
+
+SCORE!!
+Namespace(c=10, dataset='test_81068.pickle', device='cuda', m=0, model='bi', path='bi220910_0005_bs512_ep3_best1')
+Load BiEncoder
+R@1/10: 73.7051202961135
+============================================================
+

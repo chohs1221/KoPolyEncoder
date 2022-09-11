@@ -8,12 +8,12 @@ from utils import pickling
 from data_loader import DataLoader
 
 
-def recall_1C(model_path, c, test_dataset, args, device):
+def recall_1C(model_path, m, test_dataset, c, device):
     test_context, test_candidate = pickling(f"./data/pickles/{test_dataset}", "load")
-    tokenizer, model = load_tokenizer_model(model_path, args.m, device=device)
+    tokenizer, model = load_tokenizer_model(model_path, m, device=device)
     model.eval()
 
-    test_loader = DataLoader(test_context, test_candidate, tokenizer)
+    test_loader = DataLoader(test_context, test_candidate, tokenizer, shuffle=True, return_tensors='pt', device=device)
 
     cnt = 0
     for i in tqdm(range(0, len(test_loader)-c, c)):
@@ -22,20 +22,25 @@ def recall_1C(model_path, c, test_dataset, args, device):
         result = torch.argmax(dot_product, dim=-1) == torch.arange(len(dot_product)).to(device)
         cnt += result.sum().item()
     
-    return cnt / i
+    return 100 * cnt / i
 
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--model', type=str, default='bi')
-    parser.add_argument('--path', type=str, default='2022_09_06_02_40_bs2_ep6')
+    parser.add_argument('--path', type=str, default='bi220907_1256_bs512_ep20_best1')
     parser.add_argument('--m', type=int, default=0)
     parser.add_argument('--dataset', type=str, default='test_81068.pickle')
+    parser.add_argument('--c', type=int, default=100)
+    parser.add_argument('--device', type=str, default='cuda')
     args = parser.parse_args()
+
+    print("SCORE!!")
     print(args)
 
-    device = 'cuda'
     model_path =  './checkpoints/' + args.path
 
-    score = recall_1C(model_path, 100, args.dataset, args, device)
-    print(score)
+    score = recall_1C(model_path, args.m, args.dataset, args.c, args.device)
+    
+    print(f"R@1/{args.c}: {score}")
+    print(f'============================================================\n')

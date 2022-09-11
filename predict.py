@@ -92,16 +92,16 @@ if __name__ == '__main__':
 
 
     while True:
+        prompt = input("user >> ")
+        if prompt == 'bye' or prompt == 'ㅂㅂ':
+            print("{0:>50}\n".format("안녕히 가세요! << bot"))
+            break
+        print()
+        
         try:
-            prompt = input("user >> ")
-            if prompt == 'bye' or prompt == 'ㅂㅂ':
-                print("{0:>50}\n".format("안녕히 가세요! << bot"))
-                break
-            print()
+            context_input = tokenizer(prompt, padding='max_length', max_length=50, truncation=True, return_tensors = 'pt').to(device)
         except:
             continue
-        
-        context_input = tokenizer(prompt, padding='max_length', max_length=50, truncation=True, return_tensors = 'pt').to(device)
         
         with torch.no_grad():
             if args.model == 'bi':
@@ -117,8 +117,10 @@ if __name__ == '__main__':
 
         sorted_dot_product, indices = torch.sort(F.softmax(dot_product, -1), dim = -1, descending = True)
 
-        best_idx = indices[0]
-
-        print("{0:>50}".format(candidate_text[best_idx] + f" << bot ({sorted_dot_product[0] * 100:.2f}%)"))
+        print("{0:>50}".format(f"{candidate_text[indices[0]]} << bot ({sorted_dot_product[0] * 100:.2f}%)"))
+        print("{0:>50}".format(f"{candidate_text[indices[1]]} << bot ({sorted_dot_product[1] * 100:.2f}%)"))
+        print("{0:>50}".format(f"{candidate_text[indices[2]]} << bot ({sorted_dot_product[2] * 100:.2f}%)"))
+        print("{0:>50}".format(f"{candidate_text[indices[3]]} << bot ({sorted_dot_product[3] * 100:.2f}%)"))
+        print("{0:>50}".format(f"{candidate_text[indices[4]]} << bot ({sorted_dot_product[4] * 100:.2f}%)"))
         print(list(map(lambda x: round(x*100, 2), sorted_dot_product[:10].tolist())), end='\n\n')
 
