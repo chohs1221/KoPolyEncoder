@@ -73,3 +73,21 @@ Load PolyEncoder
 R@1/10: 77.17458359037632
 ============================================================
 
+SCORE!!
+Namespace(c=100, dataset='test_106685.pickle', device='cuda', m=360, model='poly', path='poly220910_1243_bs512_ep5_best1')
+Load PolyEncoder
+R@1/100: 33.34460093896713
+============================================================
+
+SCORE!!
+Namespace(c=20, dataset='test_106685.pickle', device='cuda', m=360, model='poly', path='poly220910_1243_bs512_ep5_best1')
+Load PolyEncoder
+R@1/20: 58.87680480030002
+============================================================
+
+SCORE!!
+Namespace(c=10, dataset='test_106685.pickle', device='cuda', m=360, model='poly', path='poly220910_1243_bs512_ep5_best1')
+Load PolyEncoder
+R@1/10: 71.12402737414456
+============================================================
+

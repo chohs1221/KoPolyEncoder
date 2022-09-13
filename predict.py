@@ -22,10 +22,9 @@ def load_tokenizer_model(model_path, m = 0, device = 'cuda'):
     return tokenizer, model
 
 
-def candidates_designated(file_dir, model_path, args, device= 'cuda'):
+def get_candidates_designated(file_dir, model_path, args, device= 'cuda'):
     with open(file_dir, 'r', encoding= 'utf-8') as f:
         candidate_text = [line.strip() for line in f.readlines() if len(line) > 1]
-        
     print(f'{len(candidate_text)} candidates found!!')
 
     tokenizer, model = load_tokenizer_model(model_path, args.m, device)
@@ -36,14 +35,14 @@ def candidates_designated(file_dir, model_path, args, device= 'cuda'):
     except:
         candidate_input = tokenizer(candidate_text, padding='max_length', max_length=50, truncation=True, return_tensors = 'pt').to(device)
         with torch.no_grad():
-            candidate_embeddings = model(**candidate_input, training = False)[:, 0, :]
+            candidate_embeddings = model.encode(**candidate_input)[:, 0, :]
         
         pickling(f'./data/pickles/{args.path}_designated{len(candidate_text)}.pickle', act='save', data=candidate_embeddings)
 
     return tokenizer, model, candidate_text, candidate_embeddings
 
 
-def candidates_incorpus(file_dir, model_path, args, batch_size = 256, device = 'cuda'):
+def get_candidates_incorpus(file_dir, model_path, args, batch_size = 256, device = 'cuda'):
     candidate_text0, candidate_text1 = pickling(file_dir, act= 'load')
     candidate_text = candidate_text0 + candidate_text1
     candidate_text = candidate_text[-100000:]
@@ -53,8 +52,7 @@ def candidates_incorpus(file_dir, model_path, args, batch_size = 256, device = '
     model.eval()
 
     try:
-        candidate_embeddings = pickling(f'./data/pickles/{args.path}.pickle', act= 'load')
-
+        candidate_embeddings = pickling(f'./data/pickles/{args.path}_incorpus{len(candidate_text)}.pickle', act= 'load')
     except:
         print('No pickle file exists!!')
         batch = []
@@ -64,11 +62,11 @@ def candidates_incorpus(file_dir, model_path, args, batch_size = 256, device = '
         candidate_embeddings = []
         for candidate_input in tqdm(batch):
             with torch.no_grad():
-                candidate_embedding = model(**candidate_input, training = False)[:, 0, :]
+                candidate_embedding = model.encode(**candidate_input)[:, 0, :]
                 candidate_embeddings.append(candidate_embedding)
         candidate_embeddings = torch.cat(candidate_embeddings, dim=0)
 
-        pickling(f'./data/pickles/{args.path}.pickle', act='save', data=candidate_embeddings)
+        pickling(f'./data/pickles/{args.path}_incorpus{len(candidate_text)}.pickle', act='save', data=candidate_embeddings)
 
     return tokenizer, model, candidate_text, candidate_embeddings
 
@@ -86,9 +84,9 @@ if __name__ == '__main__':
     device = 'cuda'
     model_path =  './checkpoints/' + args.path
     if args.incorpus:
-        tokenizer, model, candidate_text, candidate_embeddings = candidates_incorpus('./data/pickles/test_81068.pickle', model_path, args, batch_size = 256, device=device)
+        tokenizer, model, candidate_text, candidate_embeddings = get_candidates_incorpus('./data/pickles/test_81068.pickle', model_path, args, batch_size = 256, device=device)
     else:
-        tokenizer, model, candidate_text, candidate_embeddings = candidates_designated('./data/responses.txt', model_path, args, device=device)
+        tokenizer, model, candidate_text, candidate_embeddings = get_candidates_designated('./data/responses.txt', model_path, args, device=device)
 
 
     while True:
@@ -105,13 +103,13 @@ if __name__ == '__main__':
         
         with torch.no_grad():
             if args.model == 'bi':
-                context_embedding = model(**context_input, training = False)[:, 0, :]       # (1, hidden state)
+                context_embedding = model.encode(**context_input)[:, 0, :]       # (1, hidden state)
 
                 dot_product = torch.matmul(context_embedding, candidate_embeddings.t())     # (1, hidden state) @ (candidate size, hidden state).t() = (1, candidate size)
                 dot_product = dot_product[0, :]
 
             elif args.model == 'poly':
-                context_embedding = model(**context_input, training = False, candidate_output = candidate_embeddings)[:, 0, :]  # (candidate size, hidden state)
+                context_embedding = model.context_encode(**context_input, candidate_output = candidate_embeddings)[:, 0, :]  # (candidate size, hidden state)
 
                 dot_product = torch.sum(context_embedding * candidate_embeddings, dim = 1)  # (candidate size)
 

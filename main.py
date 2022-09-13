@@ -37,8 +37,8 @@ def main(args):
     seed_everything(args.seed)
 
 
-    train_context, train_candidate = pickling('./data/pickles/train_853474.pickle', 'load')
-    valid_context, valid_candidate = pickling('./data/pickles/valid_106684.pickle', 'load')
+    train_context, train_candidate = pickling('./data/pickles/train_1363581.pickle', 'load')
+    valid_context, valid_candidate = pickling('./data/pickles/valid_170448.pickle', 'load')
     print(f"train: {len(train_context)}")
     print(f"valid: {len(valid_context)}")
     print(train_context[100:105])
@@ -72,7 +72,7 @@ def main(args):
         gradient_accumulation_steps = args.accumulation,
         dataloader_num_workers=0,
 
-        warmup_steps = 100,
+        # warmup_steps = 100,
 
         save_strategy = "steps",
         save_steps = 500,

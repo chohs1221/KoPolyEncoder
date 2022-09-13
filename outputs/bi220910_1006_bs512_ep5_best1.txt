@@ -73,3 +73,21 @@ Load BiEncoder
 R@1/10: 83.15731030228254
 ============================================================
 
+SCORE!!
+Namespace(c=100, dataset='test_106685.pickle', device='cuda', m=0, model='bi', path='bi220910_1006_bs512_ep5_best1')
+Load BiEncoder
+R@1/100: 34.694835680751176
+============================================================
+
+SCORE!!
+Namespace(c=20, dataset='test_106685.pickle', device='cuda', m=0, model='bi', path='bi220910_1006_bs512_ep5_best1')
+Load BiEncoder
+R@1/20: 58.14925932870804
+============================================================
+
+SCORE!!
+Namespace(c=10, dataset='test_106685.pickle', device='cuda', m=0, model='bi', path='bi220910_1006_bs512_ep5_best1')
+Load BiEncoder
+R@1/10: 69.80219368144745
+============================================================
+
