@@ -1,4 +1,6 @@
 import argparse
+
+from numpy import indices
 from tqdm import tqdm
 
 import torch
@@ -8,21 +10,31 @@ from utils import pickling
 from data_loader import DataLoader
 
 
-def recall_1C(model_path, m, test_dataset, c, device):
+def evaluate(model_path, m, test_dataset, c, device):
     test_context, test_candidate = pickling(f"./data/pickles/{test_dataset}", "load")
     tokenizer, model = load_tokenizer_model(model_path, m, device=device)
     model.eval()
 
     test_loader = DataLoader(test_context, test_candidate, tokenizer, shuffle=True, return_tensors='pt', device=device)
 
-    cnt = 0
+    r_at_1 = 0
+    mrr = 0
     for i in tqdm(range(0, len(test_loader)-c, c)):
         with torch.no_grad():
-            _, dot_product = model(**test_loader[i:i+c], training=True)
+            _, dot_product = model(**test_loader[i:i+c])
+        
         result = torch.argmax(dot_product, dim=-1) == torch.arange(len(dot_product)).to(device)
-        cnt += result.sum().item()
+        r_at_1 += result.sum().item()
+
+        _, indices = torch.sort(dot_product, dim=-1)
+        for idx, indice in enumerate(indices):
+            for rank in torch.nonzero(indice == idx, as_tuple = True)[0]:
+                mrr += (1 / (rank.item()+1))
+                
+    r_at_1 = round(100 * r_at_1 / (i+c), 2)
+    mrr = round(100 * mrr / (i+c), 2)
     
-    return 100 * cnt / i
+    return r_at_1, mrr
 
 
 if __name__ == '__main__':
@@ -40,7 +52,8 @@ if __name__ == '__main__':
 
     model_path =  './checkpoints/' + args.path
 
-    score = recall_1C(model_path, args.m, args.dataset, args.c, args.device)
+    r_an_1, mrr = evaluate(model_path, args.m, args.dataset, args.c, args.device)
     
-    print(f"R@1/{args.c}: {score}")
+    print(f"R@1/{args.c}: {r_an_1}")
+    print(f"MRR: {mrr}")
     print(f'============================================================\n')

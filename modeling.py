@@ -26,9 +26,9 @@ class BiEncoder(BertPreTrainedModel):
             input_ids = input_ids,
             attention_mask= attention_mask,
             token_type_ids= token_type_ids,
-            )          # (batch size, sequence length, hidden state size)
+            )
         
-        return context_output[0]    # (batch size, 1, hidden state)
+        return context_output[0]    # (batch size, sequence length, hidden state size)
 
     
     def forward(
@@ -55,7 +55,7 @@ class BiEncoder(BertPreTrainedModel):
             inputs_embeds = inputs_embeds,
             output_attentions = output_attentions,
             output_hidden_states = output_hidden_states,
-            )          # (batch size, sequence length, hidden state size) 
+            )       # (batch size, sequence length, hidden state size) 
 
         candidate_output = self.bert(
             input_ids = candidate_input_ids,
@@ -66,7 +66,7 @@ class BiEncoder(BertPreTrainedModel):
             inputs_embeds = inputs_embeds,
             output_attentions = output_attentions,
             output_hidden_states = output_hidden_states,
-            )      # (batch size, sequence length, hidden state size)
+            )       # (batch size, sequence length, hidden state size)
 
         dot_product = torch.matmul(context_output[0][:, 0, :], candidate_output[0][:, 0, :].t())    # (batch size, hidden state) @ (batch size, hidden state).t() = (batch size, batch size)
 
@@ -95,8 +95,7 @@ class PolyEncoder(BertPreTrainedModel):
         attention_weights = torch.matmul(q, k.permute(0, 2, 1))
         attention_weights = F.softmax(attention_weights, -1)
 
-        # output: [bs, poly_m, hidden state] or [bs, 1, hidden state]
-        output = torch.matmul(attention_weights, v)
+        output = torch.matmul(attention_weights, v)     # (batch size, m, hidden state) or (batch size, 1, hidden state)
 
         return output
     
@@ -112,7 +111,7 @@ class PolyEncoder(BertPreTrainedModel):
             input_ids = input_ids,
             attention_mask= attention_mask,
             token_type_ids= token_type_ids,
-            )[0]                        # (batch size, sequence length, hidden state)
+            )[0]
 
         return context_output           # (batch size, sequence length, hidden state)
 
