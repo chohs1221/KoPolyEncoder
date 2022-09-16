@@ -58,7 +58,7 @@ def main(args):
     
 
     arguments = TrainingArguments(
-        output_dir = 'checkpoints',
+        output_dir = 'checkpoints/checkpoints_step',
         do_train = True,
         do_eval = True,
 
@@ -109,11 +109,11 @@ if __name__ == '__main__':
 
     parser.add_argument('--model', type=str, default='bi')
     parser.add_argument('--path', type=str, default='bert-base-uncased')
-    parser.add_argument('--trainset', type=str, default='persona_train_100000')
-    parser.add_argument('--validset', type=str, default='persona_valid_10000')
+    parser.add_argument('--trainset', type=str, default='persona_train_113560')
+    parser.add_argument('--validset', type=str, default='persona_valid_6801')
     parser.add_argument('--m', type=int, default=0)
     parser.add_argument('--seed', type=int, default=42)
-    parser.add_argument('--epoch', type=int, default=1)
+    parser.add_argument('--epoch', type=int, default=5)
     parser.add_argument('--lr', type=float, default=5e-5)
     parser.add_argument('--batch', type=int, default=256)
     parser.add_argument('--accumulation', type=int, default=1)

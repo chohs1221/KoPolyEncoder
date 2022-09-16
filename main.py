@@ -59,7 +59,7 @@ def main(args):
     
 
     arguments = TrainingArguments(
-        output_dir = 'checkpoints',
+        output_dir = 'checkpoints/checkpoints_step',
         do_train = True,
         do_eval = True,
 
