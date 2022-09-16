@@ -56,38 +56,23 @@ RUNNING TIME: 2:39:55
 
 
 SCORE!!
-Namespace(c=100, dataset='test_81068.pickle', device='cuda', m=360, model='poly', path='poly220910_1243_bs512_ep5_best1')
-Load PolyEncoder
-R@1/100: 49.944375772558715
-============================================================
-
-SCORE!!
-Namespace(c=20, dataset='test_81068.pickle', device='cuda', m=360, model='poly', path='poly220910_1243_bs512_ep5_best1')
-Load PolyEncoder
-R@1/20: 68.9449654491609
-============================================================
-
-SCORE!!
-Namespace(c=10, dataset='test_81068.pickle', device='cuda', m=360, model='poly', path='poly220910_1243_bs512_ep5_best1')
-Load PolyEncoder
-R@1/10: 77.17458359037632
-============================================================
-
-SCORE!!
 Namespace(c=100, dataset='test_106685.pickle', device='cuda', m=360, model='poly', path='poly220910_1243_bs512_ep5_best1')
 Load PolyEncoder
-R@1/100: 33.34460093896713
+R@1/100: 33.31
+MRR: 48.24
 ============================================================
 
 SCORE!!
 Namespace(c=20, dataset='test_106685.pickle', device='cuda', m=360, model='poly', path='poly220910_1243_bs512_ep5_best1')
 Load PolyEncoder
-R@1/20: 58.87680480030002
+R@1/20: 58.87
+MRR: 73.19
 ============================================================
 
 SCORE!!
 Namespace(c=10, dataset='test_106685.pickle', device='cuda', m=360, model='poly', path='poly220910_1243_bs512_ep5_best1')
 Load PolyEncoder
-R@1/10: 71.12402737414456
+R@1/10: 71.12
+MRR: 82.71
 ============================================================
 

@@ -1,0 +1,60 @@
+============================================================
+File Name: poly220914_2239_bs256_ep10_best1
+START!! 2022_09_14 / 22_39
+model: poly
+m: 360
+seed: 42
+epoch: 10
+learning rate: 5e-05
+batch size: 256
+accumulation: 1
+best: 1
+description: 
+
+train: 100000
+valid: 10000
+['I like to travel up to Canada to enjoy the view and relax on weekends.', 'Have you even been to Canada for snowboarding?', 'Hey how are you? I wanted to go to Florida to surf but no way!', 'I am great at catching a wave with my high school sweetheart.', "Wouldn't mind! I'm so busy at the hospital all the time."]
+['Canada is great for winter sports too.', 'No, there is a place outside Milwaukee I go.', 'I am so great. For sure, no fl now. Unless you are really good at swimming?', 'Cute! My college sweetie and I are more into swimming. Ya will have any other couple activities?', 'Do you have time to eat enough, being so busy? I love to eat. Clot.']
+
+{'loss': 3.0769, 'learning_rate': 4.3670076726342714e-05, 'epoch': 1.28}
+{'eval_loss': 1.2851355075836182, 'eval_runtime': 10.0232, 'eval_samples_per_second': 997.684, 'eval_steps_per_second': 3.991, 'epoch': 1.28}
+{'loss': 1.0561, 'learning_rate': 3.7276214833759594e-05, 'epoch': 2.56}
+{'eval_loss': 0.9229705929756165, 'eval_runtime': 10.0424, 'eval_samples_per_second': 995.782, 'eval_steps_per_second': 3.983, 'epoch': 2.56}
+{'loss': 0.7554, 'learning_rate': 3.0882352941176475e-05, 'epoch': 3.84}
+{'eval_loss': 0.732835054397583, 'eval_runtime': 10.0192, 'eval_samples_per_second': 998.088, 'eval_steps_per_second': 3.992, 'epoch': 3.84}
+{'loss': 0.6007, 'learning_rate': 2.448849104859335e-05, 'epoch': 5.12}
+{'eval_loss': 0.6796015501022339, 'eval_runtime': 10.0375, 'eval_samples_per_second': 996.267, 'eval_steps_per_second': 3.985, 'epoch': 5.12}
+{'loss': 0.5071, 'learning_rate': 1.8094629156010232e-05, 'epoch': 6.39}
+{'eval_loss': 0.6071912050247192, 'eval_runtime': 10.0313, 'eval_samples_per_second': 996.881, 'eval_steps_per_second': 3.988, 'epoch': 6.39}
+{'loss': 0.4401, 'learning_rate': 1.170076726342711e-05, 'epoch': 7.67}
+{'eval_loss': 0.5461135506629944, 'eval_runtime': 10.0153, 'eval_samples_per_second': 998.471, 'eval_steps_per_second': 3.994, 'epoch': 7.67}
+{'loss': 0.387, 'learning_rate': 5.30690537084399e-06, 'epoch': 8.95}
+{'eval_loss': 0.5369674563407898, 'eval_runtime': 10.0292, 'eval_samples_per_second': 997.088, 'eval_steps_per_second': 3.988, 'epoch': 8.95}
+{'train_runtime': 2266.3631, 'train_samples_per_second': 441.236, 'train_steps_per_second': 1.725, 'train_loss': 0.9093593938881174, 'epoch': 10.0}
+END!! 2022_09_14 / 23_17
+RUNNING TIME: 0:37:54
+============================================================
+
+
+
+SCORE!!
+Namespace(c=100, dataset='persona_test_10361.pickle', device='cuda', m=360, model='poly', path='poly220914_2239_bs256_ep10_best1')
+Load PolyEncoder
+R@1/100: 89.91
+MRR: 94.44
+============================================================
+
+SCORE!!
+Namespace(c=20, dataset='persona_test_10361.pickle', device='cuda', m=360, model='poly', path='poly220914_2239_bs256_ep10_best1')
+Load PolyEncoder
+R@1/20: 97.58
+MRR: 98.75
+============================================================
+
+SCORE!!
+Namespace(c=10, dataset='persona_test_10361.pickle', device='cuda', m=360, model='poly', path='poly220914_2239_bs256_ep10_best1')
+Load PolyEncoder
+R@1/10: 98.76
+MRR: 99.37
+============================================================
+

@@ -40,18 +40,21 @@ RUNNING TIME: 1:09:47
 SCORE!!
 Namespace(c=100, dataset='test_81068.pickle', device='cuda', m=360, model='poly', path='poly220910_0114_bs512_ep3_best1')
 Load PolyEncoder
-R@1/100: 38.5265760197775
+R@1/100: 38.48
+MRR: 49.55
 ============================================================
 
 SCORE!!
 Namespace(c=20, dataset='test_81068.pickle', device='cuda', m=360, model='poly', path='poly220910_0114_bs512_ep3_best1')
 Load PolyEncoder
-R@1/20: 56.77566633761106
+R@1/20: 56.76
+MRR: 68.71
 ============================================================
 
 SCORE!!
 Namespace(c=10, dataset='test_81068.pickle', device='cuda', m=360, model='poly', path='poly220910_0114_bs512_ep3_best1')
 Load PolyEncoder
-R@1/10: 65.79395434916718
+R@1/10: 65.79
+MRR: 77.18
 ============================================================
 

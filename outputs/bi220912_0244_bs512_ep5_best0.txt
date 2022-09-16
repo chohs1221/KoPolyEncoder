@@ -76,38 +76,23 @@ RUNNING TIME: 4:33:11
 
 
 SCORE!!
-Namespace(c=100, dataset='test_81068.pickle', device='cuda', m=0, model='bi', path='bi220912_0244_bs512_ep5_best0')
-Load BiEncoder
-R@1/100: 59.73300370828183
-============================================================
-
-SCORE!!
-Namespace(c=20, dataset='test_81068.pickle', device='cuda', m=0, model='bi', path='bi220912_0244_bs512_ep5_best0')
-Load BiEncoder
-R@1/20: 76.5695952615992
-============================================================
-
-SCORE!!
-Namespace(c=10, dataset='test_81068.pickle', device='cuda', m=0, model='bi', path='bi220912_0244_bs512_ep5_best0')
-Load BiEncoder
-R@1/10: 83.47686613201728
-============================================================
-
-SCORE!!
 Namespace(c=100, dataset='test_170448.pickle', device='cuda', m=0, model='bi', path='bi220912_0244_bs512_ep5_best0')
 Load BiEncoder
-R@1/100: 19.118027011156784
+R@1/100: 19.11
+MRR: 34.27
 ============================================================
 
 SCORE!!
 Namespace(c=20, dataset='test_170448.pickle', device='cuda', m=0, model='bi', path='bi220912_0244_bs512_ep5_best0')
 Load BiEncoder
-R@1/20: 44.474240112662834
+R@1/20: 44.47
+MRR: 61.03
 ============================================================
 
 SCORE!!
 Namespace(c=10, dataset='test_170448.pickle', device='cuda', m=0, model='bi', path='bi220912_0244_bs512_ep5_best0')
 Load BiEncoder
-R@1/10: 57.523910109722465
+R@1/10: 57.52
+MRR: 72.54
 ============================================================
 

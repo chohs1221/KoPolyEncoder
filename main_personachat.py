@@ -2,8 +2,7 @@ import os
 import argparse
 from datetime import datetime
 
-from kobert_tokenizer import KoBERTTokenizer
-from transformers import TrainingArguments, Trainer
+from transformers import BertTokenizer, TrainingArguments, Trainer
 
 from modeling import BiEncoder, PolyEncoder
 from parsing import pickling
@@ -46,7 +45,7 @@ def main(args):
     print()
 
 
-    tokenizer = KoBERTTokenizer.from_pretrained(args.path)
+    tokenizer = BertTokenizer.from_pretrained(args.path)
     if args.model == 'bi':
         model = BiEncoder.from_pretrained(args.path)
     elif args.model == 'poly':
@@ -109,9 +108,9 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
 
     parser.add_argument('--model', type=str, default='bi')
-    parser.add_argument('--path', type=str, default='skt/kobert-base-v1')
-    parser.add_argument('--trainset', type=str, default='train_1363581')
-    parser.add_argument('--validset', type=str, default='valid_170448')
+    parser.add_argument('--path', type=str, default='bert-base-uncased')
+    parser.add_argument('--trainset', type=str, default='persona_train_100000')
+    parser.add_argument('--validset', type=str, default='persona_valid_10000')
     parser.add_argument('--m', type=int, default=0)
     parser.add_argument('--seed', type=int, default=42)
     parser.add_argument('--epoch', type=int, default=1)
@@ -122,7 +121,7 @@ if __name__ == '__main__':
     parser.add_argument('--description', type=str, default='')
 
     args = parser.parse_args()
-
+    
     main(args)
 
 

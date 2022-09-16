@@ -4,7 +4,7 @@ from tqdm import tqdm
 
 import torch
 
-from predict import load_tokenizer_model
+from predict_personachat import load_tokenizer_model
 from utils import pickling
 from data_loader import DataLoader
 
@@ -41,7 +41,7 @@ if __name__ == '__main__':
     parser.add_argument('--model', type=str, default='bi')
     parser.add_argument('--path', type=str, default='bi220907_1256_bs512_ep20_best1')
     parser.add_argument('--m', type=int, default=0)
-    parser.add_argument('--dataset', type=str, default='test_81068.pickle')
+    parser.add_argument('--dataset', type=str, default='test_10361.pickle')
     parser.add_argument('--c', type=int, default=100)
     parser.add_argument('--device', type=str, default='cuda')
     args = parser.parse_args()

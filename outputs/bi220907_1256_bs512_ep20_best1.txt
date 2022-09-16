@@ -134,18 +134,21 @@ RUNNING TIME: 8:36:07
 SCORE!!
 Namespace(c=100, dataset='test_81068.pickle', device='cuda', m=0, model='bi', path='bi220907_1256_bs512_ep20_best1')
 Load BiEncoder
-R@1/100: 51.78244746600742
+R@1/100: 51.72
+MRR: 62.31
 ============================================================
 
 SCORE!!
 Namespace(c=20, dataset='test_81068.pickle', device='cuda', m=0, model='bi', path='bi220907_1256_bs512_ep20_best1')
 Load BiEncoder
-R@1/20: 69.43854886475815
+R@1/20: 69.42
+MRR: 79.11
 ============================================================
 
 SCORE!!
 Namespace(c=10, dataset='test_81068.pickle', device='cuda', m=0, model='bi', path='bi220907_1256_bs512_ep20_best1')
 Load BiEncoder
-R@1/10: 77.44848858729179
+R@1/10: 77.44
+MRR: 85.77
 ============================================================
 
