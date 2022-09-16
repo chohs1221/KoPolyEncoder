@@ -131,7 +131,7 @@ def parse_data(dir):
 
 
 if __name__ == "__main__":
-    train_context, train_candidate = parse_data("./data/train")
+    train_context, train_candidate = parse_data("./data/original_data")
 
     split_index = int(len(train_context)*0.8), int(len(train_context)*0.9)
 

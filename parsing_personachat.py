@@ -32,7 +32,7 @@ def parse_data(dir):
 
 
 if __name__ == "__main__":
-    train_context, train_candidate = parse_data("./data/train")
+    train_context, train_candidate = parse_data("./data/original_data")
 
     train_context, valid_context, test_context = train_context[:100000], train_context[100000: 110000], train_context[110000:]
     train_candidate, valid_candidate, test_candidate = train_candidate[:100000], train_candidate[100000: 110000], train_candidate[110000:]
