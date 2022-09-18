@@ -5,6 +5,19 @@ filename = "./data/original_data/personachat/personachat_truecased_full_train.js
 with open(filename, 'r', encoding='utf-8') as f:
     data = json.load(f)
 
+for i in range(len(data[:10])):
+    pre = -1
+    for dialogue in data[i]['utterances']:
+        now = len(dialogue['history'])
+        if now - pre != 2:
+            print('wwwwwwwwwwwwwwwwww')
+        pre = now
+        # print('.................',len(dialogue['history']),'....................')
+        # for d in dialogue['history']:
+        #     print(d)
+
+exit()
+
 cnt = 0
 for i in range(len(data)):
     dataset = data[i]['utterances'][-1]['history']
