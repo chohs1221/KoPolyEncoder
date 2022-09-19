@@ -44,7 +44,8 @@ def get_candidates_designated(file_dir, model_path, args, device= 'cuda'):
 
 def get_candidates_incorpus(file_dir, model_path, args, batch_size = 256, device = 'cuda'):
     candidate_text0, candidate_text1 = pickling(file_dir, act= 'load')
-    candidate_text = candidate_text1[:10000]
+    candidate_text = candidate_text0 + candidate_text1
+    candidate_text = candidate_text[-10000:]
     print(f'{len(candidate_text)} candidates found!!')
 
     tokenizer, model = load_tokenizer_model(model_path, args.m, device)
@@ -62,8 +63,8 @@ def get_candidates_incorpus(file_dir, model_path, args, batch_size = 256, device
         for candidate_input in tqdm(batch):
             with torch.no_grad():
                 candidate_embedding = model.encode(**candidate_input)[:, 0, :]
-                candidate_embeddings.append(candidate_embedding)
-        candidate_embeddings = torch.cat(candidate_embeddings, dim=0)
+                candidate_embeddings.append(candidate_embedding.to('cpu'))
+        candidate_embeddings = torch.cat(candidate_embeddings, dim=0).to('cuda')
 
         pickling(f'./data/pickles/{args.path}_incorpus{len(candidate_text)}.pickle', act='save', data=candidate_embeddings)
 
