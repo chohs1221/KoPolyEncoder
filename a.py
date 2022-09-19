@@ -12,9 +12,9 @@ for i in range(len(data[:10])):
         if now - pre != 2:
             print('wwwwwwwwwwwwwwwwww')
         pre = now
-        # print('.................',len(dialogue['history']),'....................')
-        # for d in dialogue['history']:
-        #     print(d)
+        print('.................',len(dialogue['history']),'....................')
+        for d in dialogue['history']:
+            print(d)
 
 exit()
 

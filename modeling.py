@@ -70,7 +70,7 @@ class BiEncoder(BertPreTrainedModel):
 
         dot_product = torch.matmul(context_output[0][:, 0, :], candidate_output[0][:, 0, :].t())    # (batch size, hidden state) @ (batch size, hidden state).t() = (batch size, batch size)
 
-        loss_fnt = nn.CrossEntropyLoss().to(dot_product.device)
+        loss_fnt = nn.CrossEntropyLoss()
         loss = loss_fnt(dot_product, torch.arange(dot_product.shape[0]).to(dot_product.device))
 
         return loss, dot_product

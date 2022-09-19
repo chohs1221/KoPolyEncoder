@@ -1,0 +1,56 @@
+============================================================
+File Name: poly220916_1946_bs256_ep5_best0
+START!! 2022_09_16 / 19_46
+model: poly
+path: bert-base-uncased
+trainset: persona_train_113560
+validset: persona_valid_6801
+m: 360
+seed: 42
+epoch: 5
+learning rate: 5e-05
+batch size: 256
+accumulation: 1
+best: 0
+description: 
+
+train: 113560
+valid: 6801
+["Hi, how are you doing? I'm getting ready to do some cheetah chasing to stay in shape.", 'I am! For my hobby I like to do canning or some whittling.', "That's neat. When I was in high school I placed 6th in 100m dash!", 'I do not. But I do have a favorite meat since that is all I eat exclusively.', 'I would have to say its prime rib. Do you have any favorite foods?']
+['You must be very fast. Hunting is one of my favorite hobbies.', 'I also remodel homes when I am not out bow hunting.', "That's awesome. Do you have a favorite season or time of year?", 'What is your favorite meat to eat?', 'I like chicken or macaroni and cheese.']
+
+{'loss': 4.3192, 'learning_rate': 3.898648648648649e-05, 'epoch': 1.13}
+{'eval_loss': 2.4328246116638184, 'eval_runtime': 6.9373, 'eval_samples_per_second': 980.355, 'eval_steps_per_second': 3.892, 'epoch': 1.13}
+{'loss': 1.939, 'learning_rate': 2.7725225225225226e-05, 'epoch': 2.25}
+{'eval_loss': 1.6184275150299072, 'eval_runtime': 6.9613, 'eval_samples_per_second': 976.977, 'eval_steps_per_second': 3.879, 'epoch': 2.25}
+{'loss': 1.3046, 'learning_rate': 1.6463963963963964e-05, 'epoch': 3.38}
+{'eval_loss': 1.2644635438919067, 'eval_runtime': 6.9457, 'eval_samples_per_second': 979.168, 'eval_steps_per_second': 3.887, 'epoch': 3.38}
+{'loss': 1.0287, 'learning_rate': 5.202702702702704e-06, 'epoch': 4.5}
+{'eval_loss': 1.1551085710525513, 'eval_runtime': 6.9847, 'eval_samples_per_second': 973.703, 'eval_steps_per_second': 3.866, 'epoch': 4.5}
+{'train_runtime': 1276.158, 'train_samples_per_second': 444.929, 'train_steps_per_second': 1.74, 'train_loss': 2.028260342709653, 'epoch': 5.0}
+END!! 2022_09_16 / 20_08
+RUNNING TIME: 0:21:25
+============================================================
+
+
+
+SCORE!!
+Namespace(c=100, dataset='persona_test_6801.pickle', device='cuda', m=360, model='poly', path='poly220916_1946_bs256_ep5_best0')
+Load PolyEncoder
+R@1/100: 77.79
+MRR: 86.35
+============================================================
+
+SCORE!!
+Namespace(c=20, dataset='persona_test_6801.pickle', device='cuda', m=360, model='poly', path='poly220916_1946_bs256_ep5_best0')
+Load PolyEncoder
+R@1/20: 92.82
+MRR: 96.14
+============================================================
+
+SCORE!!
+Namespace(c=10, dataset='persona_test_6801.pickle', device='cuda', m=360, model='poly', path='poly220916_1946_bs256_ep5_best0')
+Load PolyEncoder
+R@1/10: 95.93
+MRR: 97.89
+============================================================

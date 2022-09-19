@@ -109,8 +109,8 @@ if __name__ == '__main__':
 
     parser.add_argument('--model', type=str, default='bi')
     parser.add_argument('--path', type=str, default='bert-base-uncased')
-    parser.add_argument('--trainset', type=str, default='persona_train_113560')
-    parser.add_argument('--validset', type=str, default='persona_valid_6801')
+    parser.add_argument('--trainset', type=str, default='persona_train_227120')
+    parser.add_argument('--validset', type=str, default='persona_valid_13602')
     parser.add_argument('--m', type=int, default=0)
     parser.add_argument('--seed', type=int, default=42)
     parser.add_argument('--epoch', type=int, default=5)
