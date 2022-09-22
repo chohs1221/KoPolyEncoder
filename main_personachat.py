@@ -5,9 +5,8 @@ from datetime import datetime
 from transformers import BertTokenizer, TrainingArguments, Trainer
 
 from modeling import BiEncoder, PolyEncoder
-from parsing import pickling
 from data_loader import DataLoader
-from utils import seed_everything, empty_cuda_cache
+from utils import seed_everything, empty_cuda_cache, pickling
 
 # os.environ["TRANSFORMERS_OFFLINE"] = "1"
 

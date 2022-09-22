@@ -1,6 +1,8 @@
 import argparse
 from tqdm import tqdm
 
+import numpy as np
+
 import torch
 import torch.nn.functional as F
 
@@ -45,7 +47,7 @@ def get_candidates_designated(file_dir, model_path, args, device= 'cuda'):
 def get_candidates_incorpus(file_dir, model_path, args, batch_size = 256, device = 'cuda'):
     candidate_text0, candidate_text1 = pickling(file_dir, act= 'load')
     candidate_text = candidate_text0 + candidate_text1
-    candidate_text = candidate_text[-100000:]
+    candidate_text = candidate_text[-10000:]
     print(f'{len(candidate_text)} candidates found!!')
 
     tokenizer, model = load_tokenizer_model(model_path, args.m, device)
@@ -63,8 +65,8 @@ def get_candidates_incorpus(file_dir, model_path, args, batch_size = 256, device
         for candidate_input in tqdm(batch):
             with torch.no_grad():
                 candidate_embedding = model.encode(**candidate_input)[:, 0, :]
-                candidate_embeddings.append(candidate_embedding)
-        candidate_embeddings = torch.cat(candidate_embeddings, dim=0)
+                candidate_embeddings.append(candidate_embedding.to('cpu'))
+        candidate_embeddings = torch.cat(candidate_embeddings, dim=0).to('cuda')
 
         pickling(f'./data/pickles/{args.path}_incorpus{len(candidate_text)}.pickle', act='save', data=candidate_embeddings)
 
@@ -103,15 +105,14 @@ if __name__ == '__main__':
         
         with torch.no_grad():
             if args.model == 'bi':
-                context_embedding = model.encode(**context_input)[:, 0, :]       # (1, hidden state)
+                context_embedding = model.encode(**context_input)[:, 0, :]                      # (1, hidden state)
 
-                dot_product = torch.matmul(context_embedding, candidate_embeddings.t())     # (1, hidden state) @ (candidate size, hidden state).t() = (1, candidate size)
-                dot_product = dot_product[0, :]
+                dot_product = torch.matmul(context_embedding, candidate_embeddings.t())[0]      # (1, hidden state) @ (candidate size, hidden state).t() = (1, candidate size)
 
             elif args.model == 'poly':
                 context_embedding = model.context_encode(**context_input, candidate_output = candidate_embeddings)[:, 0, :]  # (candidate size, hidden state)
 
-                dot_product = torch.sum(context_embedding * candidate_embeddings, dim = 1)  # (candidate size)
+                dot_product = torch.sum(context_embedding * candidate_embeddings, dim = 1)      # (candidate size)
 
         sorted_dot_product, indices = torch.sort(F.softmax(dot_product, -1), dim = -1, descending = True)
 
