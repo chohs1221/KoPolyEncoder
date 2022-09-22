@@ -1,14 +1,5 @@
-import random
-from utils import seed_everything
-
-class DataLoader:
-    def __init__(self, context, candidate, tokenizer, shuffle = False, seed = 42, return_tensors = None, device = None):
-        if shuffle:
-            seed_everything(seed)
-            temp = list(zip(context, candidate))
-            random.shuffle(temp)
-            context, candidate = zip(*temp)
-
+class TokenizeDataset:
+    def __init__(self, context, candidate, tokenizer, return_tensors = None, device = None):
         self.context = list(context)
         self.candidate = list(candidate)
 

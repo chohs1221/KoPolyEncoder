@@ -2,11 +2,17 @@ import os
 import argparse
 from datetime import datetime
 
+from tqdm import tqdm
+
+import torch
+from torch.utils.data import DataLoader
+import torch.optim as optim
+
 from kobert_tokenizer import KoBERTTokenizer
 from transformers import TrainingArguments, Trainer
 
 from modeling import BiEncoder, PolyEncoder
-from data_loader import DataLoader
+from dataset_tokenizer import TokenizeDataset
 from utils import seed_everything, empty_cuda_cache, pickling
 
 # os.environ["TRANSFORMERS_OFFLINE"] = "1"
@@ -53,9 +59,62 @@ def main(args):
     model.to('cuda')
 
 
-    train_loader = DataLoader(train_context, train_candidate, tokenizer, shuffle = True, seed = args.seed)
-    valid_loader = DataLoader(valid_context, valid_candidate, tokenizer, shuffle = True, seed = args.seed)
-    
+    train_dataset = TokenizeDataset(train_context, train_candidate, tokenizer, return_tensors='pt', device='cuda')
+    valid_dataset = TokenizeDataset(valid_context, valid_candidate, tokenizer, return_tensors='pt', device='cuda')
+
+    train_loader = DataLoader(train_dataset, batch_size = args.batch, shuffle = True, drop_last = False)
+    valid_loader = DataLoader(valid_dataset, batch_size = args.batch, shuffle = True, drop_last = False)
+
+
+    train_loss = 0
+    valid_loss = 0
+    pre_valid_loss = 9999.
+    optimizer = optim.AdamW(model.parameters(), lr=args.lr)
+    scheduler = optim.lr_scheduler.ReduceLROnPlateau(optimizer, factor=0.4)
+    model.train()
+    for epoch in range(args.epoch):
+        with tqdm(train_loader, unit="batch") as t:
+            for iteration, batch in enumerate(t, start=1):
+
+                t.set_description(f"Epoch {epoch}")
+
+                loss, dot_product  = model(**batch)
+                                
+                loss.backward()
+                optimizer.step()
+                scheduler.step()
+                optimizer.zero_grad()
+
+                t.set_postfix(loss=loss.item())
+                
+                train_loss += loss.item()
+
+                if iteration % int(len(train_loader) / 10) == 0:
+                    model.eval()
+                    with torch.no_grad():
+                        for i, batch in enumerate(valid_loader, start=1):
+                            loss, dot_product  = model(**batch)
+
+                            valid_loss += loss.item()
+                        
+                        train_loss /= int(len(train_loader) / 10)
+                        valid_loss /= i
+                    
+                    # wandb.log(
+                    #     {
+                    #         "train_loss": train_loss,
+                    #         'valid_loss': valid_loss,
+                    #     }
+                    #     )
+
+                    if pre_valid_loss > valid_loss:
+                        pre_valid_loss = valid_loss
+                        print('Update loss: ', valid_loss)
+                        model.save_pretrained(f'./checkpoints/{file_name}')
+
+                    train_loss = 0
+                    valid_loss = 0
+                    model.train()
 
     arguments = TrainingArguments(
         output_dir = 'checkpoints/checkpoints_step',
