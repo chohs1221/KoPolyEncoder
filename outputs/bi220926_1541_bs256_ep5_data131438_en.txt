@@ -86,33 +86,18 @@ RUNNING TIME: 0:50:54
 
 
 SCORE!!
-Namespace(best='0', device='cuda', lang='en', m=0, model='bi', path='bi220926_1541_bs256_ep5_data131438_en_best0', testset='persona_test_7801.pickle')
+Namespace(best='0', device='cuda', lang='en', m=0, model='bi', path='bi220926_1541_bs256_ep5_data131438_en_best0', testset='persona_test_150240.pickle')
 Load BiEncoder
 bi220926_1541_bs256_ep5_data131438_en_best0
-R@1/20: 49.56
-MRR: 63.29
+R@1/20: 50.31
+MRR: 64.03
 ============================================================
 
 SCORE!!
-Namespace(best='1', device='cuda', lang='en', m=0, model='bi', path='bi220926_1541_bs256_ep5_data131438_en_best1', testset='persona_test_7801.pickle')
+Namespace(best='1', device='cuda', lang='en', m=0, model='bi', path='bi220926_1541_bs256_ep5_data131438_en_best1', testset='persona_test_150240.pickle')
 Load BiEncoder
 bi220926_1541_bs256_ep5_data131438_en_best1
-R@1/20: 50.41
-MRR: 63.73
-============================================================
-SCORE!!
-Namespace(best='0', device='cuda', lang='en', m=0, model='bi', path='bi220926_1541_bs256_ep5_data131438_en_best0', testset='persona_test_156020.pickle')
-Load BiEncoder
-bi220926_1541_bs256_ep5_data131438_en_best0
-R@1/20: 50.35
-MRR: 63.99
-============================================================
-
-SCORE!!
-Namespace(best='1', device='cuda', lang='en', m=0, model='bi', path='bi220926_1541_bs256_ep5_data131438_en_best1', testset='persona_test_156020.pickle')
-Load BiEncoder
-bi220926_1541_bs256_ep5_data131438_en_best1
-R@1/20: 51.16
-MRR: 64.57
+R@1/20: 50.57
+MRR: 64.47
 ============================================================
 

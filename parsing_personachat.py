@@ -28,25 +28,6 @@ def parse_data(filename):
 
 def make_testset(filename):
     context, candidate = [], []
-    with open(filename, 'r', encoding='utf-8') as f:
-        data = json.load(f)
-
-    for i in range(len(data)):
-        utterances = data[i]['utterances']
-
-        for utterance in utterances:
-            context += [utterance['history'][-1] for _ in range(20)]
-            candidate += utterance['candidates']
-
-        assert len(context) == len(candidate)
-
-    print(f'total {len(context)} datasets found')
-    
-    return context, candidate
-
-
-def make_testset_(filename):
-    context, candidate = [], []
     with open(filename, 'r') as f:
         datasets = f.readlines()
         for dataset in datasets:
@@ -61,14 +42,14 @@ def make_testset_(filename):
 
 
 if __name__ == "__main__":
-    # train_context, train_candidate = parse_data("./data/original_data/personachat/personachat_truecased_full_train.json")
-    # valid_context, valid_candidate = parse_data("./data/original_data/personachat/personachat_truecased_full_valid.json")
-    test_context, test_candidate = make_testset_("./data/original_data/personachat/test_none_original_.txt")
+    train_context, train_candidate = parse_data("./data/original_data/personachat/personachat_truecased_full_train.json")
+    valid_context, valid_candidate = parse_data("./data/original_data/personachat/personachat_truecased_full_valid.json")
+    test_context, test_candidate = make_testset("./data/original_data/personachat/test_none_original_.txt")
 
-    # print(f"train: {len(train_context)}")
-    # print(f"valid: {len(valid_context)}")
+    print(f"train: {len(train_context)}")
+    print(f"valid: {len(valid_context)}")
     print(f"test: {len(test_context)}")
-    # pickling(f'./data/pickles/persona_train_{len(train_context)}.pickle', act = 'save', data = (train_context, train_candidate))
-    # pickling(f'./data/pickles/persona_valid_{len(valid_context)}.pickle', act = 'save', data = (valid_context, valid_candidate))
+    pickling(f'./data/pickles/persona_train_{len(train_context)}.pickle', act = 'save', data = (train_context, train_candidate))
+    pickling(f'./data/pickles/persona_valid_{len(valid_context)}.pickle', act = 'save', data = (valid_context, valid_candidate))
     pickling(f'./data/pickles/persona_test_{len(test_context)}.pickle', act = 'save', data = (test_context, test_candidate))
     

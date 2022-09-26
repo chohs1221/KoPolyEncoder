@@ -86,34 +86,18 @@ RUNNING TIME: 0:51:21
 
 
 SCORE!!
-Namespace(best='0', device='cuda', lang='en', m=360, model='poly', path='poly220926_1632_bs256_ep5_data131438_en_best0', testset='persona_test_7801.pickle')
+Namespace(best='0', device='cuda', lang='en', m=360, model='poly', path='poly220926_1632_bs256_ep5_data131438_en_best0', testset='persona_test_150240.pickle')
 Load PolyEncoder
 poly220926_1632_bs256_ep5_data131438_en_best0
-R@1/20: 95.78
-MRR: 97.8
+R@1/20: 96.09
+MRR: 97.97
 ============================================================
 
 SCORE!!
-Namespace(best='1', device='cuda', lang='en', m=360, model='poly', path='poly220926_1632_bs256_ep5_data131438_en_best1', testset='persona_test_7801.pickle')
+Namespace(best='1', device='cuda', lang='en', m=360, model='poly', path='poly220926_1632_bs256_ep5_data131438_en_best1', testset='persona_test_150240.pickle')
 Load PolyEncoder
 poly220926_1632_bs256_ep5_data131438_en_best1
-R@1/20: 95.82
-MRR: 97.85
-============================================================
-
-SCORE!!
-Namespace(best='0', device='cuda', lang='en', m=360, model='poly', path='poly220926_1632_bs256_ep5_data131438_en_best0', testset='persona_test_156020.pickle')
-Load PolyEncoder
-poly220926_1632_bs256_ep5_data131438_en_best0
-R@1/20: 95.6
-MRR: 97.75
-============================================================
-
-SCORE!!
-Namespace(best='1', device='cuda', lang='en', m=360, model='poly', path='poly220926_1632_bs256_ep5_data131438_en_best1', testset='persona_test_156020.pickle')
-Load PolyEncoder
-poly220926_1632_bs256_ep5_data131438_en_best1
-R@1/20: 96.15
-MRR: 98.01
+R@1/20: 96.17
+MRR: 98.02
 ============================================================
 
