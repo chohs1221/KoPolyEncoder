@@ -3,35 +3,37 @@ import argparse
 from tqdm import tqdm
 
 import torch
+from torch.utils.data import DataLoader
 
 from predict import load_tokenizer_model
 from utils import pickling
-from data_loader import DataLoader
+from dataset_tokenizer import TokenizeDataset
 
 
-def evaluate(model_path, m, test_dataset, c, device):
+def evaluate(model_path, m, test_dataset, c, lang, device):
     test_context, test_candidate = pickling(f"./data/pickles/{test_dataset}", "load")
-    tokenizer, model = load_tokenizer_model(model_path, m, device=device)
+    tokenizer, model = load_tokenizer_model(model_path, m, lang, device=device)
     model.eval()
 
-    test_loader = DataLoader(test_context, test_candidate, tokenizer, shuffle=True, return_tensors='pt', device=device)
+    test_dataset = TokenizeDataset(test_context, test_candidate, tokenizer, return_tensors='pt', device='cuda')
+    test_loader = DataLoader(test_dataset, batch_size = c, shuffle = True, drop_last = True)
 
     r_at_1 = 0
     mrr = 0
-    for i in tqdm(range(0, len(test_loader)-c, c)):
+    for i, batch in tqdm(enumerate(test_loader, start=1)):
         with torch.no_grad():
-            _, dot_product = model(**test_loader[i:i+c])
+            _, dot_product = model(**batch)
         
-        result = torch.argmax(dot_product, dim=-1) == torch.arange(len(dot_product)).to(device)
-        r_at_1 += result.sum().item()
+            result = torch.argmax(dot_product, dim=-1) == torch.arange(len(dot_product)).to(device)
+            r_at_1 += result.sum().item()
 
-        _, indices = torch.sort(dot_product, dim=-1, descending = True)
-        for idx, indice in enumerate(indices):
-            rank = torch.nonzero(indice == idx, as_tuple = True)[0][0].item()
-            mrr += (1 / (rank+1))
+            _, indices = torch.sort(dot_product, dim=-1, descending = True)
+            for idx, indice in enumerate(indices):
+                rank = torch.nonzero(indice == idx, as_tuple = True)[0][0].item()
+                mrr += (1 / (rank+1))
                 
-    r_at_1 = round(100 * r_at_1 / (i+c), 2)
-    mrr = round(100 * mrr / (i+c), 2)
+    r_at_1 = round(100*r_at_1 / (i*c), 2)
+    mrr = round(100*mrr / (i*c), 2)
     
     return r_at_1, mrr
 
@@ -41,8 +43,8 @@ if __name__ == '__main__':
     parser.add_argument('--model', type=str, default='bi')
     parser.add_argument('--path', type=str, default='bi220907_1256_bs512_ep20_best1')
     parser.add_argument('--m', type=int, default=0)
-    parser.add_argument('--dataset', type=str, default='test_81068.pickle')
-    parser.add_argument('--c', type=int, default=100)
+    parser.add_argument('--testset', type=str, default='test_170448.pickle')
+    parser.add_argument('--lang', type=str, default='ko')
     parser.add_argument('--device', type=str, default='cuda')
     args = parser.parse_args()
 
@@ -51,8 +53,10 @@ if __name__ == '__main__':
 
     model_path =  './checkpoints/' + args.path
 
-    r_an_1, mrr = evaluate(model_path, args.m, args.dataset, args.c, args.device)
-    
-    print(f"R@1/{args.c}: {r_an_1}")
-    print(f"MRR: {mrr}")
-    print(f'============================================================\n')
+    for c in [100, 20, 10]:
+        r_at_1, mrr = evaluate(model_path, args.m, args.testset, c, args.lang, args.device)
+        
+        print(f'{args.path}')
+        print(f"R@1/{c}: {r_at_1}")
+        print(f"MRR: {mrr}")
+        print(f'============================================================\n')

@@ -6,14 +6,20 @@ import numpy as np
 import torch
 import torch.nn.functional as F
 
+from transformers import BertTokenizer
+
 from kobert_tokenizer import KoBERTTokenizer
 
 from modeling import BiEncoder, PolyEncoder
 from parsing import pickling
 
 
-def load_tokenizer_model(model_path, m = 0, device = 'cuda'):
-    tokenizer = KoBERTTokenizer.from_pretrained('skt/kobert-base-v1')
+def load_tokenizer_model(model_path, m = 0, lang = "ko", device = 'cuda'):
+    if lang == "ko":
+        tokenizer = KoBERTTokenizer.from_pretrained('skt/kobert-base-v1')
+    elif lang == "en":
+        tokenizer = BertTokenizer.from_pretrained('bert-base-uncased')
+
     if m == 0:
         print('Load BiEncoder')
         model = BiEncoder.from_pretrained(model_path).to(device)
@@ -29,12 +35,14 @@ def get_candidates_designated(file_dir, model_path, args, device= 'cuda'):
         candidate_text = [line.strip() for line in f.readlines() if len(line) > 1]
     print(f'{len(candidate_text)} candidates found!!')
 
-    tokenizer, model = load_tokenizer_model(model_path, args.m, device)
+    tokenizer, model = load_tokenizer_model(model_path, args.m, args.lang, device)
     model.eval()
 
     try:
         candidate_embeddings = pickling(f'./data/pickles/{args.path}_designated{len(candidate_text)}.pickle', act= 'load')
+        print('Pickle file exists!!')
     except:
+        print('No pickle file exists!!')
         candidate_input = tokenizer(candidate_text, padding='max_length', max_length=50, truncation=True, return_tensors = 'pt').to(device)
         with torch.no_grad():
             candidate_embeddings = model.encode(**candidate_input)[:, 0, :]
@@ -47,14 +55,15 @@ def get_candidates_designated(file_dir, model_path, args, device= 'cuda'):
 def get_candidates_incorpus(file_dir, model_path, args, batch_size = 256, device = 'cuda'):
     candidate_text0, candidate_text1 = pickling(file_dir, act= 'load')
     candidate_text = candidate_text0 + candidate_text1
-    candidate_text = candidate_text[-10000:]
+    candidate_text = candidate_text[-100000:]
     print(f'{len(candidate_text)} candidates found!!')
 
-    tokenizer, model = load_tokenizer_model(model_path, args.m, device)
+    tokenizer, model = load_tokenizer_model(model_path, args.m, args.lang, device)
     model.eval()
 
     try:
         candidate_embeddings = pickling(f'./data/pickles/{args.path}_incorpus{len(candidate_text)}.pickle', act= 'load')
+        print('Pickle file exists!!')
     except:
         print('No pickle file exists!!')
         batch = []
@@ -78,6 +87,7 @@ if __name__ == '__main__':
     parser.add_argument('--model', type=str, default='bi')
     parser.add_argument('--path', type=str, default='2022_09_06_01_19_bs2_ep10')
     parser.add_argument('--m', type=int, default=0)
+    parser.add_argument('--lang', type=str, default="ko")
     parser.add_argument('--incorpus', type=int, default=0)
     args = parser.parse_args()
     print(args)

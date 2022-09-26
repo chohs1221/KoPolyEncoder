@@ -47,9 +47,9 @@ class BiEncoder(BertPreTrainedModel):
         ):
         
         context_output = self.bert(
-            input_ids = input_ids,
-            attention_mask= attention_mask,
-            token_type_ids= token_type_ids,
+            input_ids = input_ids[:,0,:],
+            attention_mask= attention_mask[:,0,:],
+            token_type_ids= token_type_ids[:,0,:],
             position_ids = position_ids,
             head_mask = head_mask,
             inputs_embeds = inputs_embeds,
@@ -58,9 +58,9 @@ class BiEncoder(BertPreTrainedModel):
             )       # (batch size, sequence length, hidden state size) 
 
         candidate_output = self.bert(
-            input_ids = candidate_input_ids,
-            attention_mask = candidate_attention_mask, 
-            token_type_ids = candidate_token_type_ids,
+            input_ids = candidate_input_ids[:,0,:],
+            attention_mask = candidate_attention_mask[:,0,:], 
+            token_type_ids = candidate_token_type_ids[:,0,:],
             position_ids = position_ids,
             head_mask = head_mask,
             inputs_embeds = inputs_embeds,
@@ -125,9 +125,9 @@ class PolyEncoder(BertPreTrainedModel):
         ):
         
         context_output = self.bert(
-            input_ids = input_ids,
-            attention_mask= attention_mask,
-            token_type_ids= token_type_ids,
+            input_ids = input_ids[:,0,:],
+            attention_mask= attention_mask[:,0,:],
+            token_type_ids= token_type_ids[:,0,:],
             )[0]                        # (batch size, sequence length, hidden state)
 
         code_embedding_ids = torch.arange(self.m, dtype = torch.long).to(context_output.device)
@@ -159,9 +159,9 @@ class PolyEncoder(BertPreTrainedModel):
         ):
         
         context_output = self.bert(
-            input_ids = input_ids,
-            attention_mask= attention_mask,
-            token_type_ids= token_type_ids,
+            input_ids = input_ids[:,0,:],
+            attention_mask= attention_mask[:,0,:],
+            token_type_ids= token_type_ids[:,0,:],
             position_ids = position_ids,
             head_mask = head_mask,
             inputs_embeds = inputs_embeds,
@@ -177,9 +177,9 @@ class PolyEncoder(BertPreTrainedModel):
         code_output = self.dot_attention(codes, context_output, context_output)     # (batch size, m, hidden state)
 
         candidate_output = self.bert(
-            input_ids = candidate_input_ids,
-            attention_mask = candidate_attention_mask, 
-            token_type_ids = candidate_token_type_ids,
+            input_ids = candidate_input_ids[:,0,:],
+            attention_mask = candidate_attention_mask[:,0,:], 
+            token_type_ids = candidate_token_type_ids[:,0,:],
             position_ids = position_ids,
             head_mask = head_mask,
             inputs_embeds = inputs_embeds,

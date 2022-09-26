@@ -8,8 +8,9 @@ import torch
 from torch.utils.data import DataLoader
 import torch.optim as optim
 
+from transformers import BertTokenizer
+
 from kobert_tokenizer import KoBERTTokenizer
-from transformers import TrainingArguments, Trainer
 
 from modeling import BiEncoder, PolyEncoder
 from dataset_tokenizer import TokenizeDataset
@@ -21,7 +22,7 @@ from utils import seed_everything, empty_cuda_cache, pickling
 def main(args):
     print(f'============================================================')
     start_time = datetime.now()
-    file_name = f"{args.model}{start_time.strftime('%Y%m%d_%H%M')[2:]}_bs{args.batch * args.accumulation}_ep{args.epoch}_best{args.best}"
+    file_name = f"{args.model}{start_time.strftime('%Y%m%d_%H%M')[2:]}_bs{args.batch * args.accumulation}_ep{args.epoch}_data{args.trainset[args.trainset.index('_')+1:]}_{args.lang}"
     os.rename('./output.txt', f'./outputs/{file_name}.txt')
     print(f'File Name: {file_name}')
     print(f"START!! {start_time.strftime('%Y_%m_%d / %H_%M')}")
@@ -35,7 +36,7 @@ def main(args):
     print(f'learning rate: {args.lr}')
     print(f'batch size: {args.batch}')
     print(f'accumulation: {args.accumulation}')
-    print(f'best: {args.best}')
+    print(f'language: {args.lang}')
     print(f'description: {args.description}\n')
 
 
@@ -49,9 +50,13 @@ def main(args):
     print(train_context[0:5])
     print(train_candidate[0:5])
     print()
+    
+    
+    if args.lang == "ko":
+        tokenizer = KoBERTTokenizer.from_pretrained('skt/kobert-base-v1')
+    elif args.lang == "en":
+        tokenizer = BertTokenizer.from_pretrained('bert-base-uncased')
 
-
-    tokenizer = KoBERTTokenizer.from_pretrained(args.path)
     if args.model == 'bi':
         model = BiEncoder.from_pretrained(args.path)
     elif args.model == 'poly':
@@ -62,8 +67,8 @@ def main(args):
     train_dataset = TokenizeDataset(train_context, train_candidate, tokenizer, return_tensors='pt', device='cuda')
     valid_dataset = TokenizeDataset(valid_context, valid_candidate, tokenizer, return_tensors='pt', device='cuda')
 
-    train_loader = DataLoader(train_dataset, batch_size = args.batch, shuffle = True, drop_last = False)
-    valid_loader = DataLoader(valid_dataset, batch_size = args.batch, shuffle = True, drop_last = False)
+    train_loader = DataLoader(train_dataset, batch_size = args.batch, shuffle = True, drop_last = True)
+    valid_loader = DataLoader(valid_dataset, batch_size = args.batch, shuffle = True, drop_last = True)
 
 
     train_loss = 0
@@ -72,34 +77,44 @@ def main(args):
     optimizer = optim.AdamW(model.parameters(), lr=args.lr)
     scheduler = optim.lr_scheduler.ReduceLROnPlateau(optimizer, factor=0.4)
     model.train()
+    empty_cuda_cache()
     for epoch in range(args.epoch):
         with tqdm(train_loader, unit="batch") as t:
             for iteration, batch in enumerate(t, start=1):
-
                 t.set_description(f"Epoch {epoch}")
 
-                loss, dot_product  = model(**batch)
+                loss, _  = model(**batch)
                                 
                 loss.backward()
                 optimizer.step()
-                scheduler.step()
                 optimizer.zero_grad()
 
-                t.set_postfix(loss=loss.item())
-                
                 train_loss += loss.item()
+                
+                t.set_postfix(loss=loss.item())
 
                 if iteration % int(len(train_loader) / 10) == 0:
                     model.eval()
                     with torch.no_grad():
                         for i, batch in enumerate(valid_loader, start=1):
-                            loss, dot_product  = model(**batch)
+                            loss, _  = model(**batch)
 
                             valid_loss += loss.item()
                         
                         train_loss /= int(len(train_loader) / 10)
                         valid_loss /= i
                     
+                    if iteration % (5 * int(len(train_loader) / 10)) == 0:
+                        print("scheduler!")
+                        scheduler.step(valid_loss)
+                    
+                    if pre_valid_loss > valid_loss:
+                        pre_valid_loss = valid_loss
+                        print(f'train loss: {train_loss} / valid loss: {valid_loss} -------------------- epoch: {epoch} iteration: {iteration} ==> save')
+                        model.save_pretrained(f'./checkpoints/{file_name}_best1')
+                    else:
+                        print(f'train loss: {train_loss} / valid loss: {valid_loss} -------------------- epoch: {epoch} iteration: {iteration}')
+
                     # wandb.log(
                     #     {
                     #         "train_loss": train_loss,
@@ -107,54 +122,11 @@ def main(args):
                     #     }
                     #     )
 
-                    if pre_valid_loss > valid_loss:
-                        pre_valid_loss = valid_loss
-                        print('Update loss: ', valid_loss)
-                        model.save_pretrained(f'./checkpoints/{file_name}')
-
                     train_loss = 0
                     valid_loss = 0
                     model.train()
 
-    arguments = TrainingArguments(
-        output_dir = 'checkpoints/checkpoints_step',
-        do_train = True,
-        do_eval = True,
-
-        num_train_epochs = args.epoch,
-        learning_rate = args.lr,
-        per_device_train_batch_size = args.batch,
-        per_device_eval_batch_size = args.batch,
-        gradient_accumulation_steps = args.accumulation,
-        dataloader_num_workers=0,
-
-        # warmup_steps = 100,
-
-        save_strategy = "steps",
-        save_steps = 500,
-        save_total_limit = 30,
-
-        evaluation_strategy = "steps",
-        eval_steps = 500,
-
-        load_best_model_at_end=args.best,
-        
-        report_to = 'none',
-
-        fp16=True,
-        )
-
-    trainer = Trainer(
-        model,
-        arguments,
-        train_dataset=train_loader,
-        eval_dataset=valid_loader
-        )
-
-
-    empty_cuda_cache()
-    trainer.train(resume_from_checkpoint = None)
-    model.save_pretrained(f"checkpoints/{file_name}")
+    model.save_pretrained(f"checkpoints/{file_name}_best0")
 
 
     end_time = datetime.now()
@@ -176,7 +148,7 @@ if __name__ == '__main__':
     parser.add_argument('--lr', type=float, default=5e-5)
     parser.add_argument('--batch', type=int, default=256)
     parser.add_argument('--accumulation', type=int, default=1)
-    parser.add_argument('--best', type=int, default=0)
+    parser.add_argument('--lang', type=str, default="ko")
     parser.add_argument('--description', type=str, default='')
 
     args = parser.parse_args()
