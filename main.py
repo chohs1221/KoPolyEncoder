@@ -1,6 +1,7 @@
 import os
 import argparse
 from datetime import datetime
+import re
 
 from tqdm import tqdm
 
@@ -22,7 +23,7 @@ from utils import seed_everything, empty_cuda_cache, pickling
 def main(args):
     print(f'============================================================')
     start_time = datetime.now()
-    file_name = f"{args.model}{start_time.strftime('%Y%m%d_%H%M')[2:]}_bs{args.batch * args.accumulation}_ep{args.epoch}_data{args.trainset[args.trainset.index('_')+1:]}_{args.lang}"
+    file_name = f"{args.model}{start_time.strftime('%Y%m%d_%H%M')[2:]}_bs{args.batch * args.accumulation}_ep{args.epoch}_data{re.sub(r'[^0-9]', '', args.trainset)}_{args.lang}"
     os.rename('./output.txt', f'./outputs/{file_name}.txt')
     print(f'File Name: {file_name}')
     print(f"START!! {start_time.strftime('%Y_%m_%d / %H_%M')}")

@@ -155,7 +155,6 @@ class PolyEncoder(BertPreTrainedModel):
         inputs_embeds = None,
         output_attentions = None,
         output_hidden_states = None,
-        candidate_output = None,
         ):
         
         context_output = self.bert(
