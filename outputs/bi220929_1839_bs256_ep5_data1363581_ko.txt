@@ -1,0 +1,127 @@
+============================================================
+File Name: bi220929_1839_bs256_ep5_data1363581_ko
+START!! 2022_09_29 / 18_39
+model: bi
+path: skt/kobert-base-v1
+trainset: train_1363581
+validset: valid_170448
+m: 0
+seed: 42
+epoch: 5
+learning rate: 5e-05
+batch size: 256
+accumulation: 1
+language: ko
+description: 
+
+train: 1363581
+valid: 170448
+['유튜브에서 봤는데 토너로 피부 닦는 거 하지 말라더라.', '나도 각질을 닦아준다고 들었었는데 잘못된 정보였나 봐.', '응. 닦아내는 게 자극적이라서 피부가 예민해진대.', '약하게 한다고 해도 닦다 보면 저절로 힘이 들어가잖아.', '그리고 손으로 바르는게 피부에 흡수도 더 잘 되는 느낌이야.']
+['정말? 나 항상 그렇게 쓰고 있는데!', '그럼 그냥 손으로 바르는 게 좋다는 말이지?', '어쩐지 요즘 피부가 좀 거칠어지는 느낌이 들긴 했어.', '지금부터 손으로 발라야겠다.', '엄청 오래전에 얼굴에 손이 닿지 않게 거품으로만 세안하는 방법이 유행이었는데']
+
+train loss: 3.553656665902389 / valid loss: 4.761687211345013 -------------------- epoch: 0 iteration: 532 ==> save
+train loss: 2.9634804586718855 / valid loss: 4.477692943228814 -------------------- epoch: 0 iteration: 1064 ==> save
+train loss: 2.8165425160773716 / valid loss: 4.400138807655277 -------------------- epoch: 0 iteration: 1596 ==> save
+train loss: 2.7311674239940213 / valid loss: 4.344842246779822 -------------------- epoch: 0 iteration: 2128 ==> save
+train loss: 2.662013434825983 / valid loss: 4.24451750991936 -------------------- epoch: 0 iteration: 2660 ==> save
+scheduler!
+train loss: 2.61685785180644 / valid loss: 4.31772279237446 -------------------- epoch: 0 iteration: 3192
+train loss: 2.567851464551194 / valid loss: 4.170842555053252 -------------------- epoch: 0 iteration: 3724 ==> save
+train loss: 2.5409666237078214 / valid loss: 4.203136436562789 -------------------- epoch: 0 iteration: 4256
+train loss: 2.5006614291578306 / valid loss: 4.339935917603342 -------------------- epoch: 0 iteration: 4788
+train loss: 2.49948345360003 / valid loss: 4.139014530898933 -------------------- epoch: 0 iteration: 5320 ==> save
+scheduler!
+train loss: 2.3874392298827494 / valid loss: 4.224441019574503 -------------------- epoch: 1 iteration: 532
+train loss: 2.3461844278009316 / valid loss: 4.214184438375602 -------------------- epoch: 1 iteration: 1064
+train loss: 2.333377616746085 / valid loss: 4.143631935119629 -------------------- epoch: 1 iteration: 1596
+train loss: 2.324023221220289 / valid loss: 4.067795931306997 -------------------- epoch: 1 iteration: 2128 ==> save
+train loss: 2.3130945552112463 / valid loss: 4.069973968204699 -------------------- epoch: 1 iteration: 2660
+scheduler!
+train loss: 2.2948193178141025 / valid loss: 4.046867813024305 -------------------- epoch: 1 iteration: 3192 ==> save
+train loss: 2.29480732159507 / valid loss: 4.104267910190095 -------------------- epoch: 1 iteration: 3724
+train loss: 2.2848524366106306 / valid loss: 4.0442947344672415 -------------------- epoch: 1 iteration: 4256 ==> save
+train loss: 2.2681737033496225 / valid loss: 4.006999853320588 -------------------- epoch: 1 iteration: 4788 ==> save
+train loss: 2.2614001474882426 / valid loss: 3.9886821076385957 -------------------- epoch: 1 iteration: 5320 ==> save
+scheduler!
+train loss: 2.1310521538992573 / valid loss: 4.033201240955439 -------------------- epoch: 2 iteration: 532
+train loss: 2.108535428916601 / valid loss: 4.031325636770492 -------------------- epoch: 2 iteration: 1064
+train loss: 2.1125115900111378 / valid loss: 3.9988851328541464 -------------------- epoch: 2 iteration: 1596
+train loss: 2.1113787396509847 / valid loss: 4.012007310695218 -------------------- epoch: 2 iteration: 2128
+train loss: 2.113553678630886 / valid loss: 3.939656793623042 -------------------- epoch: 2 iteration: 2660 ==> save
+scheduler!
+train loss: 2.098677956968322 / valid loss: 4.0650711970221725 -------------------- epoch: 2 iteration: 3192
+train loss: 2.100921117497566 / valid loss: 3.9390075550939803 -------------------- epoch: 2 iteration: 3724 ==> save
+train loss: 2.1054114361006513 / valid loss: 4.016277295306213 -------------------- epoch: 2 iteration: 4256
+train loss: 2.0924351847261415 / valid loss: 3.951462668225281 -------------------- epoch: 2 iteration: 4788
+train loss: 2.105506034946083 / valid loss: 4.0111754453271855 -------------------- epoch: 2 iteration: 5320
+scheduler!
+train loss: 1.9539497761349929 / valid loss: 4.02341020770539 -------------------- epoch: 3 iteration: 532
+train loss: 1.9421539299918296 / valid loss: 3.9672463442149914 -------------------- epoch: 3 iteration: 1064
+train loss: 1.9447580952393382 / valid loss: 3.965347026882315 -------------------- epoch: 3 iteration: 1596
+train loss: 1.9471739077926578 / valid loss: 3.957673290797642 -------------------- epoch: 3 iteration: 2128
+train loss: 1.9601090290492638 / valid loss: 3.9875843076777637 -------------------- epoch: 3 iteration: 2660
+scheduler!
+train loss: 1.9565150027436422 / valid loss: 3.947170243585916 -------------------- epoch: 3 iteration: 3192
+train loss: 1.9550749655056716 / valid loss: 3.9391613540792823 -------------------- epoch: 3 iteration: 3724
+train loss: 1.9696164202869386 / valid loss: 3.937407176655934 -------------------- epoch: 3 iteration: 4256 ==> save
+train loss: 1.9631654667226892 / valid loss: 3.913502964220549 -------------------- epoch: 3 iteration: 4788 ==> save
+train loss: 1.9653581353954803 / valid loss: 3.9513901592197276 -------------------- epoch: 3 iteration: 5320
+scheduler!
+train loss: 1.80540347211343 / valid loss: 3.9461736492644577 -------------------- epoch: 4 iteration: 532
+train loss: 1.7982664594524784 / valid loss: 3.965858190938046 -------------------- epoch: 4 iteration: 1064
+train loss: 1.8165510910794251 / valid loss: 3.9573296762050543 -------------------- epoch: 4 iteration: 1596
+train loss: 1.8171598884396087 / valid loss: 3.9400031835513007 -------------------- epoch: 4 iteration: 2128
+train loss: 1.9863609438551997 / valid loss: 4.0244244790615 -------------------- epoch: 4 iteration: 2660
+scheduler!
+train loss: 1.903015186912135 / valid loss: 4.050560153158087 -------------------- epoch: 4 iteration: 3192
+train loss: 1.8866048894430463 / valid loss: 3.9715185667339123 -------------------- epoch: 4 iteration: 3724
+train loss: 1.8800822518821945 / valid loss: 3.9737911762151503 -------------------- epoch: 4 iteration: 4256
+train loss: 1.8798183677788067 / valid loss: 3.971903216928468 -------------------- epoch: 4 iteration: 4788
+train loss: 1.8797039398573394 / valid loss: 3.968321620969844 -------------------- epoch: 4 iteration: 5320
+scheduler!
+END!! 2022_09_30 / 04_50
+RUNNING TIME: 10:10:5
+============================================================
+
+
+
+SCORE!!
+Namespace(best='0', device='cuda', lang='ko', m=0, model='bi', path='bi220929_1839_bs256_ep5_data1363581_ko_best0', task='ko', testset='test_170448.pickle')
+Load BiEncoder
+bi220929_1839_bs256_ep5_data1363581_ko_best0
+R@1/100: 19.67
+MRR: 34.74
+============================================================
+
+Load BiEncoder
+bi220929_1839_bs256_ep5_data1363581_ko_best0
+R@1/20: 44.9
+MRR: 61.32
+============================================================
+
+Load BiEncoder
+bi220929_1839_bs256_ep5_data1363581_ko_best0
+R@1/10: 57.71
+MRR: 72.7
+============================================================
+
+SCORE!!
+Namespace(best='1', device='cuda', lang='ko', m=0, model='bi', path='bi220929_1839_bs256_ep5_data1363581_ko_best1', task='ko', testset='test_170448.pickle')
+Load BiEncoder
+bi220929_1839_bs256_ep5_data1363581_ko_best1
+R@1/100: 19.46
+MRR: 34.33
+============================================================
+
+Load BiEncoder
+bi220929_1839_bs256_ep5_data1363581_ko_best1
+R@1/20: 44.26
+MRR: 60.8
+============================================================
+
+Load BiEncoder
+bi220929_1839_bs256_ep5_data1363581_ko_best1
+R@1/10: 57.29
+MRR: 72.38
+============================================================
+

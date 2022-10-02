@@ -101,3 +101,19 @@ R@1/20: 96.17
 MRR: 98.02
 ============================================================
 
+SCORE!!
+Namespace(best='0', device='cuda', lang='en', m=360, model='poly', path='poly220926_1632_bs256_ep5_data131438_en_best0', task='personachat', testset='persona_test_7512.pickle')
+Load PolyEncoder
+poly220926_1632_bs256_ep5_data131438_en_best0
+R@1/20: 26.37
+MRR: 45.39
+============================================================
+
+SCORE!!
+Namespace(best='1', device='cuda', lang='en', m=360, model='poly', path='poly220926_1632_bs256_ep5_data131438_en_best1', task='personachat', testset='persona_test_7512.pickle')
+Load PolyEncoder
+poly220926_1632_bs256_ep5_data131438_en_best1
+R@1/20: 30.1
+MRR: 48.73
+============================================================
+

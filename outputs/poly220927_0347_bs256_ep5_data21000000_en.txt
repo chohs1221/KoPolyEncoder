@@ -1,0 +1,119 @@
+============================================================
+File Name: poly220927_0347_bs256_ep5_data21000000_en
+START!! 2022_09_27 / 03_47
+model: poly
+path: bert-base-uncased
+trainset: ubuntu2_train_1000000
+validset: ubuntu2_valid_19560
+m: 360
+seed: 42
+epoch: 5
+learning rate: 5e-05
+batch size: 256
+accumulation: 1
+language: en
+description: 
+
+train: 1000000
+valid: 19560
+["i think we could import the old comments via rsync, but from there we need to go via email. I think it is easier than caching the status on each bug and than import bits here and there __eou__ __eot__ it would be very easy to keep a hash db of message-ids  __eou__ sounds good __eou__ __eot__ ok __eou__ perhaps we can ship an ad-hoc apt_prefereces __eou__ __eot__ version? __eou__ __eot__ thanks __eou__ __eot__ not yet __eou__ it is covered by your insurance? __eou__ __eot__ yes __eou__ but it's really not the right time :/ __eou__ with a changing house upcoming in 3 weeks __eou__ __eot__ you will be moving into your house soon? __eou__ posted a message recently which explains what to do if the autoconfiguration does not do what you expect __eou__ __eot__ how urgent is #896? __eou__ __eot__ not particularly urgent, but a policy violation __eou__ __eot__ i agree that we should kill the -novtswitch __eou__ __eot__ ok __eou__ __eot__ would you consider a package split a feature? __eou__ __eot__ context? __eou__ __eot__ splitting xfonts* out of xfree86*. one upload for the rest of the life and that's it __eou__ __eot__ splitting the source package you mean? __eou__ __eot__ yes. same binary packages. __eou__ __eot__ I would prefer to avoid it at this stage.  this is something that has gone into XSF svn, I assume? __eou__ __eot__ ", 'I\'m not suggesting all - only the ones you modify. __eou__ __eot__ ok, it sounds like you\'re agreeing with me, then __eou__ though rather than "the ones we modify", my idea is "the ones we need to merge" __eou__ __eot__ ', "afternoon all __eou__ not entirely related to warty, but if grub-install takes 5 minutes to install, is this a sign that i should just retry the install :) __eou__ __eot__ here  __eou__ __eot__ you might want to know that thinice in warty is buggy compared to that in sid __eou__ __eot__ and apparently GNOME is suddently almost perfect (out of the thinice problem), nobody report bugs :-P __eou__ I don't get your question, where do you want to paste ? __eou__ __eot__ can i file the panel not linking to eds? :) __eou__ __eot__ are you using alt ? or the windows key ? __eou__ wait for the gnome-themes, component will be added __eou__ __eot__ i just restarted X and now nautilus won't show the desktop :( __eou__ hal isn't starting :( __eou__ __eot__ do you think we have any interest to have hal support turned on in gnome-vfs at this point ? It increases the sources of problems for no real benefit imho ... __eou__ __eot__ is it a known bug that g-s-t doesn't know what distribution its running on? __eou__ are there any changes to desktop-file-utils you've got hidden away? __eou__ __eot__ somebody should really kick that guy *hard* __eou__ I've added a build-dep on libxt-dev in warty for zenity __eou__ __eot__ arse. xt-dev? i added libx11-dev __eou__ so just libxt-dev or libxt and libx11? __eou__ for future note, the xmodmap line in that X sticky-super fixes the problem for me __eou__ __eot__ we have planned to speak about menu organisation during the 2 weeks __eou__ I need we don't need to force it __eou__ ? __eou__ __eot__ was away, you said ? __eou__ nope __eou__ __eot__ the warty repository __eou__ ok, fine. Thanks __eou__ nice to get packages update every 30min instead once a day, isn't it :) __eou__ __eot__ you'll be glad to know i've fixed my missing arrows in thinice bug __eou__ __eot__ I've uploaded the gnome-vfs without hal support should be available rsn __eou__ __eot__ should g2 in ubuntu do the magic dont-focus-window tricks? __eou__ join the gang, get an x-series thinkpad __eou__ sj has hung on my box, again. __eou__ what is monday mornings discussion actually about? __eou__ __eot__ ", "interesting __eou__ grub-install worked with / being ext3, failed when it was xfs __eou__ i thought d-i installed the relevant kernel for your machine. i have a p4 and its installed the 386 kernel __eou__ holy crap a lot of stuff gets installed by default :) __eou__ YOU ARE INSTALLING VIM ON A BOX OF MINE __eou__ ;) __eou__ __eot__ more like osx than debian ;) __eou__ we have a selection of python modules available for great justice (and python development) __eou__ __eot__ 2.8 is fixing them iirc __eou__ __eot__ pong __eou__ vino will be in __eou__ enjoying ubuntu? __eou__ __eot__ told me to come here __eou__ suggested thursday as a good day to come __eou__ __eot__ we froze versions a while back :) __eou__ you coming today or thursday? __eou__ we're considering shifting it __eou__ yay __eou__ enjoying ubuntu? __eou__ usplash! __eou__ __eot__ thats the one __eou__ __eot__ so i saw your email with the mockup at the airport, but it hasn't appeared now that i've pulled my mail :| __eou__ __eot__ i've got a better one now too, give me a minute __eou__ we've got rh9 installed on most desktops. you want me to look at up2date, right? __eou__ __eot__ aha! no, the gui thingy __eou__ it's more wizardy __eou__ so the first page is okayish __eou__ we can do a whole load better on the second page (icons, translated descriptions) __eou__ but that's the kind of thing i was thinking about __eou__ (a single big treeview would get very scary, very quickly) __eou__ sure it's not a hurricane? __eou__ __eot__ i think experimental is getting 2.8 too __eou__ let him work on #1217 :) __eou__ __eot__ we call it 'universe' ;) __eou__ haha __eou__ ooh, totally __eou__ __eot__ i want it on in sarge too but nobody else agrees __eou__ __eot__ ", 'and because Python gives Mark a woody __eou__ __eot__ i\'m not sure if we\'re meant to talk about that publically yet. __eou__ __eot__ and I thought we were a "pants off" kind of company ... :p __eou__ you need new glasses __eou__ __eot__ mono 1.0? dude, that\'s going to be a barrel of laughs for totally non-release related reasons during hoary __eou__ read bryan clark\'s entry about NetworkManager? __eou__ __eot__ there was an accompanying IRC conversation to that one <g> __eou__ explain ? __eou__ I guess you could ship the new png in the debian/ directory and copy them over in your rules __eou__ __eot__ but debian/ is also part of diff.gz... __eou__ you can fix this for the common people, dude! multiple tarballs in source! __eou__ __eot__ NOTWARTY, HTH, HAND, KTHXBYE <g> __eou__ everyone else had their macs stolen, so can\'t really comment __eou__ that picture of you is a classic __eou__ __eot__ which? __eou__ the best feature of the new imac is that the old imacs are going to be cheaper! __eou__ ooh, can you add that to the wiki? __eou__ __eot__ k. __eou__ you getting two-weeks-to-release edginess? __eou__ http://descent.netsplit.com/~scott/kids.mp3 -- but for releases __eou__ I played with an x300 about the time I bought my new laptop, it didn\'t feel solid at all __eou__ __eot__ which series is yours again? __eou__ nc8000? __eou__ mmm __eou__ __eot__ you have my sympathy __eou__ I\'m trying to *find* the definition I wrote __eou__ __eot__ it\'d be on Glossary __eou__ i know i wrote one there __eou__ __eot__ I\'m trying to find the one with mdz\'s l33t dot madness __eou__ that would be a pretty good look for you :p __eou__ bandwidth bills? __eou__ __eot__ i\'m reverting the wifi change; i don\'t think the bars are the right thing, but they\'re better than the current one. __eou__ ooh, that\'d be rad __eou__ __eot__ not about waiting?  clearly you haven\'t tried to read a site that\'s just made slashdot? __eou__ __eot__ ']
+['basically each xfree86 upload will NOT force users to upgrade 100Mb of fonts for nothing __eou__ no something i did in my spare time. __eou__', 'oh? oops. __eou__', "we'll have a BOF about this __eou__ so you're coming tomorrow ? __eou__", 'i fully endorse this suggestion </quimby> __eou__ how did your reinstall go? __eou__', "(i thought someone was going to make a joke about .au bandwidth...) __eou__ especially not if you're using screen ;) __eou__"]
+
+train loss: 4.573683496010609 / valid loss: 2.994615648922167 -------------------- epoch: 0 iteration: 390 ==> save
+train loss: 3.3820994413816012 / valid loss: 2.5373938993403784 -------------------- epoch: 0 iteration: 780 ==> save
+train loss: 2.1935805106774353 / valid loss: 1.5942423673052537 -------------------- epoch: 0 iteration: 1170 ==> save
+train loss: 1.6455202900446377 / valid loss: 1.3193210661411285 -------------------- epoch: 0 iteration: 1560 ==> save
+scheduler!
+train loss: 1.4424521702986497 / valid loss: 1.2490428058724654 -------------------- epoch: 0 iteration: 1950 ==> save
+train loss: 1.3358606103139046 / valid loss: 1.1285091066046764 -------------------- epoch: 0 iteration: 2340 ==> save
+train loss: 1.2537232836087544 / valid loss: 1.023822167202046 -------------------- epoch: 0 iteration: 2730 ==> save
+train loss: 1.1986971230078967 / valid loss: 1.003135590961105 -------------------- epoch: 0 iteration: 3120 ==> save
+train loss: 1.146926769384971 / valid loss: 1.0101186578211032 -------------------- epoch: 0 iteration: 3510
+scheduler!
+train loss: 1.1342172148900154 / valid loss: 1.003491120118844 -------------------- epoch: 0 iteration: 3900
+train loss: 1.103414967426887 / valid loss: 0.9778618914516348 -------------------- epoch: 1 iteration: 390 ==> save
+train loss: 1.1479098399480183 / valid loss: 0.983535351721864 -------------------- epoch: 1 iteration: 780
+train loss: 1.0677504534904774 / valid loss: 0.9331742540786141 -------------------- epoch: 1 iteration: 1170 ==> save
+train loss: 1.0353846649328868 / valid loss: 0.9601047493909535 -------------------- epoch: 1 iteration: 1560
+scheduler!
+train loss: 1.0215736830845856 / valid loss: 0.9028111821726749 -------------------- epoch: 1 iteration: 1950 ==> save
+train loss: 1.0053113428445963 / valid loss: 0.8891738998262506 -------------------- epoch: 1 iteration: 2340 ==> save
+train loss: 0.9932677279680203 / valid loss: 0.8876151128819114 -------------------- epoch: 1 iteration: 2730 ==> save
+train loss: 0.9809286310122564 / valid loss: 0.8742643610427254 -------------------- epoch: 1 iteration: 3120 ==> save
+train loss: 0.9784812471805475 / valid loss: 0.9231705179339961 -------------------- epoch: 1 iteration: 3510
+scheduler!
+train loss: 0.9793031819355793 / valid loss: 0.8778798415472633 -------------------- epoch: 1 iteration: 3900
+train loss: 0.9654205310039031 / valid loss: 0.8713105140548003 -------------------- epoch: 2 iteration: 390 ==> save
+train loss: 0.9617327236212216 / valid loss: 0.9115727073267886 -------------------- epoch: 2 iteration: 780
+train loss: 0.9536100905675154 / valid loss: 0.9253662722675424 -------------------- epoch: 2 iteration: 1170
+train loss: 0.9525566318096259 / valid loss: 0.9283002183625573 -------------------- epoch: 2 iteration: 1560
+scheduler!
+train loss: 0.940356702529467 / valid loss: 0.8645180981410178 -------------------- epoch: 2 iteration: 1950 ==> save
+train loss: 0.9476295834932572 / valid loss: 0.8545298654782144 -------------------- epoch: 2 iteration: 2340 ==> save
+train loss: 0.9213357751186078 / valid loss: 0.8415650223430834 -------------------- epoch: 2 iteration: 2730 ==> save
+train loss: 0.9166277666886647 / valid loss: 0.8333757809902492 -------------------- epoch: 2 iteration: 3120 ==> save
+train loss: 0.9091994591248341 / valid loss: 0.8467065942914862 -------------------- epoch: 2 iteration: 3510
+scheduler!
+train loss: 0.8875255771172352 / valid loss: 0.8250874618166372 -------------------- epoch: 2 iteration: 3900 ==> save
+train loss: 0.8860976721995916 / valid loss: 0.8531792626569146 -------------------- epoch: 3 iteration: 390
+train loss: 0.8675919162921416 / valid loss: 0.8492328242251748 -------------------- epoch: 3 iteration: 780
+train loss: 0.8722525272613917 / valid loss: 0.8742797578635969 -------------------- epoch: 3 iteration: 1170
+train loss: 0.8805914081059969 / valid loss: 0.8207243500571502 -------------------- epoch: 3 iteration: 1560 ==> save
+scheduler!
+train loss: 0.8685198881687262 / valid loss: 0.8235529998415395 -------------------- epoch: 3 iteration: 1950
+train loss: 1.012007362720294 / valid loss: 0.8636675649567654 -------------------- epoch: 3 iteration: 2340
+train loss: 0.9102676747701107 / valid loss: 0.8275177800341657 -------------------- epoch: 3 iteration: 2730
+train loss: 0.8823533311868326 / valid loss: 0.8360710363639029 -------------------- epoch: 3 iteration: 3120
+train loss: 0.8640290721868857 / valid loss: 0.8349031704036813 -------------------- epoch: 3 iteration: 3510
+scheduler!
+train loss: 0.8591334404089512 / valid loss: 0.7928464875409478 -------------------- epoch: 3 iteration: 3900 ==> save
+train loss: 0.8557701983512976 / valid loss: 0.8199216033283033 -------------------- epoch: 4 iteration: 390
+train loss: 0.8471902729609073 / valid loss: 0.8109770464269739 -------------------- epoch: 4 iteration: 780
+train loss: 0.8397061726985834 / valid loss: 0.815789036844906 -------------------- epoch: 4 iteration: 1170
+train loss: 0.8299523341350067 / valid loss: 0.8176801298793993 -------------------- epoch: 4 iteration: 1560
+scheduler!
+train loss: 0.8333511334199172 / valid loss: 0.8253464675263354 -------------------- epoch: 4 iteration: 1950
+train loss: 0.8340876701550606 / valid loss: 0.79346522375157 -------------------- epoch: 4 iteration: 2340
+train loss: 0.8399357490050487 / valid loss: 0.8362202142414293 -------------------- epoch: 4 iteration: 2730
+train loss: 0.8234584603554164 / valid loss: 0.8001226869068647 -------------------- epoch: 4 iteration: 3120
+train loss: 0.8467190178541036 / valid loss: 0.8147467602240411 -------------------- epoch: 4 iteration: 3510
+scheduler!
+train loss: 0.8379265201397431 / valid loss: 0.81684689066912 -------------------- epoch: 4 iteration: 3900
+END!! 2022_09_27 / 11_15
+RUNNING TIME: 7:27:52
+============================================================
+
+
+
+SCORE!!
+Namespace(best='0', device='cuda', lang='en', m=360, model='poly', path='poly220927_0347_bs256_ep5_data21000000_en_best0', testset='ubuntu2_test_18920.pickle')
+Load PolyEncoder
+poly220927_0347_bs256_ep5_data21000000_en_best0
+R@1/10: 98.03
+MRR: 98.96
+============================================================
+
+SCORE!!
+Namespace(best='1', device='cuda', lang='en', m=360, model='poly', path='poly220927_0347_bs256_ep5_data21000000_en_best1', testset='ubuntu2_test_18920.pickle')
+Load PolyEncoder
+poly220927_0347_bs256_ep5_data21000000_en_best1
+R@1/10: 98.38
+MRR: 99.15
+============================================================
+
+SCORE!!
+Namespace(best='0', device='cuda', lang='en', m=360, model='poly', path='poly220927_0347_bs256_ep5_data21000000_en_best0', testset='ubuntu2_test_18920.pickle')
+Load PolyEncoder
+poly220927_0347_bs256_ep5_data21000000_en_best0
+R@1/10: 29.4
+MRR: 49.72
+============================================================
+
+SCORE!!
+Namespace(best='1', device='cuda', lang='en', m=360, model='poly', path='poly220927_0347_bs256_ep5_data21000000_en_best1', testset='ubuntu2_test_18920.pickle')
+Load PolyEncoder
+poly220927_0347_bs256_ep5_data21000000_en_best1
+R@1/10: 29.96
+MRR: 50.12
+============================================================
+

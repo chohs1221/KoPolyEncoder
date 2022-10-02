@@ -88,6 +88,7 @@ if __name__ == '__main__':
     parser.add_argument('--path', type=str, default='2022_09_06_01_19_bs2_ep10')
     parser.add_argument('--m', type=int, default=0)
     parser.add_argument('--lang', type=str, default="ko")
+    parser.add_argument('--cand', type=str, default="test_170448")
     parser.add_argument('--incorpus', type=int, default=0)
     args = parser.parse_args()
     print(args)
@@ -96,14 +97,14 @@ if __name__ == '__main__':
     device = 'cuda'
     model_path =  './checkpoints/' + args.path
     if args.incorpus:
-        tokenizer, model, candidate_text, candidate_embeddings = get_candidates_incorpus('./data/pickles/test_81068.pickle', model_path, args, batch_size = 256, device=device)
+        tokenizer, model, candidate_text, candidate_embeddings = get_candidates_incorpus(f'./data/pickles/{args.cand}.pickle', model_path, args, batch_size = 256, device=device)
     else:
-        tokenizer, model, candidate_text, candidate_embeddings = get_candidates_designated('./data/responses.txt', model_path, args, device=device)
+        tokenizer, model, candidate_text, candidate_embeddings = get_candidates_designated(f'./data/responses_{args.lang}.txt', model_path, args, device=device)
 
 
     while True:
         prompt = input("user >> ")
-        if prompt == 'bye' or prompt == 'ㅂㅂ':
+        if prompt == 'qq' or prompt == 'ㅂㅂ':
             print("{0:>50}\n".format("안녕히 가세요! << bot"))
             break
         print()
@@ -122,7 +123,7 @@ if __name__ == '__main__':
             elif args.model == 'poly':
                 context_embedding = model.context_encode(**context_input, candidate_output = candidate_embeddings)[:, 0, :]  # (candidate size, hidden state)
 
-                dot_product = torch.sum(context_embedding * candidate_embeddings, dim = 1)      # (candidate size)
+                dot_product = torch.sum(context_embedding * candidate_embeddings, dim = -1)      # (candidate size)
 
         sorted_dot_product, indices = torch.sort(F.softmax(dot_product, -1), dim = -1, descending = True)
 

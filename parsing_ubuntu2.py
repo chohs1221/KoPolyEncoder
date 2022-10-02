@@ -51,5 +51,5 @@ if __name__ == "__main__":
     print(f"test: {len(test_context)}")
     pickling(f'./data/pickles/ubuntu2_train_{len(train_context)}.pickle', act = 'save', data = (train_context, train_candidate))
     pickling(f'./data/pickles/ubuntu2_valid_{len(valid_context)}.pickle', act = 'save', data = (valid_context, valid_candidate))
-    pickling(f'./data/pickles/ubuntu2_test_{len(test_context)}.pickle', act = 'save', data = (test_context, test_candidate))
+    pickling(f'./data/pickles/ubuntu2_test_{len(test_context) // 10}.pickle', act = 'save', data = (test_context, test_candidate))
     

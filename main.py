@@ -105,16 +105,16 @@ def main(args):
                         train_loss /= int(len(train_loader) / 10)
                         valid_loss /= i
                     
-                    if iteration % (5 * int(len(train_loader) / 10)) == 0:
-                        print("scheduler!")
-                        scheduler.step(valid_loss)
-                    
                     if pre_valid_loss > valid_loss:
                         pre_valid_loss = valid_loss
                         print(f'train loss: {train_loss} / valid loss: {valid_loss} -------------------- epoch: {epoch} iteration: {iteration} ==> save')
                         model.save_pretrained(f'./checkpoints/{file_name}_best1')
                     else:
                         print(f'train loss: {train_loss} / valid loss: {valid_loss} -------------------- epoch: {epoch} iteration: {iteration}')
+                    
+                    if iteration % (5 * int(len(train_loader) / 10)) == 0:
+                        print("scheduler!")
+                        scheduler.step(valid_loss)
 
                     # wandb.log(
                     #     {

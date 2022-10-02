@@ -98,6 +98,19 @@ class PolyEncoder(BertPreTrainedModel):
         output = torch.matmul(attention_weights, v)     # (batch size, m, hidden state) or (batch size, 1, hidden state)
 
         return output
+
+    
+    def dot_attention_negatives(self, q, k, v):
+        # q:   [bs, poly_m, hidden state] or [bs, 1, hidden state]
+        # k=v: [bs, length, hidden state] or [bs, poly_m, hidden state]
+        outputs = torch.empty(k.shape[0], k.shape[0], 1, k.shape[2]).to(q.device)
+        for i in range(len(k)):
+            attention_weights = torch.matmul(q, k[i].unsqueeze(0).permute(0, 2, 1))
+            attention_weights = F.softmax(attention_weights, -1)
+
+            outputs[i] = torch.matmul(attention_weights, v[i].unsqueeze(0))
+            
+        return outputs
     
 
     def encode(
@@ -125,15 +138,15 @@ class PolyEncoder(BertPreTrainedModel):
         ):
         
         context_output = self.bert(
-            input_ids = input_ids[:,0,:],
-            attention_mask= attention_mask[:,0,:],
-            token_type_ids= token_type_ids[:,0,:],
+            input_ids = input_ids,
+            attention_mask= attention_mask,
+            token_type_ids= token_type_ids,
             )[0]                        # (batch size, sequence length, hidden state)
 
         code_embedding_ids = torch.arange(self.m, dtype = torch.long).to(context_output.device)
         code_embedding_ids = code_embedding_ids.unsqueeze(0).expand(context_output.shape[0], self.m)
 
-        codes = self.code_embedding(code_embedding_ids)                             # (m, hidden state)
+        codes = self.code_embedding(code_embedding_ids)                             # (batch size, m, hidden state)
 
         code_output = self.dot_attention(codes, context_output, context_output)     # (batch size, m, hidden state)
 
@@ -186,9 +199,11 @@ class PolyEncoder(BertPreTrainedModel):
             output_hidden_states = output_hidden_states,
             )[0][:, 0, :]           # (batch size, hidden state)
 
-        cross_output = self.dot_attention(candidate_output.unsqueeze(1), code_output, code_output)  # (batch size, 1, hidden state)
-        
-        dot_product = torch.matmul(cross_output.squeeze(1), candidate_output.t())                   # (batch size, hidden state) @ (batch size, hidden state).t() = (batch size, batch size)
+        cross_outputs = self.dot_attention_negatives(candidate_output.unsqueeze(1), code_output, code_output)   # (batch size, batch size, 1, hidden state)
+
+        dot_product = torch.empty(cross_outputs.shape[0], cross_outputs.shape[0]).to(cross_outputs.device)
+        for i ,cross_output in enumerate(cross_outputs):
+            dot_product[i] = torch.sum(cross_output.squeeze(1) * candidate_output, dim = -1)                       # (batch size)
 
         loss_fnt = nn.CrossEntropyLoss()
         loss = loss_fnt(dot_product, torch.arange(dot_product.shape[0]).to(dot_product.device))

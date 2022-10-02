@@ -52,11 +52,41 @@ def evaluate_personachat(model_path, m, test_dataset, c, lang, device):
         with torch.no_grad():
             _, dot_product = model(**batch)
 
-            if torch.argmax(dot_product[-1], dim=-1).item() == c-1:
+            # logits = torch.diagonal(dot_product * torch.eye(c).to(dot_product.device))
+            logits = dot_product[0]
+            if torch.argmax(logits, dim=-1).item() == c-1:
                 r_at_1 += 1
 
-            _, indices = torch.sort(dot_product[-1], dim=-1, descending = True)
+            _, indices = torch.sort(logits, dim=-1, descending = True)
             rank = torch.nonzero(indices == c-1, as_tuple = True)[0][0].item()
+            mrr += (1 / (rank+1))
+                
+    r_at_1 = round(100*r_at_1 / i, 2)
+    mrr = round(100*mrr / i, 2)
+    
+    return r_at_1, mrr
+
+
+def evaluate_ubuntu2(model_path, m, test_dataset, c, lang, device):
+    test_context, test_candidate = pickling(f"./data/pickles/{test_dataset}", "load")
+    tokenizer, model = load_tokenizer_model(model_path, m, lang, device=device)
+    model.eval()
+
+    test_dataset = TokenizeDataset(test_context, test_candidate, tokenizer, return_tensors='pt', device='cuda')
+    test_loader = DataLoader(test_dataset, batch_size = c, shuffle = False, drop_last = True)
+
+    r_at_1 = 0
+    mrr = 0
+    for i, batch in tqdm(enumerate(test_loader, start=1)):
+        with torch.no_grad():
+            _, dot_product = model(**batch)
+
+            logits = dot_product[0]
+            if torch.argmax(logits, dim=-1).item() == 0:
+                r_at_1 += 1
+
+            _, indices = torch.sort(logits, dim=-1, descending = True)
+            rank = torch.nonzero(indices == 0, as_tuple = True)[0][0].item()
             mrr += (1 / (rank+1))
                 
     r_at_1 = round(100*r_at_1 / i, 2)
@@ -72,6 +102,7 @@ if __name__ == '__main__':
     parser.add_argument('--m', type=int, default=0)
     parser.add_argument('--testset', type=str, default='test_170448.pickle')
     parser.add_argument('--lang', type=str, default='ko')
+    parser.add_argument('--task', type=str, default='ko')
     parser.add_argument('--best', type=str, default='0')
     parser.add_argument('--device', type=str, default='cuda')
     args = parser.parse_args()
@@ -81,17 +112,27 @@ if __name__ == '__main__':
 
     model_path =  './checkpoints/' + args.path
 
-    # for c in [100, 20, 10]:
-    #     r_at_1, mrr = evaluate(model_path, args.m, args.testset, c, args.lang, args.device)
+    if args.task == 'ko':
+        for c in [100, 20, 10]:
+            r_at_1, mrr = evaluate(model_path, args.m, args.testset, c, args.lang, args.device)
 
-    #     print(f'{args.path}')
-    #     print(f"R@1/{c}: {r_at_1}")
-    #     print(f"MRR: {mrr}")
-    #     print(f'============================================================\n')
+            print(f'{args.path}')
+            print(f"R@1/{c}: {r_at_1}")
+            print(f"MRR: {mrr}")
+            print(f'============================================================\n')
+    
+    elif args.task == 'personachat':
+        r_at_1, mrr = evaluate_personachat(model_path, args.m, args.testset, 20, args.lang, args.device)
 
-    r_at_1, mrr = evaluate_personachat(model_path, args.m, args.testset, 20, args.lang, args.device)
+        print(f'{args.path}')
+        print(f"R@1/{20}: {r_at_1}")
+        print(f"MRR: {mrr}")
+        print(f'============================================================\n')
+    
+    elif args.task == 'ubuntu2':
+        r_at_1, mrr = evaluate_ubuntu2(model_path, args.m, args.testset, 10, args.lang, args.device)
 
-    print(f'{args.path}')
-    print(f"R@1/{20}: {r_at_1}")
-    print(f"MRR: {mrr}")
-    print(f'============================================================\n')
+        print(f'{args.path}')
+        print(f"R@1/{10}: {r_at_1}")
+        print(f"MRR: {mrr}")
+        print(f'============================================================\n')
