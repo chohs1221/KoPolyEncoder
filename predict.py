@@ -55,6 +55,9 @@ def get_candidates_designated(file_dir, model_path, args, device= 'cuda'):
 def get_candidates_incorpus(file_dir, model_path, args, batch_size = 256, device = 'cuda'):
     candidate_text0, candidate_text1 = pickling(file_dir, act= 'load')
     candidate_text = candidate_text0 + candidate_text1
+    print(len(candidate_text))
+    candidate_text = list(set(candidate_text))
+    print(len(candidate_text))
     candidate_text = candidate_text[-100000:]
     print(f'{len(candidate_text)} candidates found!!')
 
