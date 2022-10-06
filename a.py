@@ -1,5 +1,14 @@
-with open('./outputs/poly220929_0811_bs128_ep5_data21000000_en.txt', 'r') as f:
-    with open('./outputs/poly220929_0811_bs128_ep5_data21000000_en_.txt', 'w') as f_:
-        for line in f.readlines():
-            if line != 'torch.Size([128, 128])\n':
-                f_.write(line)
+from tqdm import tqdm
+from utils import pickling
+from transformers import BertTokenizer
+
+tokenizer = BertTokenizer.from_pretrained('bert-base-uncased')
+ctx, cand = pickling('./data/pickles/ubuntu2_train_1000000.pickle', 'load')
+
+lenght = []
+for i in tqdm(range(len(ctx))):
+    tok = tokenizer.encode(ctx[i])
+
+    lenght.append(len(tok))
+
+print(sum(lenght) / len(lenght))

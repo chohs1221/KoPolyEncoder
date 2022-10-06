@@ -39,7 +39,7 @@ def get_candidates_designated(file_dir, model_path, args, device= 'cuda'):
     model.eval()
 
     try:
-        candidate_embeddings = pickling(f'./data/pickles/{args.path}_designated{len(candidate_text)}.pickle', act= 'load')
+        candidate_embeddings = pickling(f'./data/pickles/predict/{args.path}_designated{len(candidate_text)}.pickle', act= 'load')
         print('Pickle file exists!!')
     except:
         print('No pickle file exists!!')
@@ -47,7 +47,7 @@ def get_candidates_designated(file_dir, model_path, args, device= 'cuda'):
         with torch.no_grad():
             candidate_embeddings = model.encode(**candidate_input)[:, 0, :]
         
-        pickling(f'./data/pickles/{args.path}_designated{len(candidate_text)}.pickle', act='save', data=candidate_embeddings)
+        pickling(f'./data/pickles/predict/{args.path}_designated{len(candidate_text)}.pickle', act='save', data=candidate_embeddings)
 
     return tokenizer, model, candidate_text, candidate_embeddings
 
@@ -65,7 +65,7 @@ def get_candidates_incorpus(file_dir, model_path, args, batch_size = 256, device
     model.eval()
 
     try:
-        candidate_embeddings = pickling(f'./data/pickles/{args.path}_incorpus{len(candidate_text)}.pickle', act= 'load')
+        candidate_embeddings = pickling(f'./data/pickles/predict/{args.path}_incorpus{len(candidate_text)}.pickle', act= 'load')
         print('Pickle file exists!!')
     except:
         print('No pickle file exists!!')
@@ -80,7 +80,7 @@ def get_candidates_incorpus(file_dir, model_path, args, batch_size = 256, device
                 candidate_embeddings.append(candidate_embedding.to('cpu'))
         candidate_embeddings = torch.cat(candidate_embeddings, dim=0).to('cuda')
 
-        pickling(f'./data/pickles/{args.path}_incorpus{len(candidate_text)}.pickle', act='save', data=candidate_embeddings)
+        pickling(f'./data/pickles/predict/{args.path}_incorpus{len(candidate_text)}.pickle', act='save', data=candidate_embeddings)
 
     return tokenizer, model, candidate_text, candidate_embeddings
 
@@ -100,7 +100,7 @@ if __name__ == '__main__':
     device = 'cuda'
     model_path =  './checkpoints/' + args.path
     if args.incorpus:
-        tokenizer, model, candidate_text, candidate_embeddings = get_candidates_incorpus(f'./data/pickles/{args.cand}.pickle', model_path, args, batch_size = 256, device=device)
+        tokenizer, model, candidate_text, candidate_embeddings = get_candidates_incorpus(f'./data/pickles/data/{args.cand}.pickle', model_path, args, batch_size = 256, device=device)
     else:
         tokenizer, model, candidate_text, candidate_embeddings = get_candidates_designated(f'./data/responses_{args.lang}.txt', model_path, args, device=device)
 

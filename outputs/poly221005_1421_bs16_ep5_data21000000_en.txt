@@ -1,15 +1,15 @@
 ============================================================
-File Name: bi221003_0942_bs256_ep5_data21000000_en
-START!! 2022_10_03 / 09_42
-model: bi
+File Name: poly221005_1421_bs16_ep5_data21000000_en
+START!! 2022_10_05 / 14_21
+model: poly
 path: bert-base-uncased
 trainset: ubuntu2_train_1000000
 validset: ubuntu2_valid_19560
-m: 0
+m: 64
 seed: 42
 epoch: 5
 learning rate: 5e-05
-batch size: 256
+batch size: 16
 accumulation: 1
 language: en
 description: 

@@ -11,7 +11,7 @@ from dataset_tokenizer import TokenizeDataset
 
 
 def evaluate(model_path, m, test_dataset, c, lang, device):
-    test_context, test_candidate = pickling(f"./data/pickles/{test_dataset}", "load")
+    test_context, test_candidate = pickling(f"./data/pickles/data/{test_dataset}", "load")
     tokenizer, model = load_tokenizer_model(model_path, m, lang, device=device)
     model.eval()
 
@@ -39,7 +39,7 @@ def evaluate(model_path, m, test_dataset, c, lang, device):
 
 
 def evaluate_personachat(model_path, m, test_dataset, c, lang, device):
-    test_context, test_candidate = pickling(f"./data/pickles/{test_dataset}", "load")
+    test_context, test_candidate = pickling(f"./data/pickles/data/{test_dataset}", "load")
     tokenizer, model = load_tokenizer_model(model_path, m, lang, device=device)
     model.eval()
 
@@ -68,7 +68,7 @@ def evaluate_personachat(model_path, m, test_dataset, c, lang, device):
 
 
 def evaluate_ubuntu2(model_path, m, test_dataset, c, lang, device):
-    test_context, test_candidate = pickling(f"./data/pickles/{test_dataset}", "load")
+    test_context, test_candidate = pickling(f"./data/pickles/data/{test_dataset}", "load")
     tokenizer, model = load_tokenizer_model(model_path, m, lang, device=device)
     model.eval()
 

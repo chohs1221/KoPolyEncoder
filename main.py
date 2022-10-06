@@ -44,8 +44,8 @@ def main(args):
     seed_everything(args.seed)
 
 
-    train_context, train_candidate = pickling(f'./data/pickles/{args.trainset}.pickle', 'load')
-    valid_context, valid_candidate = pickling(f'./data/pickles/{args.validset}.pickle', 'load')
+    train_context, train_candidate = pickling(f'./data/pickles/data/{args.trainset}.pickle', 'load')
+    valid_context, valid_candidate = pickling(f'./data/pickles/data/{args.validset}.pickle', 'load')
     print(f"train: {len(train_context)}")
     print(f"valid: {len(valid_context)}")
     print(train_context[0:5])

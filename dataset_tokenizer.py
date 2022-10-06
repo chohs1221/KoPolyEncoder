@@ -10,11 +10,11 @@ class TokenizeDataset:
 
     def __getitem__(self, i):
         if self.device is not None:
-            context_input = self.tokenizer(self.context[i], padding='max_length', max_length=55, truncation=True, return_tensors=self.return_tensors).to(self.device)
-            candidate_input = self.tokenizer(self.candidate[i], padding='max_length', max_length=55, truncation=True, return_tensors=self.return_tensors).to(self.device)
+            context_input = self.tokenizer(self.context[i], padding='max_length', max_length=360, truncation=True, return_tensors=self.return_tensors).to(self.device)
+            candidate_input = self.tokenizer(self.candidate[i], padding='max_length', max_length=360, truncation=True, return_tensors=self.return_tensors).to(self.device)
         elif self.device is None:
-            context_input = self.tokenizer(self.context[i], padding='max_length', max_length=55, truncation=True, return_tensors=self.return_tensors)
-            candidate_input = self.tokenizer(self.candidate[i], padding='max_length', max_length=55, truncation=True, return_tensors=self.return_tensors)
+            context_input = self.tokenizer(self.context[i], padding='max_length', max_length=360, truncation=True, return_tensors=self.return_tensors)
+            candidate_input = self.tokenizer(self.candidate[i], padding='max_length', max_length=360, truncation=True, return_tensors=self.return_tensors)
 
         return {
             'input_ids': context_input['input_ids'],

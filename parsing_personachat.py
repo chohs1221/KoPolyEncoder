@@ -49,7 +49,7 @@ if __name__ == "__main__":
     print(f"train: {len(train_context)}")
     print(f"valid: {len(valid_context)}")
     print(f"test: {len(test_context) // 20}")
-    pickling(f'./data/pickles/persona_train_{len(train_context)}.pickle', act = 'save', data = (train_context, train_candidate))
-    pickling(f'./data/pickles/persona_valid_{len(valid_context)}.pickle', act = 'save', data = (valid_context, valid_candidate))
-    pickling(f'./data/pickles/persona_test_{len(test_context) // 20}.pickle', act = 'save', data = (test_context, test_candidate))
+    pickling(f'./data/pickles/data/persona_train_{len(train_context)}.pickle', act = 'save', data = (train_context, train_candidate))
+    pickling(f'./data/pickles/data/persona_valid_{len(valid_context)}.pickle', act = 'save', data = (valid_context, valid_candidate))
+    pickling(f'./data/pickles/data/persona_test_{len(test_context) // 20}.pickle', act = 'save', data = (test_context, test_candidate))
     
