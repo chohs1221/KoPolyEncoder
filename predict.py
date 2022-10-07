@@ -30,33 +30,37 @@ def load_tokenizer_model(model_path, m = 0, lang = "ko", device = 'cuda'):
     return tokenizer, model
 
 
-def get_candidates_designated(file_dir, model_path, args, device= 'cuda'):
+def get_candidates_dale(file_dir, model_path, args, device= 'cuda'):
     with open(file_dir, 'r', encoding= 'utf-8') as f:
         candidate_text = [line.strip() for line in f.readlines() if len(line) > 1]
+    print(len(candidate_text))
+    candidate_text = list(dict.fromkeys(candidate_text))
+    print(len(candidate_text))
     print(f'{len(candidate_text)} candidates found!!')
 
     tokenizer, model = load_tokenizer_model(model_path, args.m, args.lang, device)
     model.eval()
 
     try:
-        candidate_embeddings = pickling(f'./data/pickles/predict/{args.path}_designated{len(candidate_text)}.pickle', act= 'load')
+        candidate_embeddings = pickling(f'./data/pickles/candidate/{args.path}_{len(candidate_text)}_dale.pickle', act= 'load')
         print('Pickle file exists!!')
     except:
         print('No pickle file exists!!')
-        candidate_input = tokenizer(candidate_text, padding='max_length', max_length=50, truncation=True, return_tensors = 'pt').to(device)
+        candidate_input = tokenizer(candidate_text, padding='max_length', max_length=360, truncation=True, return_tensors = 'pt').to(device)
         with torch.no_grad():
             candidate_embeddings = model.encode(**candidate_input)[:, 0, :]
         
-        pickling(f'./data/pickles/predict/{args.path}_designated{len(candidate_text)}.pickle', act='save', data=candidate_embeddings)
+        pickling(f'./data/pickles/candidate/{args.path}_{len(candidate_text)}_dale.pickle', act='save', data=candidate_embeddings)
 
     return tokenizer, model, candidate_text, candidate_embeddings
 
 
-def get_candidates_incorpus(file_dir, model_path, args, batch_size = 256, device = 'cuda'):
-    candidate_text0, candidate_text1 = pickling(file_dir, act= 'load')
-    candidate_text = candidate_text0 + candidate_text1
+def get_candidates_corpus(file_dir, model_path, args, batch_size = 256, device = 'cuda'):
+    # candidate_text0, candidate_text1 = pickling(file_dir, act= 'load')
+    # candidate_text = candidate_text0 + candidate_text1
+    _, candidate_text = pickling(file_dir, act= 'load')
     print(len(candidate_text))
-    candidate_text = list(set(candidate_text))
+    candidate_text = list(dict.fromkeys(candidate_text))
     print(len(candidate_text))
     candidate_text = candidate_text[-100000:]
     print(f'{len(candidate_text)} candidates found!!')
@@ -65,22 +69,20 @@ def get_candidates_incorpus(file_dir, model_path, args, batch_size = 256, device
     model.eval()
 
     try:
-        candidate_embeddings = pickling(f'./data/pickles/predict/{args.path}_incorpus{len(candidate_text)}.pickle', act= 'load')
+        candidate_embeddings = pickling(f'./data/pickles/candidate/{args.path}_{len(candidate_text)}_corpus.pickle', act= 'load')
         print('Pickle file exists!!')
     except:
         print('No pickle file exists!!')
         batch = []
         for i in tqdm(range(0, len(candidate_text)-batch_size, batch_size)):
-            batch.append(tokenizer(candidate_text[i: i+batch_size], padding='max_length', max_length=50, truncation=True, return_tensors = 'pt').to(device))
+            batch.append(tokenizer(candidate_text[i: i+batch_size], padding='max_length', max_length=360, truncation=True, return_tensors = 'pt').to(device))
 
-        candidate_embeddings = []
-        for candidate_input in tqdm(batch):
+        candidate_embeddings = torch.empty(len(batch) * batch_size, 768).to(device)
+        for i, candidate_input in tqdm(enumerate(batch), total = len(batch)):
             with torch.no_grad():
-                candidate_embedding = model.encode(**candidate_input)[:, 0, :]
-                candidate_embeddings.append(candidate_embedding.to('cpu'))
-        candidate_embeddings = torch.cat(candidate_embeddings, dim=0).to('cuda')
+                candidate_embeddings[i*batch_size:(i+1)*batch_size] = model.encode(**candidate_input)[:, 0, :]
 
-        pickling(f'./data/pickles/predict/{args.path}_incorpus{len(candidate_text)}.pickle', act='save', data=candidate_embeddings)
+        pickling(f'./data/pickles/candidate/{args.path}_{len(candidate_text)}_corpus.pickle', act='save', data=candidate_embeddings)
 
     return tokenizer, model, candidate_text, candidate_embeddings
 
@@ -92,17 +94,17 @@ if __name__ == '__main__':
     parser.add_argument('--m', type=int, default=0)
     parser.add_argument('--lang', type=str, default="ko")
     parser.add_argument('--cand', type=str, default="test_170448")
-    parser.add_argument('--incorpus', type=int, default=0)
+    parser.add_argument('--corpus', type=int, default=0)
     args = parser.parse_args()
     print(args)
 
 
     device = 'cuda'
     model_path =  './checkpoints/' + args.path
-    if args.incorpus:
-        tokenizer, model, candidate_text, candidate_embeddings = get_candidates_incorpus(f'./data/pickles/data/{args.cand}.pickle', model_path, args, batch_size = 256, device=device)
+    if args.corpus:
+        tokenizer, model, candidate_text, candidate_embeddings = get_candidates_corpus(f'./data/pickles/data/{args.cand}.pickle', model_path, args, batch_size = 512, device=device)
     else:
-        tokenizer, model, candidate_text, candidate_embeddings = get_candidates_designated(f'./data/responses_{args.lang}.txt', model_path, args, device=device)
+        tokenizer, model, candidate_text, candidate_embeddings = get_candidates_dale(f'./data/responses_{args.lang}.txt', model_path, args, device=device)
 
 
     while True:
@@ -113,7 +115,7 @@ if __name__ == '__main__':
         print()
         
         try:
-            context_input = tokenizer(prompt, padding='max_length', max_length=50, truncation=True, return_tensors = 'pt').to(device)
+            context_input = tokenizer(prompt, padding='max_length', max_length=360, truncation=True, return_tensors = 'pt').to(device)
         except:
             continue
         
@@ -129,6 +131,8 @@ if __name__ == '__main__':
                 dot_product = torch.sum(context_embedding * candidate_embeddings, dim = -1)      # (candidate size)
 
         sorted_dot_product, indices = torch.sort(F.softmax(dot_product, -1), dim = -1, descending = True)
+
+        assert round(torch.sum(sorted_dot_product).item()) == 1
 
         print("{0:>50}".format(f"{candidate_text[indices[0]]} << bot ({sorted_dot_product[0] * 100:.2f}%)"))
         print("{0:>50}".format(f"{candidate_text[indices[1]]} << bot ({sorted_dot_product[1] * 100:.2f}%)"))

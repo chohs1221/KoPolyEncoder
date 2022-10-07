@@ -26,9 +26,9 @@ class BiEncoder(BertPreTrainedModel):
             input_ids = input_ids,
             attention_mask= attention_mask,
             token_type_ids= token_type_ids,
-            )
+            )[0]
         
-        return context_output[0]    # (batch size, sequence length, hidden state size)
+        return context_output    # (batch size, sequence length, hidden state size)
 
     
     def forward(
@@ -55,7 +55,7 @@ class BiEncoder(BertPreTrainedModel):
             inputs_embeds = inputs_embeds,
             output_attentions = output_attentions,
             output_hidden_states = output_hidden_states,
-            )       # (batch size, sequence length, hidden state size) 
+            )[0]       # (batch size, sequence length, hidden state size) 
 
         candidate_output = self.bert(
             input_ids = candidate_input_ids[:,0,:],
@@ -66,9 +66,9 @@ class BiEncoder(BertPreTrainedModel):
             inputs_embeds = inputs_embeds,
             output_attentions = output_attentions,
             output_hidden_states = output_hidden_states,
-            )       # (batch size, sequence length, hidden state size)
+            )[0]       # (batch size, sequence length, hidden state size)
 
-        dot_product = torch.matmul(context_output[0][:, 0, :], candidate_output[0][:, 0, :].t())    # (batch size, hidden state) @ (batch size, hidden state).t() = (batch size, batch size)
+        dot_product = torch.matmul(context_output[:, 0, :], candidate_output[:, 0, :].t())    # (batch size, hidden state) @ (batch size, hidden state).t() = (batch size, batch size)
 
         loss_fnt = nn.CrossEntropyLoss()
         loss = loss_fnt(dot_product, torch.arange(dot_product.shape[0]).to(dot_product.device))
@@ -141,16 +141,20 @@ class PolyEncoder(BertPreTrainedModel):
             input_ids = input_ids,
             attention_mask= attention_mask,
             token_type_ids= token_type_ids,
-            )[0]                        # (batch size, sequence length, hidden state)
+            )[0]                        # (1, sequence length, hidden state)
 
         code_embedding_ids = torch.arange(self.m, dtype = torch.long).to(context_output.device)
         code_embedding_ids = code_embedding_ids.unsqueeze(0).expand(context_output.shape[0], self.m)
 
-        codes = self.code_embedding(code_embedding_ids)                             # (batch size, m, hidden state)
+        codes = self.code_embedding(code_embedding_ids)                             # (1, m, hidden state)
 
-        code_output = self.dot_attention(codes, context_output, context_output)     # (batch size, m, hidden state)
+        code_output = self.dot_attention(codes, context_output, context_output)     # (1, m, hidden state)
 
-        cross_output = self.dot_attention(candidate_output.unsqueeze(1), code_output, code_output)
+        cross_output = self.dot_attention(candidate_output.unsqueeze(1), code_output, code_output)      # (candidate size, 1, hidden state)
+
+        assert codes.shape == torch.Size([1, code_embedding_ids.shape[1], 768])
+        assert code_output.shape == torch.Size([1, code_embedding_ids.shape[1], 768])
+        assert cross_output.shape == torch.Size([len(candidate_output), 1, 768])
 
         return cross_output
 

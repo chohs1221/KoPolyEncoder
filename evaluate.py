@@ -20,7 +20,7 @@ def evaluate(model_path, m, test_dataset, c, lang, device):
 
     r_at_1 = 0
     mrr = 0
-    for i, batch in tqdm(enumerate(test_loader, start=1)):
+    for i, batch in tqdm(enumerate(test_loader, start=1), total=len(test_loader)):
         with torch.no_grad():
             _, dot_product = model(**batch)
         
@@ -48,7 +48,7 @@ def evaluate_personachat(model_path, m, test_dataset, c, lang, device):
 
     r_at_1 = 0
     mrr = 0
-    for i, batch in tqdm(enumerate(test_loader, start=1)):
+    for i, batch in tqdm(enumerate(test_loader, start=1), total=len(test_loader)):
         with torch.no_grad():
             _, dot_product = model(**batch)
 
@@ -77,7 +77,7 @@ def evaluate_ubuntu2(model_path, m, test_dataset, c, lang, device):
 
     r_at_1 = 0
     mrr = 0
-    for i, batch in tqdm(enumerate(test_loader, start=1)):
+    for i, batch in tqdm(enumerate(test_loader, start=1), total=len(test_loader)):
         with torch.no_grad():
             _, dot_product = model(**batch)
 
