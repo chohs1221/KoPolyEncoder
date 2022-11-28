@@ -1,5 +1,6 @@
 import os
 import json
+import random
 import pickle
 from tqdm import tqdm
 
@@ -7,57 +8,58 @@ from utils import pickling
 
 
 def parse_data(dir):
-    # 주제별 텍스트 일상 대화 https://www.aihub.or.kr/aihubdata/data/view.do?currMenu=115&topMenu=100&aihubDataSe=realm&dataSetSn=543
-    filenames = os.listdir(f"{dir}/aihub_543")
-    filenames = [f"{dir}/aihub_543/{f}" for f in filenames if f.endswith(".json")]
-    print(f'{len(filenames)} json files found')
-
     context, candidate = [], []
-    for filename in tqdm(filenames):
-        dataset = []
-        with open(filename, 'r', encoding= 'utf-8') as f:
-            try:
-                data = json.load(f)
-            except:
-                print(filename)
-                exit(0)
-            
-        lines = data["info"][0]["annotations"]["lines"]
-        for line in lines:
-            dataset.append(line["norm_text"])
-        
-        if len(dataset) > 1:
-            if len(dataset) % 2 == 0:
-                context += dataset[0::2]
-                candidate += dataset[1::2]
-            elif len(dataset) % 2 == 1:
-                context += dataset[0:len(dataset)-1:2]
-                candidate += dataset[1::2]
     
-    print(f'current {len(context)} datasets found')
+    # # 주제별 텍스트 일상 대화 https://www.aihub.or.kr/aihubdata/data/view.do?currMenu=115&topMenu=100&aihubDataSe=realm&dataSetSn=543
+    # filenames = os.listdir(f"{dir}/aihub_543")
+    # filenames = [f"{dir}/aihub_543/{f}" for f in filenames if f.endswith(".json")]
+    # print(f'{len(filenames)} json files found')
 
-    #########################################################################################################
-
-    # 용도별 목적대화 https://www.aihub.or.kr/aihubdata/data/view.do?currMenu=115&topMenu=100&aihubDataSe=realm&dataSetSn=544
-    folders = os.listdir(f"{dir}/aihub_544")
-    for folder in folders:
-        filenames = os.listdir(f"{dir}/aihub_544/{folder}")
-        filenames = [f"{dir}/aihub_544/{folder}/{f}" for f in filenames if f.endswith(".txt")]
-        print(f'{len(filenames)} txt files found')
-
-        for filename in tqdm(filenames):
-            with open(filename, 'r', encoding= 'utf-8') as f:
-                dataset = [line.strip() for line in f.readlines() if len(line) > 1]
+    # for filename in tqdm(filenames):
+    #     dataset = []
+    #     with open(filename, 'r', encoding= 'utf-8') as f:
+    #         try:
+    #             data = json.load(f)
+    #         except:
+    #             print(filename)
+    #             exit(0)
             
-            if len(dataset) > 1:
-                if len(dataset) % 2 == 0:
-                    context += dataset[0::2]
-                    candidate += dataset[1::2]
-                elif len(dataset) % 2 == 1:
-                    context += dataset[0:len(dataset)-1:2]
-                    candidate += dataset[1::2]
+    #     lines = data["info"][0]["annotations"]["lines"]
+    #     for line in lines:
+    #         dataset.append(line["norm_text"])
         
-    print(f'current {len(context)} datasets found')
+    #     if len(dataset) > 1:
+    #         if len(dataset) % 2 == 0:
+    #             context += dataset[0::2]
+    #             candidate += dataset[1::2]
+    #         elif len(dataset) % 2 == 1:
+    #             context += dataset[0:len(dataset)-1:2]
+    #             candidate += dataset[1::2]
+    
+    # print(f'current {len(context)} datasets found')
+
+    # #########################################################################################################
+
+    # # 용도별 목적대화 https://www.aihub.or.kr/aihubdata/data/view.do?currMenu=115&topMenu=100&aihubDataSe=realm&dataSetSn=544
+    # folders = os.listdir(f"{dir}/aihub_544")
+    # for folder in folders:
+    #     filenames = os.listdir(f"{dir}/aihub_544/{folder}")
+    #     filenames = [f"{dir}/aihub_544/{folder}/{f}" for f in filenames if f.endswith(".txt")]
+    #     print(f'{len(filenames)} txt files found')
+
+    #     for filename in tqdm(filenames):
+    #         with open(filename, 'r', encoding= 'utf-8') as f:
+    #             dataset = [line.strip() for line in f.readlines() if len(line) > 1]
+            
+    #         if len(dataset) > 1:
+    #             if len(dataset) % 2 == 0:
+    #                 context += dataset[0::2]
+    #                 candidate += dataset[1::2]
+    #             elif len(dataset) % 2 == 1:
+    #                 context += dataset[0:len(dataset)-1:2]
+    #                 candidate += dataset[1::2]
+        
+    # print(f'current {len(context)} datasets found')
 
     #########################################################################################################
 
@@ -130,18 +132,76 @@ def parse_data(dir):
     return context, candidate
 
 
+def parse_data_cross(dir):
+    question_all = []
+    answer_all = []
+
+    # KLUE DST https://klue-benchmark.com/tasks/73/data/description
+    filenames = os.listdir(f"{dir}/klue_dst")
+    filenames = [f"{dir}/klue_dst/{f}" for f in filenames if f.endswith(".json")]
+    print(f'{len(filenames)} json files found')
+
+    for filename in tqdm(filenames):
+        with open(filename, 'r', encoding= 'utf-8') as f:
+            data = json.load(f)
+            
+        for annotation in data:
+            question = []
+            answer = []
+
+            assert len(annotation['dialogue']) % 2 == 0
+            assert annotation['dialogue'][0]['role'] == 'user'
+            assert annotation['dialogue'][-1]['role'] == 'sys'
+
+            for i, dialogue in enumerate(annotation['dialogue']):
+                if i % 2 == 0:
+                    question.append(dialogue['text'])
+                else:
+                    answer.append(dialogue['text'])
+            
+            question_all += question
+            answer_all += answer
+    
+    question_all *= 2
+    temp = answer_all[:]
+    random.shuffle(temp)
+    answer_all += temp
+    label = [1] * (len(question_all)//2) + [0] * (len(question_all)//2)
+
+    dataset = list(zip(question_all, answer_all, label))
+    random.shuffle(dataset)
+        
+    print(f'total {len(dataset)} datasets found')
+
+    return dataset
+
+
 if __name__ == "__main__":
-    train_context, train_candidate = parse_data("./data/original_data")
+    # train_context, train_candidate = parse_data("./data/original_data")
 
-    split_index = int(len(train_context)*0.8), int(len(train_context)*0.9)
+    # split_index = int(len(train_context)*0.8), int(len(train_context)*0.9)
 
-    train_context, valid_context, test_context = train_context[:split_index[0]], train_context[split_index[0]: split_index[1]], train_context[split_index[1]:]
-    train_candidate, valid_candidate, test_candidate = train_candidate[:split_index[0]], train_candidate[split_index[0]: split_index[1]], train_candidate[split_index[1]:]
+    # train_context, valid_context, test_context = train_context[:split_index[0]], train_context[split_index[0]: split_index[1]], train_context[split_index[1]:]
+    # train_candidate, valid_candidate, test_candidate = train_candidate[:split_index[0]], train_candidate[split_index[0]: split_index[1]], train_candidate[split_index[1]:]
 
-    print(f"train: {len(train_context)}")
-    print(f"valid: {len(valid_context)}")
-    print(f"test: {len(test_context)}")
-    pickling(f'./data/pickles/data/train_{len(train_context)}.pickle', act = 'save', data = (train_context, train_candidate))
-    pickling(f'./data/pickles/data/valid_{len(valid_context)}.pickle', act = 'save', data = (valid_context, valid_candidate))
-    pickling(f'./data/pickles/data/test_{len(test_context)}.pickle', act = 'save', data = (test_context, test_candidate))
+    # print(f"train: {len(train_context)}")
+    # print(f"valid: {len(valid_context)}")
+    # print(f"test: {len(test_context)}")
+    # pickling(f'./data/pickles/data/ko_train_{len(train_context)}.pickle', act = 'save', data = (train_context, train_candidate))
+    # pickling(f'./data/pickles/data/ko_valid_{len(valid_context)}.pickle', act = 'save', data = (valid_context, valid_candidate))
+    # pickling(f'./data/pickles/data/ko_test_{len(test_context)}.pickle', act = 'save', data = (test_context, test_candidate))
+    
+
+    dataset = parse_data_cross("./data/original_data")
+
+    split_idx = int(len(dataset)*0.8), int(len(dataset)*0.9)
+
+    train, valid, test = dataset[:split_idx[0]], dataset[split_idx[0]:split_idx[1]], dataset[split_idx[1]:]
+
+    print(f"train: {len(train)}")
+    print(f"valid: {len(valid)}")
+    print(f"test: {len(test)}")
+    pickling(f'./data/pickles/data/ko_cross_train_{len(train)}.pickle', act = 'save', data = train)
+    pickling(f'./data/pickles/data/ko_cross_valid_{len(valid)}.pickle', act = 'save', data = valid)
+    pickling(f'./data/pickles/data/ko_cross_test_{len(test)}.pickle', act = 'save', data = test)
     

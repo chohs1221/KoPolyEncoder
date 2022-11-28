@@ -1,33 +1,11 @@
 import argparse
 from tqdm import tqdm
 
-import numpy as np
-
 import torch
 import torch.nn.functional as F
 
-from transformers import BertTokenizer
-
-from kobert_tokenizer import KoBERTTokenizer
-
-from modeling import BiEncoder, PolyEncoder
 from parsing import pickling
-
-
-def load_tokenizer_model(model_path, m = 0, lang = "ko", device = 'cuda'):
-    if lang == "ko":
-        tokenizer = KoBERTTokenizer.from_pretrained('skt/kobert-base-v1')
-    elif lang == "en":
-        tokenizer = BertTokenizer.from_pretrained('bert-base-uncased')
-
-    if m == 0:
-        print('Load BiEncoder')
-        model = BiEncoder.from_pretrained(model_path).to(device)
-    else:
-        print('Load PolyEncoder')
-        model = PolyEncoder.from_pretrained(model_path, m).to(device)
-    
-    return tokenizer, model
+from utils import load_tokenizer_model
 
 
 def get_candidates_dale(file_dir, model_path, args, device= 'cuda'):
@@ -46,7 +24,7 @@ def get_candidates_dale(file_dir, model_path, args, device= 'cuda'):
         print('Pickle file exists!!')
     except:
         print('No pickle file exists!!')
-        candidate_input = tokenizer(candidate_text, padding='max_length', max_length=360, truncation=True, return_tensors = 'pt').to(device)
+        candidate_input = tokenizer(candidate_text, padding='max_length', max_length=args.max_length, truncation=True, return_tensors = 'pt').to(device)
         with torch.no_grad():
             candidate_embeddings = model.encode(**candidate_input)[:, 0, :]
         
@@ -75,7 +53,7 @@ def get_candidates_corpus(file_dir, model_path, args, batch_size = 256, device =
         print('No pickle file exists!!')
         batch = []
         for i in tqdm(range(0, len(candidate_text)-batch_size, batch_size)):
-            batch.append(tokenizer(candidate_text[i: i+batch_size], padding='max_length', max_length=360, truncation=True, return_tensors = 'pt').to(device))
+            batch.append(tokenizer(candidate_text[i: i+batch_size], padding='max_length', max_length=args.max_length, truncation=True, return_tensors = 'pt').to(device))
 
         candidate_embeddings = torch.empty(len(batch) * batch_size, 768).to(device)
         for i, candidate_input in tqdm(enumerate(batch), total = len(batch)):
@@ -90,10 +68,11 @@ def get_candidates_corpus(file_dir, model_path, args, batch_size = 256, device =
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--model', type=str, default='bi')
-    parser.add_argument('--path', type=str, default='2022_09_06_01_19_bs2_ep10')
+    parser.add_argument('--path', type=str, default='bi221026_1139_bs128_ep5_data562920_ko_best1')
+    parser.add_argument('--max_length', type=int, default=50)
     parser.add_argument('--m', type=int, default=0)
     parser.add_argument('--lang', type=str, default="ko")
-    parser.add_argument('--cand', type=str, default="test_170448")
+    parser.add_argument('--cand', type=str, default="ko_test_70365")
     parser.add_argument('--corpus', type=int, default=0)
     args = parser.parse_args()
     print(args)
@@ -114,8 +93,9 @@ if __name__ == '__main__':
             break
         print()
         
+        # prompt += "your persona: I live in Korea.\nyour persona: I'm not human.\nyour persona: I live to help people.\n"
         try:
-            context_input = tokenizer(prompt, padding='max_length', max_length=360, truncation=True, return_tensors = 'pt').to(device)
+            context_input = tokenizer(prompt, padding='max_length', max_length=args.max_length, truncation=True, return_tensors = 'pt').to(device)
         except:
             continue
         

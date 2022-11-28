@@ -9,12 +9,10 @@ import torch
 from torch.utils.data import DataLoader
 import torch.optim as optim
 
-from transformers import BertTokenizer
-
 from kobert_tokenizer import KoBERTTokenizer
 
-from modeling import BiEncoder, PolyEncoder
-from dataset_tokenizer import TokenizeDataset
+from modeling import CrossEncoder
+from dataset_tokenizer import TokenizeDataset_CrossEncoder
 from utils import seed_everything, empty_cuda_cache, pickling
 
 # os.environ["TRANSFORMERS_OFFLINE"] = "1"
@@ -31,7 +29,6 @@ def main(args):
     print(f'path: {args.path}')
     print(f'trainset: {args.trainset}')
     print(f'validset: {args.validset}')
-    print(f'm: {args.m}')
     print(f'seed: {args.seed}')
     print(f'epoch: {args.epoch}')
     print(f'learning rate: {args.lr}')
@@ -45,29 +42,24 @@ def main(args):
     seed_everything(args.seed)
 
     
-    train_context, train_candidate = pickling(f'./data/pickles/data/{args.trainset}.pickle', 'load')
-    valid_context, valid_candidate = pickling(f'./data/pickles/data/{args.validset}.pickle', 'load')
-    print(f"train: {len(train_context)}")
-    print(f"valid: {len(valid_context)}")
-    print(train_context[0:5])
-    print(train_candidate[0:5])
+    train = pickling(f'./data/pickles/data/{args.trainset}.pickle', 'load')
+    valid = pickling(f'./data/pickles/data/{args.validset}.pickle', 'load')
+    print(f"train: {len(train)}")
+    print(f"valid: {len(valid)}")
+    print(train[0])
+    print(train[1])
+    print(valid[0])
+    print(valid[1])
     print()
     
     
-    if args.lang == "ko":
-        tokenizer = KoBERTTokenizer.from_pretrained('skt/kobert-base-v1')
-    elif args.lang == "en":
-        tokenizer = BertTokenizer.from_pretrained('bert-base-uncased')
-
-    if args.model == 'bi':
-        model = BiEncoder.from_pretrained(args.path)
-    elif args.model == 'poly':
-        model = PolyEncoder.from_pretrained(args.path, m=args.m)
+    tokenizer = KoBERTTokenizer.from_pretrained('skt/kobert-base-v1')
+    model = CrossEncoder.from_pretrained(args.path)
     model.to('cuda')
 
 
-    train_dataset = TokenizeDataset(train_context, train_candidate, tokenizer, max_length=args.max_length, return_tensors='pt', device='cuda')
-    valid_dataset = TokenizeDataset(valid_context, valid_candidate, tokenizer, max_length=args.max_length, return_tensors='pt', device='cuda')
+    train_dataset = TokenizeDataset_CrossEncoder(train, tokenizer, max_length=args.max_length, return_tensors='pt', device='cuda')
+    valid_dataset = TokenizeDataset_CrossEncoder(valid, tokenizer, max_length=args.max_length, return_tensors='pt', device='cuda')
 
     train_loader = DataLoader(train_dataset, batch_size = args.batch, shuffle = True, drop_last = True)
     valid_loader = DataLoader(valid_dataset, batch_size = args.batch, shuffle = True, drop_last = True)
@@ -140,17 +132,16 @@ def main(args):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
 
-    parser.add_argument('--model', type=str, default='bi')
+    parser.add_argument('--model', type=str, default='cross')
     parser.add_argument('--path', type=str, default='skt/kobert-base-v1')
-    parser.add_argument('--trainset', type=str, default='ko_train_1363581')
-    parser.add_argument('--validset', type=str, default='ko_valid_170448')
-    parser.add_argument('--m', type=int, default=0)
+    parser.add_argument('--trainset', type=str, default='ko_cross_train_105625')
+    parser.add_argument('--validset', type=str, default='ko_cross_valid_13203')
     parser.add_argument('--seed', type=int, default=42)
     parser.add_argument('--epoch', type=int, default=1)
     parser.add_argument('--lr', type=float, default=5e-5)
-    parser.add_argument('--batch', type=int, default=256)
+    parser.add_argument('--batch', type=int, default=32)
     parser.add_argument('--accumulation', type=int, default=1)
-    parser.add_argument('--max_length', type=int, default=360)
+    parser.add_argument('--max_length', type=int, default=200)
     parser.add_argument('--lang', type=str, default="ko")
     parser.add_argument('--description', type=str, default='')
 

@@ -214,3 +214,52 @@ class PolyEncoder(BertPreTrainedModel):
 
         return loss, dot_product
         
+
+class CrossEncoder(BertPreTrainedModel):
+    def __init__(self, config):
+        super().__init__(config)
+
+        self.bert = BertModel(config)
+        self.dropout = nn.Dropout(0.5)
+        self.linear = nn.Linear(768, 2)
+        
+        # Initialize weights and apply final processing
+        self.post_init()
+
+
+    def forward(
+        self,
+        input_ids = None,
+        attention_mask = None,
+        token_type_ids = None,
+        position_ids = None,
+        labels = None,
+        head_mask = None,
+        inputs_embeds = None,
+        output_attentions = None,
+        output_hidden_states = None,
+        ):
+        
+        pooled_output = self.bert(
+            input_ids = input_ids[:,0,:],
+            attention_mask= attention_mask[:,0,:],
+            token_type_ids= token_type_ids[:,0,:],
+            position_ids = position_ids,
+            head_mask = head_mask,
+            inputs_embeds = inputs_embeds,
+            output_attentions = output_attentions,
+            output_hidden_states = output_hidden_states,
+            ).pooler_output       # (batch size, hidden state size)
+        
+        pooled_output = self.dropout(pooled_output)
+        logits = self.linear(pooled_output)
+
+        if labels is not None:
+            labels = labels.to(logits.device)
+            loss_fnt = nn.CrossEntropyLoss()
+            loss = loss_fnt(logits, labels)
+
+            return loss, None
+        else:
+            return None, logits
+

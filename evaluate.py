@@ -5,17 +5,16 @@ from tqdm import tqdm
 import torch
 from torch.utils.data import DataLoader
 
-from predict import load_tokenizer_model
-from utils import pickling
+from utils import pickling, load_tokenizer_model
 from dataset_tokenizer import TokenizeDataset
 
 
-def evaluate(model_path, m, test_dataset, c, lang, device):
-    test_context, test_candidate = pickling(f"./data/pickles/data/{test_dataset}", "load")
-    tokenizer, model = load_tokenizer_model(model_path, m, lang, device=device)
+def evaluate(model_path, args, c):
+    test_context, test_candidate = pickling(f"./data/pickles/data/{args.testset}", "load")
+    tokenizer, model = load_tokenizer_model(args.model, model_path, args.m, args.lang, device=args.device)
     model.eval()
 
-    test_dataset = TokenizeDataset(test_context, test_candidate, tokenizer, return_tensors='pt', device='cuda')
+    test_dataset = TokenizeDataset(test_context, test_candidate, tokenizer, return_tensors='pt', device=args.device)
     test_loader = DataLoader(test_dataset, batch_size = c, shuffle = True, drop_last = True)
 
     r_at_1 = 0
@@ -24,7 +23,7 @@ def evaluate(model_path, m, test_dataset, c, lang, device):
         with torch.no_grad():
             _, dot_product = model(**batch)
         
-            result = torch.argmax(dot_product, dim=-1) == torch.arange(len(dot_product)).to(device)
+            result = torch.argmax(dot_product, dim=-1) == torch.arange(len(dot_product)).to(args.device)
             r_at_1 += result.sum().item()
 
             _, indices = torch.sort(dot_product, dim=-1, descending = True)
@@ -38,12 +37,12 @@ def evaluate(model_path, m, test_dataset, c, lang, device):
     return r_at_1, mrr
 
 
-def evaluate_personachat(model_path, m, test_dataset, c, lang, device):
-    test_context, test_candidate = pickling(f"./data/pickles/data/{test_dataset}", "load")
-    tokenizer, model = load_tokenizer_model(model_path, m, lang, device=device)
+def evaluate_personachat(model_path, args, c):
+    test_context, test_candidate = pickling(f"./data/pickles/data/{args.testset}", "load")
+    tokenizer, model = load_tokenizer_model(args.model, model_path, args.m, args.lang, device=args.device)
     model.eval()
 
-    test_dataset = TokenizeDataset(test_context, test_candidate, tokenizer, return_tensors='pt', device='cuda')
+    test_dataset = TokenizeDataset(test_context, test_candidate, tokenizer, return_tensors='pt', device=args.device)
     test_loader = DataLoader(test_dataset, batch_size = c, shuffle = False, drop_last = True)
 
     r_at_1 = 0
@@ -67,12 +66,12 @@ def evaluate_personachat(model_path, m, test_dataset, c, lang, device):
     return r_at_1, mrr
 
 
-def evaluate_ubuntu2(model_path, m, test_dataset, c, lang, device):
-    test_context, test_candidate = pickling(f"./data/pickles/data/{test_dataset}", "load")
-    tokenizer, model = load_tokenizer_model(model_path, m, lang, device=device)
+def evaluate_ubuntu2(model_path, args, c):
+    test_context, test_candidate = pickling(f"./data/pickles/data/{args.testset}", "load")
+    tokenizer, model = load_tokenizer_model(args.model, model_path, args.m, args.lang, device=args.device)
     model.eval()
 
-    test_dataset = TokenizeDataset(test_context, test_candidate, tokenizer, return_tensors='pt', device='cuda')
+    test_dataset = TokenizeDataset(test_context, test_candidate, tokenizer, return_tensors='pt', device=args.device)
     test_loader = DataLoader(test_dataset, batch_size = c, shuffle = False, drop_last = True)
 
     r_at_1 = 0
@@ -98,9 +97,9 @@ def evaluate_ubuntu2(model_path, m, test_dataset, c, lang, device):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--model', type=str, default='bi')
-    parser.add_argument('--path', type=str, default='bi220907_1256_bs512_ep20_best1')
+    parser.add_argument('--path', type=str, default='bi221026_1139_bs128_ep5_data562920_ko_best1')
     parser.add_argument('--m', type=int, default=0)
-    parser.add_argument('--testset', type=str, default='test_170448.pickle')
+    parser.add_argument('--testset', type=str, default='ko_test_70365.pickle')
     parser.add_argument('--lang', type=str, default='ko')
     parser.add_argument('--task', type=str, default='ko')
     parser.add_argument('--best', type=str, default='0')
@@ -114,7 +113,7 @@ if __name__ == '__main__':
 
     if args.task == 'ko':
         for c in [100, 20, 10]:
-            r_at_1, mrr = evaluate(model_path, args.m, args.testset, c, args.lang, args.device)
+            r_at_1, mrr = evaluate(model_path, args, c)
 
             print(f'{args.path}')
             print(f"R@1/{c}: {r_at_1}")
@@ -122,7 +121,7 @@ if __name__ == '__main__':
             print(f'============================================================\n')
     
     elif args.task == 'personachat':
-        r_at_1, mrr = evaluate_personachat(model_path, args.m, args.testset, 20, args.lang, args.device)
+        r_at_1, mrr = evaluate_personachat(model_path, args, 20)
 
         print(f'{args.path}')
         print(f"R@1/{20}: {r_at_1}")
@@ -130,7 +129,7 @@ if __name__ == '__main__':
         print(f'============================================================\n')
     
     elif args.task == 'ubuntu2':
-        r_at_1, mrr = evaluate_ubuntu2(model_path, args.m, args.testset, 10, args.lang, args.device)
+        r_at_1, mrr = evaluate_ubuntu2(model_path, args, 10)
 
         print(f'{args.path}')
         print(f"R@1/{10}: {r_at_1}")
