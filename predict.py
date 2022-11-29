@@ -16,7 +16,7 @@ def get_candidates_dale(file_dir, model_path, args, device= 'cuda'):
     print(len(candidate_text))
     print(f'{len(candidate_text)} candidates found!!')
 
-    tokenizer, model = load_tokenizer_model(model_path, args.m, args.lang, device)
+    tokenizer, model = load_tokenizer_model(args.model, model_path, args.m, args.lang, device)
     model.eval()
 
     try:
@@ -34,8 +34,6 @@ def get_candidates_dale(file_dir, model_path, args, device= 'cuda'):
 
 
 def get_candidates_corpus(file_dir, model_path, args, batch_size = 256, device = 'cuda'):
-    # candidate_text0, candidate_text1 = pickling(file_dir, act= 'load')
-    # candidate_text = candidate_text0 + candidate_text1
     _, candidate_text = pickling(file_dir, act= 'load')
     print(len(candidate_text))
     candidate_text = list(dict.fromkeys(candidate_text))
@@ -43,7 +41,7 @@ def get_candidates_corpus(file_dir, model_path, args, batch_size = 256, device =
     candidate_text = candidate_text[-100000:]
     print(f'{len(candidate_text)} candidates found!!')
 
-    tokenizer, model = load_tokenizer_model(model_path, args.m, args.lang, device)
+    tokenizer, model = load_tokenizer_model(args.model, model_path, args.m, args.lang, device)
     model.eval()
 
     try:
@@ -93,7 +91,6 @@ if __name__ == '__main__':
             break
         print()
         
-        # prompt += "your persona: I live in Korea.\nyour persona: I'm not human.\nyour persona: I live to help people.\n"
         try:
             context_input = tokenizer(prompt, padding='max_length', max_length=args.max_length, truncation=True, return_tensors = 'pt').to(device)
         except:

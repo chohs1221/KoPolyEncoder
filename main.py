@@ -13,8 +13,8 @@ from transformers import BertTokenizer
 
 from kobert_tokenizer import KoBERTTokenizer
 
-from modeling import BiEncoder, PolyEncoder
-from dataset_tokenizer import TokenizeDataset
+from modeling import BiEncoder, PolyEncoder, CrossEncoder
+from dataset_tokenizer import TokenizeDataset, TokenizeDataset_CrossEncoder
 from utils import seed_everything, empty_cuda_cache, pickling
 
 # os.environ["TRANSFORMERS_OFFLINE"] = "1"
@@ -39,35 +39,47 @@ def main(args):
     print(f'accumulation: {args.accumulation}')
     print(f'max length: {args.max_length}')
     print(f'language: {args.lang}')
+    print(f'scheduler: {args.scheduler}')
     print(f'description: {args.description}\n')
 
 
     seed_everything(args.seed)
 
     
-    train_context, train_candidate = pickling(f'./data/pickles/data/{args.trainset}.pickle', 'load')
-    valid_context, valid_candidate = pickling(f'./data/pickles/data/{args.validset}.pickle', 'load')
-    print(f"train: {len(train_context)}")
-    print(f"valid: {len(valid_context)}")
-    print(train_context[0:5])
-    print(train_candidate[0:5])
-    print()
-    
-    
+    """ Load Tokenizer, Model """
     if args.lang == "ko":
         tokenizer = KoBERTTokenizer.from_pretrained('skt/kobert-base-v1')
     elif args.lang == "en":
         tokenizer = BertTokenizer.from_pretrained('bert-base-uncased')
 
+
     if args.model == 'bi':
         model = BiEncoder.from_pretrained(args.path)
     elif args.model == 'poly':
         model = PolyEncoder.from_pretrained(args.path, m=args.m)
+    elif args.model == 'cross':
+        model = CrossEncoder.from_pretrained(args.path)
     model.to('cuda')
+    
 
+    if args.model == 'cross':
+        train = pickling(f'./data/pickles/data/{args.trainset}.pickle', 'load')
+        valid = pickling(f'./data/pickles/data/{args.validset}.pickle', 'load')
+        print(f"train: {len(train)}")
+        print(f"valid: {len(valid)}")
+        print(train[0], train[1], valid[0], valid[1], sep='\n', end='\n\n')
+        train_dataset = TokenizeDataset_CrossEncoder(train, tokenizer, max_length=args.max_length, return_tensors='pt', device='cuda')
+        valid_dataset = TokenizeDataset_CrossEncoder(valid, tokenizer, max_length=args.max_length, return_tensors='pt', device='cuda')
 
-    train_dataset = TokenizeDataset(train_context, train_candidate, tokenizer, max_length=args.max_length, return_tensors='pt', device='cuda')
-    valid_dataset = TokenizeDataset(valid_context, valid_candidate, tokenizer, max_length=args.max_length, return_tensors='pt', device='cuda')
+    elif args.model == 'bi' or args.model == 'poly':
+        train_context, train_candidate = pickling(f'./data/pickles/data/{args.trainset}.pickle', 'load')
+        valid_context, valid_candidate = pickling(f'./data/pickles/data/{args.validset}.pickle', 'load')
+        print(f"train: {len(train_context)}")
+        print(f"valid: {len(valid_context)}")
+        print(train_context[0:5], train_candidate[0:5], sep='\n', end='\n\n')
+        train_dataset = TokenizeDataset(train_context, train_candidate, tokenizer, max_length=args.max_length, return_tensors='pt', device='cuda')
+        valid_dataset = TokenizeDataset(valid_context, valid_candidate, tokenizer, max_length=args.max_length, return_tensors='pt', device='cuda')
+    
 
     train_loader = DataLoader(train_dataset, batch_size = args.batch, shuffle = True, drop_last = True)
     valid_loader = DataLoader(valid_dataset, batch_size = args.batch, shuffle = True, drop_last = True)
@@ -113,9 +125,10 @@ def main(args):
                     else:
                         print(f'train loss: {train_loss} / valid loss: {valid_loss} -------------------- epoch: {epoch} iteration: {iteration}')
                     
-                    if iteration % (5 * int(len(train_loader) / 10)) == 0:
-                        print("scheduler!")
-                        scheduler.step(valid_loss)
+                    if args.scheduler:
+                        if iteration % (5 * int(len(train_loader) / 10)) == 0:
+                            print("scheduler!")
+                            scheduler.step(valid_loss)
 
                     # wandb.log(
                     #     {
@@ -152,6 +165,7 @@ if __name__ == '__main__':
     parser.add_argument('--accumulation', type=int, default=1)
     parser.add_argument('--max_length', type=int, default=360)
     parser.add_argument('--lang', type=str, default="ko")
+    parser.add_argument('--scheduler', type=bool, default=True)
     parser.add_argument('--description', type=str, default='')
 
     args = parser.parse_args()
