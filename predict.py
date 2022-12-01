@@ -66,11 +66,11 @@ def get_candidates_corpus(file_dir, model_path, args, batch_size = 256, device =
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--model', type=str, default='bi')
-    parser.add_argument('--path', type=str, default='bi221026_1139_bs128_ep5_data562920_ko_best1')
+    parser.add_argument('--path', type=str, default='poly221129_1703_bs128_ep5_data52812_ko_best1')
     parser.add_argument('--max_length', type=int, default=50)
     parser.add_argument('--m', type=int, default=0)
     parser.add_argument('--lang', type=str, default="ko")
-    parser.add_argument('--cand', type=str, default="ko_test_70365")
+    parser.add_argument('--cand', type=str, default="ko_train_1363581")
     parser.add_argument('--corpus', type=int, default=0)
     args = parser.parse_args()
     print(args)
