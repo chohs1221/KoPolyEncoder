@@ -1,4 +1,5 @@
 import argparse
+import re
 from tqdm import tqdm
 
 import torch
@@ -63,6 +64,20 @@ def get_candidates_corpus(file_dir, model_path, args, batch_size = 256, device =
     return tokenizer, model, candidate_text, candidate_embeddings
 
 
+def shift_R(text, n):
+    original_length = len(text)
+
+    ko = re.compile('[^ㄱ-ㅣ가-힣+]')
+    ko_text = ko.sub('', text)
+
+    ko_length = len(ko_text)
+    
+    if n - original_length - ko_length >= 0:
+        return ' ' * (n - original_length - ko_length) + text
+    else:
+        return text
+
+
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--model', type=str, default='bi')
@@ -84,6 +99,7 @@ if __name__ == '__main__':
         tokenizer, model, candidate_text, candidate_embeddings = get_candidates_dale(f'./data/responses_{args.lang}.txt', model_path, args, device=device)
 
 
+    print('='*100)
     while True:
         prompt = input("user >> ")
         if prompt == 'qq' or prompt == 'ㅂㅂ':
@@ -111,10 +127,19 @@ if __name__ == '__main__':
 
         assert round(torch.sum(sorted_dot_product).item()) == 1
 
-        print("{0:>50}".format(f"{candidate_text[indices[0]]} << bot ({sorted_dot_product[0] * 100:.2f}%)"))
-        print("{0:>50}".format(f"{candidate_text[indices[1]]} << bot ({sorted_dot_product[1] * 100:.2f}%)"))
-        print("{0:>50}".format(f"{candidate_text[indices[2]]} << bot ({sorted_dot_product[2] * 100:.2f}%)"))
-        print("{0:>50}".format(f"{candidate_text[indices[3]]} << bot ({sorted_dot_product[3] * 100:.2f}%)"))
-        print("{0:>50}".format(f"{candidate_text[indices[4]]} << bot ({sorted_dot_product[4] * 100:.2f}%)"))
-        print(list(map(lambda x: round(x*100, 2), sorted_dot_product[:10].tolist())), end='\n\n')
+        # print("{0:>50}".format(f"{candidate_text[indices[0]]} << bot ({sorted_dot_product[0] * 100:.2f}%)"))
+        # print("{0:>50}".format(f"{candidate_text[indices[1]]} << bot ({sorted_dot_product[1] * 100:.2f}%)"))
+        # print("{0:>50}".format(f"{candidate_text[indices[2]]} << bot ({sorted_dot_product[2] * 100:.2f}%)"))
+        # print("{0:>50}".format(f"{candidate_text[indices[3]]} << bot ({sorted_dot_product[3] * 100:.2f}%)"))
+        # print("{0:>50}".format(f"{candidate_text[indices[4]]} << bot ({sorted_dot_product[4] * 100:.2f}%)"))
+        # print(list(map(lambda x: round(x*100, 2), sorted_dot_product[:10].tolist())), end='\n\n')
+
+        print(shift_R(f"{candidate_text[indices[0]]} << bot ({sorted_dot_product[0] * 100:05.2f}%)", 100))
+        print(shift_R(f"{candidate_text[indices[1]]} << bot ({sorted_dot_product[1] * 100:05.2f}%)", 100))
+        print(shift_R(f"{candidate_text[indices[2]]} << bot ({sorted_dot_product[2] * 100:05.2f}%)", 100))
+        print(shift_R(f"{candidate_text[indices[3]]} << bot ({sorted_dot_product[3] * 100:05.2f}%)", 100))
+        print(shift_R(f"{candidate_text[indices[4]]} << bot ({sorted_dot_product[4] * 100:05.2f}%)", 100))
+        print('='*100, list(map(lambda x: round(x*100, 2), sorted_dot_product[:10].tolist())), end='\n\n')
+
+
 
