@@ -105,32 +105,63 @@ def parse_data(dir):
     #########################################################################################################
 
     """ KLUE DST https://klue-benchmark.com/tasks/73/data/description """
-    filenames = os.listdir(f"{dir}/klue_dst")
-    filenames = [f"{dir}/klue_dst/{f}" for f in filenames if f.endswith(".json")]
+    # filenames = os.listdir(f"{dir}/klue_dst")
+    # filenames = [f"{dir}/klue_dst/{f}" for f in filenames if f.endswith(".json")]
+    # print(f'{len(filenames)} json files found')
+
+    # for filename in tqdm(filenames):
+    #     with open(filename, 'r', encoding= 'utf-8') as f:
+    #         data = json.load(f)
+            
+    #     dataset = []
+    #     for annotation in data:
+    #         for dialogue in annotation['dialogue']:
+    #             dataset.append(dialogue['text'])
+                
+    #     if len(dataset) > 1:
+    #         if len(dataset) % 2 == 0:
+    #             context += dataset[0::2]
+    #             candidate += dataset[1::2]
+    #         elif len(dataset) % 2 == 1:
+    #             context += dataset[0:len(dataset)-1:2]
+    #             candidate += dataset[1::2]
+    
+    # print(f'current {len(context)} datasets found')
+
+    # print(f'total {len(context)} datasets found')
+
+    # #########################################################################################################
+
+    """ 감성 대화 말뭉치 https://aihub.or.kr/aihubdata/data/view.do?currMenu=115&topMenu=100&aihubDataSe=realm&dataSetSn=86 """
+    filenames = os.listdir(f"{dir}/aihub_86")
+    filenames = [f"{dir}/aihub_86/{f}" for f in filenames if f.endswith(".json")]
     print(f'{len(filenames)} json files found')
 
+    dataset = []
     for filename in tqdm(filenames):
         with open(filename, 'r', encoding= 'utf-8') as f:
-            data = json.load(f)
-            
-        dataset = []
-        for annotation in data:
-            for dialogue in annotation['dialogue']:
-                dataset.append(dialogue['text'])
-                
-        if len(dataset) > 1:
-            if len(dataset) % 2 == 0:
-                context += dataset[0::2]
-                candidate += dataset[1::2]
-            elif len(dataset) % 2 == 1:
-                context += dataset[0:len(dataset)-1:2]
-                candidate += dataset[1::2]
-    
+            try:
+                data = json.load(f)
+            except:
+                print(filename)
+                exit(0)
+        
+        for i in tqdm(range(len(data))):
+            dialogues = data[i]['talk']["content"]
+            dialogues = list(dialogues.values())
+            for dialogue in dialogues:
+                if len(dialogue) > 0:
+                    dataset.append(dialogue)
+            assert len(dialogues) % 2 == 0
+
+    context += dataset[0::2]
+    candidate += dataset[1::2]
+        
+    print(f'current {len(context)} datasets found')
+
     print(f'total {len(context)} datasets found')
 
-
     return context, candidate
-
 
 def parse_data_cross(dir):
     question_all = []
