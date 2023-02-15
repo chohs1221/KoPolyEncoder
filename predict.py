@@ -81,11 +81,11 @@ def shift_R(text, n):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--model', type=str, default='bi')
-    parser.add_argument('--path', type=str, default='poly221215_0912_bs128_ep10_data131131_ko_best1')
+    parser.add_argument('--path', type=str, default='bi230214_1048_bs64_ep10_data9458_ko_best1')
     parser.add_argument('--max_length', type=int, default=50)
     parser.add_argument('--m', type=int, default=0)
     parser.add_argument('--lang', type=str, default="ko")
-    parser.add_argument('--cand', type=str, default="ko_test_16392")
+    parser.add_argument('--cand', type=str, default="ko_train_9458")
     parser.add_argument('--corpus', type=int, default=0)
     args = parser.parse_args()
     print(args)
@@ -127,18 +127,13 @@ if __name__ == '__main__':
 
         assert round(torch.sum(sorted_dot_product).item()) == 1
 
-        # print("{0:>50}".format(f"{candidate_text[indices[0]]} << bot ({sorted_dot_product[0] * 100:.2f}%)"))
-        # print("{0:>50}".format(f"{candidate_text[indices[1]]} << bot ({sorted_dot_product[1] * 100:.2f}%)"))
-        # print("{0:>50}".format(f"{candidate_text[indices[2]]} << bot ({sorted_dot_product[2] * 100:.2f}%)"))
-        # print("{0:>50}".format(f"{candidate_text[indices[3]]} << bot ({sorted_dot_product[3] * 100:.2f}%)"))
-        # print("{0:>50}".format(f"{candidate_text[indices[4]]} << bot ({sorted_dot_product[4] * 100:.2f}%)"))
-        # print(list(map(lambda x: round(x*100, 2), sorted_dot_product[:10].tolist())), end='\n\n')
-
-        print(shift_R(f"{candidate_text[indices[0]]} << bot ({sorted_dot_product[0] * 100:05.2f}%)", 100))
-        print(shift_R(f"{candidate_text[indices[1]]} << bot ({sorted_dot_product[1] * 100:05.2f}%)", 100))
-        print(shift_R(f"{candidate_text[indices[2]]} << bot ({sorted_dot_product[2] * 100:05.2f}%)", 100))
-        print(shift_R(f"{candidate_text[indices[3]]} << bot ({sorted_dot_product[3] * 100:05.2f}%)", 100))
-        print(shift_R(f"{candidate_text[indices[4]]} << bot ({sorted_dot_product[4] * 100:05.2f}%)", 100))
+        # print(shift_R(f"{candidate_text[indices[0]]} << bot ({sorted_dot_product[0] * 100:05.2f}%)", 100))
+        # print(shift_R(f"{candidate_text[indices[1]]} << bot ({sorted_dot_product[1] * 100:05.2f}%)", 100))
+        # print(shift_R(f"{candidate_text[indices[2]]} << bot ({sorted_dot_product[2] * 100:05.2f}%)", 100))
+        # print(shift_R(f"{candidate_text[indices[3]]} << bot ({sorted_dot_product[3] * 100:05.2f}%)", 100))
+        # print(shift_R(f"{candidate_text[indices[4]]} << bot ({sorted_dot_product[4] * 100:05.2f}%)", 100))
+        for i in range(5):
+            print(shift_R("{}".format(f"{candidate_text[indices[0]]} << bot ({sorted_dot_product[0] * 100:05.2f}%)"), 100))
         print('='*100, list(map(lambda x: round(x*100, 2), sorted_dot_product[:10].tolist())), end='\n\n')
 
 

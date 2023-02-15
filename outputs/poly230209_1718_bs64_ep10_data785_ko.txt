@@ -1,0 +1,209 @@
+============================================================
+File Name: poly230209_1718_bs64_ep10_data785_ko
+START!! 2023_02_09 / 17_18
+model: poly
+path: skt/kobert-base-v1
+trainset: ko_train_785
+validset: ko_train_785
+m: 16
+seed: 42
+epoch: 10
+learning rate: 5e-05
+batch size: 64
+accumulation: 1
+max length: 30
+language: ko
+scheduler: True
+description: 
+
+train: 785
+valid: 785
+['노래 불러줘', '노래 불러줘', '노래 불러줘', '노래 불러줘', '노래 불러줘']
+['죄송해요. 제가 노래를 잘 못해요', '오늘은 좀. 다음에 해드릴게요.', '먼저 불러 주시면 제가 그 다음에 할게요.', '마이크 없으면 못해요.', '저는 무대에서만 노래해요.']
+
+train loss: 7.856800556182861 / valid loss: 5.802440762519836 -------------------- epoch: 0 iteration: 1 ==> save
+train loss: 6.153548240661621 / valid loss: 5.488419731458028 -------------------- epoch: 0 iteration: 2 ==> save
+train loss: 23.767728805541992 / valid loss: 17.313986857732136 -------------------- epoch: 0 iteration: 3
+train loss: 13.43372631072998 / valid loss: 7.970349351565043 -------------------- epoch: 0 iteration: 4
+train loss: 7.860770225524902 / valid loss: 5.319774031639099 -------------------- epoch: 0 iteration: 5 ==> save
+scheduler!
+train loss: 5.439281463623047 / valid loss: 3.9461259245872498 -------------------- epoch: 0 iteration: 6 ==> save
+train loss: 4.4235382080078125 / valid loss: 3.7432623704274497 -------------------- epoch: 0 iteration: 7 ==> save
+train loss: 4.009265422821045 / valid loss: 3.4271740118662515 -------------------- epoch: 0 iteration: 8 ==> save
+train loss: 4.084695816040039 / valid loss: 3.089717904726664 -------------------- epoch: 0 iteration: 9 ==> save
+train loss: 3.4406964778900146 / valid loss: 2.883060574531555 -------------------- epoch: 0 iteration: 10 ==> save
+scheduler!
+train loss: 3.523280382156372 / valid loss: 2.6667663852373757 -------------------- epoch: 0 iteration: 11 ==> save
+train loss: 3.295496940612793 / valid loss: 2.5293922622998557 -------------------- epoch: 0 iteration: 12 ==> save
+train loss: 2.873246908187866 / valid loss: 2.419814666112264 -------------------- epoch: 1 iteration: 1 ==> save
+train loss: 2.8551347255706787 / valid loss: 2.36497970422109 -------------------- epoch: 1 iteration: 2 ==> save
+train loss: 2.930675745010376 / valid loss: 2.365899980068207 -------------------- epoch: 1 iteration: 3
+train loss: 2.9593775272369385 / valid loss: 2.309936821460724 -------------------- epoch: 1 iteration: 4 ==> save
+train loss: 2.6440718173980713 / valid loss: 2.2606236239274344 -------------------- epoch: 1 iteration: 5 ==> save
+scheduler!
+train loss: 2.6085124015808105 / valid loss: 2.2388990819454193 -------------------- epoch: 1 iteration: 6 ==> save
+train loss: 2.687920093536377 / valid loss: 2.2064245144526162 -------------------- epoch: 1 iteration: 7 ==> save
+train loss: 2.552922248840332 / valid loss: 2.1398239731788635 -------------------- epoch: 1 iteration: 8 ==> save
+train loss: 2.667416572570801 / valid loss: 2.060876031716665 -------------------- epoch: 1 iteration: 9 ==> save
+train loss: 2.520117998123169 / valid loss: 2.0536981225013733 -------------------- epoch: 1 iteration: 10 ==> save
+scheduler!
+train loss: 2.3283021450042725 / valid loss: 1.9492946366469066 -------------------- epoch: 1 iteration: 11 ==> save
+train loss: 2.4897451400756836 / valid loss: 1.9307633539040883 -------------------- epoch: 1 iteration: 12 ==> save
+train loss: 2.484750509262085 / valid loss: 1.8306820789972942 -------------------- epoch: 2 iteration: 1 ==> save
+train loss: 2.25076961517334 / valid loss: 1.756015807390213 -------------------- epoch: 2 iteration: 2 ==> save
+train loss: 2.016402006149292 / valid loss: 1.7263672749201457 -------------------- epoch: 2 iteration: 3 ==> save
+train loss: 2.1376497745513916 / valid loss: 1.699236939350764 -------------------- epoch: 2 iteration: 4 ==> save
+train loss: 2.0225725173950195 / valid loss: 1.672346959511439 -------------------- epoch: 2 iteration: 5 ==> save
+scheduler!
+train loss: 1.840157389640808 / valid loss: 1.5922561784585316 -------------------- epoch: 2 iteration: 6 ==> save
+train loss: 1.8412845134735107 / valid loss: 1.5805644690990448 -------------------- epoch: 2 iteration: 7 ==> save
+train loss: 1.642189860343933 / valid loss: 1.5254460275173187 -------------------- epoch: 2 iteration: 8 ==> save
+train loss: 1.7496800422668457 / valid loss: 1.5359537104765575 -------------------- epoch: 2 iteration: 9
+train loss: 1.856744647026062 / valid loss: 1.5179121792316437 -------------------- epoch: 2 iteration: 10 ==> save
+scheduler!
+train loss: 1.8847166299819946 / valid loss: 1.5037645995616913 -------------------- epoch: 2 iteration: 11 ==> save
+train loss: 1.6359580755233765 / valid loss: 1.4460376103719075 -------------------- epoch: 2 iteration: 12 ==> save
+train loss: 1.8143759965896606 / valid loss: 1.465869168440501 -------------------- epoch: 3 iteration: 1
+train loss: 1.7609769105911255 / valid loss: 1.445605883995692 -------------------- epoch: 3 iteration: 2 ==> save
+train loss: 1.5557396411895752 / valid loss: 1.417788416147232 -------------------- epoch: 3 iteration: 3 ==> save
+train loss: 1.8110871315002441 / valid loss: 1.4103055397669475 -------------------- epoch: 3 iteration: 4 ==> save
+train loss: 1.4831790924072266 / valid loss: 1.4048959811528523 -------------------- epoch: 3 iteration: 5 ==> save
+scheduler!
+train loss: 1.428090214729309 / valid loss: 1.3821512659390767 -------------------- epoch: 3 iteration: 6 ==> save
+train loss: 1.7272615432739258 / valid loss: 1.3560031553109486 -------------------- epoch: 3 iteration: 7 ==> save
+train loss: 1.6830227375030518 / valid loss: 1.322268694639206 -------------------- epoch: 3 iteration: 8 ==> save
+train loss: 1.955123782157898 / valid loss: 1.3255778054396312 -------------------- epoch: 3 iteration: 9
+train loss: 1.6178611516952515 / valid loss: 1.3426641821861267 -------------------- epoch: 3 iteration: 10
+scheduler!
+train loss: 1.5043957233428955 / valid loss: 1.3111934264500935 -------------------- epoch: 3 iteration: 11 ==> save
+train loss: 1.4556736946105957 / valid loss: 1.2903004089991252 -------------------- epoch: 3 iteration: 12 ==> save
+train loss: 1.4820921421051025 / valid loss: 1.2765203913052876 -------------------- epoch: 4 iteration: 1 ==> save
+train loss: 1.4934275150299072 / valid loss: 1.2713458438714345 -------------------- epoch: 4 iteration: 2 ==> save
+train loss: 1.4308563470840454 / valid loss: 1.2588379482428234 -------------------- epoch: 4 iteration: 3 ==> save
+train loss: 1.5919610261917114 / valid loss: 1.244467963774999 -------------------- epoch: 4 iteration: 4 ==> save
+train loss: 1.5689018964767456 / valid loss: 1.2283329566319783 -------------------- epoch: 4 iteration: 5 ==> save
+scheduler!
+train loss: 1.4541130065917969 / valid loss: 1.2603921095530193 -------------------- epoch: 4 iteration: 6
+train loss: 1.6009634733200073 / valid loss: 1.2355013191699982 -------------------- epoch: 4 iteration: 7
+train loss: 1.4587424993515015 / valid loss: 1.2261956234773 -------------------- epoch: 4 iteration: 8 ==> save
+train loss: 1.4392887353897095 / valid loss: 1.2365521490573883 -------------------- epoch: 4 iteration: 9
+train loss: 1.4158250093460083 / valid loss: 1.2185359100500743 -------------------- epoch: 4 iteration: 10 ==> save
+scheduler!
+train loss: 1.5343225002288818 / valid loss: 1.2265375256538391 -------------------- epoch: 4 iteration: 11
+train loss: 1.4821654558181763 / valid loss: 1.2310556769371033 -------------------- epoch: 4 iteration: 12
+train loss: 1.4234119653701782 / valid loss: 1.1774624486764271 -------------------- epoch: 5 iteration: 1 ==> save
+train loss: 1.3440639972686768 / valid loss: 1.1992657383282979 -------------------- epoch: 5 iteration: 2
+train loss: 1.458113193511963 / valid loss: 1.1860226094722748 -------------------- epoch: 5 iteration: 3
+train loss: 1.2224498987197876 / valid loss: 1.230235089858373 -------------------- epoch: 5 iteration: 4
+train loss: 1.385540246963501 / valid loss: 1.1848408579826355 -------------------- epoch: 5 iteration: 5
+scheduler!
+train loss: 1.3580836057662964 / valid loss: 1.1770687798659007 -------------------- epoch: 5 iteration: 6 ==> save
+train loss: 1.4111000299453735 / valid loss: 1.1416576008001964 -------------------- epoch: 5 iteration: 7 ==> save
+train loss: 1.4691133499145508 / valid loss: 1.1360176702340443 -------------------- epoch: 5 iteration: 8 ==> save
+train loss: 1.3982123136520386 / valid loss: 1.163899044195811 -------------------- epoch: 5 iteration: 9
+train loss: 1.22944974899292 / valid loss: 1.1867458919684093 -------------------- epoch: 5 iteration: 10
+scheduler!
+train loss: 1.3687084913253784 / valid loss: 1.1790311833222706 -------------------- epoch: 5 iteration: 11
+train loss: 1.3645638227462769 / valid loss: 1.1693917413552601 -------------------- epoch: 5 iteration: 12
+train loss: 1.2179570198059082 / valid loss: 1.1459978421529133 -------------------- epoch: 6 iteration: 1
+train loss: 1.3160028457641602 / valid loss: 1.1418195962905884 -------------------- epoch: 6 iteration: 2
+train loss: 1.1569737195968628 / valid loss: 1.1284631490707397 -------------------- epoch: 6 iteration: 3 ==> save
+train loss: 1.2663995027542114 / valid loss: 1.1433877448240917 -------------------- epoch: 6 iteration: 4
+train loss: 1.2249183654785156 / valid loss: 1.1423611044883728 -------------------- epoch: 6 iteration: 5
+scheduler!
+train loss: 1.331017255783081 / valid loss: 1.1302874485651653 -------------------- epoch: 6 iteration: 6
+train loss: 1.2687104940414429 / valid loss: 1.1337197025616963 -------------------- epoch: 6 iteration: 7
+train loss: 1.1397643089294434 / valid loss: 1.1422173778216045 -------------------- epoch: 6 iteration: 8
+train loss: 1.3559271097183228 / valid loss: 1.11194051305453 -------------------- epoch: 6 iteration: 9 ==> save
+train loss: 1.4447433948516846 / valid loss: 1.118799219528834 -------------------- epoch: 6 iteration: 10
+scheduler!
+train loss: 1.2444405555725098 / valid loss: 1.1468062698841095 -------------------- epoch: 6 iteration: 11
+train loss: 1.225200891494751 / valid loss: 1.1117344746987026 -------------------- epoch: 6 iteration: 12 ==> save
+train loss: 1.274350881576538 / valid loss: 1.135287766655286 -------------------- epoch: 7 iteration: 1
+train loss: 1.1390955448150635 / valid loss: 1.12315234541893 -------------------- epoch: 7 iteration: 2
+train loss: 1.27606201171875 / valid loss: 1.0890636990467708 -------------------- epoch: 7 iteration: 3 ==> save
+train loss: 1.1097731590270996 / valid loss: 1.1106707255045574 -------------------- epoch: 7 iteration: 4
+train loss: 1.2727947235107422 / valid loss: 1.1471462150414784 -------------------- epoch: 7 iteration: 5
+scheduler!
+train loss: 1.2393244504928589 / valid loss: 1.05919249355793 -------------------- epoch: 7 iteration: 6 ==> save
+train loss: 1.384195327758789 / valid loss: 1.1346337000528972 -------------------- epoch: 7 iteration: 7
+train loss: 1.1829490661621094 / valid loss: 1.0901998728513718 -------------------- epoch: 7 iteration: 8
+train loss: 1.2215867042541504 / valid loss: 1.1107373187939327 -------------------- epoch: 7 iteration: 9
+train loss: 1.3530136346817017 / valid loss: 1.1081239680449169 -------------------- epoch: 7 iteration: 10
+scheduler!
+train loss: 1.2999117374420166 / valid loss: 1.1021132965882618 -------------------- epoch: 7 iteration: 11
+train loss: 1.0684758424758911 / valid loss: 1.1175650457541149 -------------------- epoch: 7 iteration: 12
+train loss: 1.2584240436553955 / valid loss: 1.0957437207301457 -------------------- epoch: 8 iteration: 1
+train loss: 1.3044006824493408 / valid loss: 1.0852961540222168 -------------------- epoch: 8 iteration: 2
+train loss: 1.2258328199386597 / valid loss: 1.1073953807353973 -------------------- epoch: 8 iteration: 3
+train loss: 1.2752341032028198 / valid loss: 1.1045979261398315 -------------------- epoch: 8 iteration: 4
+train loss: 1.232937216758728 / valid loss: 1.1368551154931386 -------------------- epoch: 8 iteration: 5
+scheduler!
+train loss: 1.2380845546722412 / valid loss: 1.0890035231908162 -------------------- epoch: 8 iteration: 6
+train loss: 1.2621204853057861 / valid loss: 1.0847008228302002 -------------------- epoch: 8 iteration: 7
+train loss: 1.1783976554870605 / valid loss: 1.0872378547986348 -------------------- epoch: 8 iteration: 8
+train loss: 1.2185169458389282 / valid loss: 1.06525619328022 -------------------- epoch: 8 iteration: 9
+train loss: 1.2515355348587036 / valid loss: 1.0908630887667339 -------------------- epoch: 8 iteration: 10
+scheduler!
+train loss: 1.0984711647033691 / valid loss: 1.1124837895234425 -------------------- epoch: 8 iteration: 11
+train loss: 1.3481110334396362 / valid loss: 1.104174941778183 -------------------- epoch: 8 iteration: 12
+train loss: 1.26529860496521 / valid loss: 1.0923664669195812 -------------------- epoch: 9 iteration: 1
+train loss: 1.1242308616638184 / valid loss: 1.1112958093484242 -------------------- epoch: 9 iteration: 2
+train loss: 1.106743574142456 / valid loss: 1.083354299267133 -------------------- epoch: 9 iteration: 3
+train loss: 1.156177043914795 / valid loss: 1.100522090991338 -------------------- epoch: 9 iteration: 4
+train loss: 1.0437756776809692 / valid loss: 1.0844971438248951 -------------------- epoch: 9 iteration: 5
+scheduler!
+train loss: 1.2504236698150635 / valid loss: 1.083192229270935 -------------------- epoch: 9 iteration: 6
+train loss: 1.1448196172714233 / valid loss: 1.1262766520182292 -------------------- epoch: 9 iteration: 7
+train loss: 1.2203319072723389 / valid loss: 1.0546044458945592 -------------------- epoch: 9 iteration: 8 ==> save
+train loss: 1.194433569908142 / valid loss: 1.0985195140043895 -------------------- epoch: 9 iteration: 9
+train loss: 1.31095290184021 / valid loss: 1.1441597243150075 -------------------- epoch: 9 iteration: 10
+scheduler!
+train loss: 1.043255090713501 / valid loss: 1.1449992458025615 -------------------- epoch: 9 iteration: 11
+train loss: 1.1755802631378174 / valid loss: 1.114701007803281 -------------------- epoch: 9 iteration: 12
+END!! 2023_02_09 / 17_21
+RUNNING TIME: 0:03:19
+============================================================
+
+
+
+SCORE!!
+Namespace(batch=32, best='0', device='cuda', lang='ko', m=16, max_length=40, model='poly', path='poly221215_0912_bs128_ep10_data131131_ko_best0', task='ko', testset='ko_train_785.pickle')
+Load PolyEncoder
+poly221215_0912_bs128_ep10_data131131_ko_best0
+R@1/100: 14.57
+MRR: 28.42
+============================================================
+
+Load PolyEncoder
+poly221215_0912_bs128_ep10_data131131_ko_best0
+R@1/20: 36.03
+MRR: 53.01
+============================================================
+
+Load PolyEncoder
+poly221215_0912_bs128_ep10_data131131_ko_best0
+R@1/10: 48.21
+MRR: 64.89
+============================================================
+
+SCORE!!
+Namespace(batch=32, best='1', device='cuda', lang='ko', m=16, max_length=40, model='poly', path='poly221215_0912_bs128_ep10_data131131_ko_best1', task='ko', testset='ko_train_785.pickle')
+Load PolyEncoder
+poly221215_0912_bs128_ep10_data131131_ko_best1
+R@1/100: 14.57
+MRR: 29.55
+============================================================
+
+Load PolyEncoder
+poly221215_0912_bs128_ep10_data131131_ko_best1
+R@1/20: 41.03
+MRR: 57.31
+============================================================
+
+Load PolyEncoder
+poly221215_0912_bs128_ep10_data131131_ko_best1
+R@1/10: 55.26
+MRR: 69.67
+============================================================
+

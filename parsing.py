@@ -4,6 +4,7 @@ import random
 import pickle
 from tqdm import tqdm
 
+import pandas as pd
 from utils import pickling
 
 
@@ -128,40 +129,51 @@ def parse_data(dir):
     
     # print(f'current {len(context)} datasets found')
 
-    # print(f'total {len(context)} datasets found')
-
     # #########################################################################################################
 
-    """ 감성 대화 말뭉치 https://aihub.or.kr/aihubdata/data/view.do?currMenu=115&topMenu=100&aihubDataSe=realm&dataSetSn=86 """
-    filenames = os.listdir(f"{dir}/aihub_86")
-    filenames = [f"{dir}/aihub_86/{f}" for f in filenames if f.endswith(".json")]
-    print(f'{len(filenames)} json files found')
+    # """ 감성 대화 말뭉치 https://aihub.or.kr/aihubdata/data/view.do?currMenu=115&topMenu=100&aihubDataSe=realm&dataSetSn=86 """
+    # filenames = os.listdir(f"{dir}/aihub_86")
+    # filenames = [f"{dir}/aihub_86/{f}" for f in filenames if f.endswith(".json")]
+    # print(f'{len(filenames)} json files found')
 
-    dataset = []
-    for filename in tqdm(filenames):
-        with open(filename, 'r', encoding= 'utf-8') as f:
-            try:
-                data = json.load(f)
-            except:
-                print(filename)
-                exit(0)
+    # dataset = []
+    # for filename in tqdm(filenames):
+    #     with open(filename, 'r', encoding= 'utf-8') as f:
+    #         try:
+    #             data = json.load(f)
+    #         except:
+    #             print(filename)
+    #             exit(0)
         
-        for i in tqdm(range(len(data))):
-            dialogues = data[i]['talk']["content"]
-            dialogues = list(dialogues.values())
-            for dialogue in dialogues:
-                if len(dialogue) > 0:
-                    dataset.append(dialogue)
-            assert len(dialogues) % 2 == 0
+    #     for i in tqdm(range(len(data))):
+    #         dialogues = data[i]['talk']["content"]
+    #         dialogues = list(dialogues.values())
+    #         for dialogue in dialogues:
+    #             if len(dialogue) > 0:
+    #                 dataset.append(dialogue)
+    #         assert len(dialogues) % 2 == 0
 
-    context += dataset[0::2]
-    candidate += dataset[1::2]
+    # context += dataset[0::2]
+    # candidate += dataset[1::2]
         
+    # print(f'current {len(context)} datasets found')
+
+    """ ChatbotData.csv Single-turn Data 9458/1182/1183"""
+    data = pd.read_csv(f"{dir}/ChatbotData.csv")
+    for i in range(len(data['Q'])):
+        if type(data['Q'][i]) == str and type(data['A'][i]) == str:
+            context.append(data['Q'][i])
+            candidate.append(data['A'][i])
+    
+    temp = list(zip(context, candidate))
+    random.shuffle(temp)
+    context, candidate = zip(*temp)
+
     print(f'current {len(context)} datasets found')
 
     print(f'total {len(context)} datasets found')
 
-    return context, candidate
+    return list(context), list(candidate)
 
 def parse_data_cross(dir):
     question_all = []
