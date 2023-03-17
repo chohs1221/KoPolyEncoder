@@ -27,7 +27,7 @@ def get_candidates_dale(file_dir, model_path, args, device= 'cuda'):
         print('No pickle file exists!!')
         candidate_input = tokenizer(candidate_text, padding='max_length', max_length=args.max_length, truncation=True, return_tensors = 'pt').to(device)
         with torch.no_grad():
-            candidate_embeddings = model.encode(**candidate_input)[:, 0, :]
+            candidate_embeddings = model(**candidate_input)[0][:, 0, :]
         
         pickling(f'./data/pickles/candidate/{args.path}_{len(candidate_text)}_dale.pickle', act='save', data=candidate_embeddings)
 
@@ -57,7 +57,7 @@ def get_candidates_corpus(file_dir, model_path, args, batch_size = 256, device =
         candidate_embeddings = torch.empty(len(batch) * batch_size, 768).to(device)
         for i, candidate_input in tqdm(enumerate(batch), total = len(batch)):
             with torch.no_grad():
-                candidate_embeddings[i*batch_size:(i+1)*batch_size] = model.encode(**candidate_input)[:, 0, :]
+                candidate_embeddings[i*batch_size:(i+1)*batch_size] = model(**candidate_input)[0][:, 0, :]
 
         pickling(f'./data/pickles/candidate/{args.path}_{len(candidate_text)}_corpus.pickle', act='save', data=candidate_embeddings)
 
@@ -114,12 +114,12 @@ if __name__ == '__main__':
         
         with torch.no_grad():
             if args.model == 'bi':
-                context_embedding = model.encode(**context_input)[:, 0, :]                      # (1, hidden state)
+                context_embedding = model(**context_input)[0][:, 0, :]                      # (1, hidden state)
 
                 dot_product = torch.matmul(context_embedding, candidate_embeddings.t())[0]      # (1, hidden state) @ (candidate size, hidden state).t() = (1, candidate size)
 
             elif args.model == 'poly':
-                context_embedding = model.context_encode(**context_input, candidate_output = candidate_embeddings)[:, 0, :]  # (candidate size, hidden state)
+                context_embedding = model(**context_input, candidate_output = candidate_embeddings)[:, 0, :]  # (candidate size, hidden state)
 
                 dot_product = torch.sum(context_embedding * candidate_embeddings, dim = -1)      # (candidate size)
 

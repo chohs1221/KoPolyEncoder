@@ -15,22 +15,6 @@ class BiEncoder(BertPreTrainedModel):
         self.post_init()
     
 
-    def encode(
-        self,
-        input_ids = None,
-        attention_mask = None,
-        token_type_ids = None,
-        ):
-
-        context_output = self.bert(
-            input_ids = input_ids,
-            attention_mask= attention_mask,
-            token_type_ids= token_type_ids,
-            )[0]
-        
-        return context_output    # (batch size, sequence length, hidden state size)
-
-    
     def forward(
         self,
         input_ids = None,
@@ -46,6 +30,9 @@ class BiEncoder(BertPreTrainedModel):
         output_hidden_states = None,
         ):
         
+        if candidate_input_ids is None:
+            return self.bert(input_ids = input_ids, attention_mask= attention_mask, token_type_ids= token_type_ids)
+
         context_output = self.bert(
             input_ids = input_ids[:,0,:],
             attention_mask= attention_mask[:,0,:],
@@ -113,22 +100,6 @@ class PolyEncoder(BertPreTrainedModel):
         return outputs
     
 
-    def encode(
-        self,
-        input_ids = None,
-        attention_mask = None,
-        token_type_ids = None,
-        ):
-        
-        context_output = self.bert(
-            input_ids = input_ids,
-            attention_mask= attention_mask,
-            token_type_ids= token_type_ids,
-            )[0]
-
-        return context_output           # (batch size, sequence length, hidden state)
-
-
     def context_encode(
         self,
         input_ids = None,
@@ -172,8 +143,14 @@ class PolyEncoder(BertPreTrainedModel):
         inputs_embeds = None,
         output_attentions = None,
         output_hidden_states = None,
+        candidate_output = None,
         ):
         
+        if candidate_output is not None:
+            return self.context_encode(input_ids, attention_mask, token_type_ids, candidate_output)
+        if candidate_input_ids is None:
+            return self.bert(input_ids = input_ids, attention_mask= attention_mask, token_type_ids= token_type_ids)
+
         context_output = self.bert(
             input_ids = input_ids[:,0,:],
             attention_mask= attention_mask[:,0,:],
