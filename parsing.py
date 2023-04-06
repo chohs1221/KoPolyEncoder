@@ -218,21 +218,41 @@ def parse_data_cross(dir):
 
     return dataset
 
+def parse_data_stackExchange(dir):
+    context, candidate = [], []
+    with open(f'{dir}/stackExchange_qa_questions.txt', 'r') as f:
+        datas = f.readlines()
+        for data in datas:
+            context.append(data)
+    with open(f'{dir}/stackExchange_qa_answers.txt', 'r') as f:
+        datas = f.readlines()
+        for data in datas:
+            candidate.append(data)
+    
+    temp = list(zip(context, candidate))
+    random.shuffle(temp)
+    context, candidate = zip(*temp)
+
+    print(f'current {len(context)} datasets found')
+
+    print(f'total {len(context)} datasets found')
+
+    return list(context), list(candidate)
 
 if __name__ == "__main__":
-    train_context, train_candidate = parse_data("./data/original_data")
+    # train_context, train_candidate = parse_data("./data/original_data")
 
-    split_index = int(len(train_context)*0.8), int(len(train_context)*0.9)
+    # split_index = int(len(train_context)*0.8), int(len(train_context)*0.9)
 
-    train_context, valid_context, test_context = train_context[:split_index[0]], train_context[split_index[0]: split_index[1]], train_context[split_index[1]:]
-    train_candidate, valid_candidate, test_candidate = train_candidate[:split_index[0]], train_candidate[split_index[0]: split_index[1]], train_candidate[split_index[1]:]
+    # train_context, valid_context, test_context = train_context[:split_index[0]], train_context[split_index[0]: split_index[1]], train_context[split_index[1]:]
+    # train_candidate, valid_candidate, test_candidate = train_candidate[:split_index[0]], train_candidate[split_index[0]: split_index[1]], train_candidate[split_index[1]:]
 
-    print(f"train: {len(train_context)}")
-    print(f"valid: {len(valid_context)}")
-    print(f"test: {len(test_context)}")
-    pickling(f'./data/pickles/data/ko_train_{len(train_context)}.pickle', act = 'save', data = (train_context, train_candidate))
-    pickling(f'./data/pickles/data/ko_valid_{len(valid_context)}.pickle', act = 'save', data = (valid_context, valid_candidate))
-    pickling(f'./data/pickles/data/ko_test_{len(test_context)}.pickle', act = 'save', data = (test_context, test_candidate))
+    # print(f"train: {len(train_context)}")
+    # print(f"valid: {len(valid_context)}")
+    # print(f"test: {len(test_context)}")
+    # pickling(f'./data/pickles/data/ko_train_{len(train_context)}.pickle', act = 'save', data = (train_context, train_candidate))
+    # pickling(f'./data/pickles/data/ko_valid_{len(valid_context)}.pickle', act = 'save', data = (valid_context, valid_candidate))
+    # pickling(f'./data/pickles/data/ko_test_{len(test_context)}.pickle', act = 'save', data = (test_context, test_candidate))
     
 
     # dataset = parse_data_cross("./data/original_data")
@@ -248,3 +268,8 @@ if __name__ == "__main__":
     # pickling(f'./data/pickles/data/ko_cross_valid_{len(valid)}.pickle', act = 'save', data = valid)
     # pickling(f'./data/pickles/data/ko_cross_test_{len(test)}.pickle', act = 'save', data = test)
     
+    train_context, train_candidate = parse_data_stackExchange("./data/original_data")
+    print(f"train: {len(train_context[: int(len(train_context)*0.9)])}")
+    print(f"valid: {len(train_context[int(len(train_context)*0.9) :])}")
+    pickling(f'./data/pickles/data/stackfaq_train_{len(train_context[: int(len(train_context)*0.9)])}.pickle', act = 'save', data = (train_context[: int(len(train_context)*0.9)], train_candidate[: int(len(train_context)*0.9)]))
+    pickling(f'./data/pickles/data/stackfaq_valid_{len(train_context[int(len(train_context)*0.9) :])}.pickle', act = 'save', data = (train_context[int(len(train_context)*0.9) :], train_candidate[int(len(train_context)*0.9) :]))
